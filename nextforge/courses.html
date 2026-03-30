@@ -3,141 +3,325 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Courses — Nextforge Academy</title>
-  <meta name="description" content="Explore all 7 career tracks at Nextforge Academy. Cyber Security, Product Management, Data Analysis, UI/UX Design, Data Science, Graphic Design and more." />
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <title>All Courses — NextForge Academy</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .catalog-hero {
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+      padding: 56px 0 40px;
+    }
+    .catalog-hero h1 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin-bottom: 10px; }
+    .catalog-hero p { color: var(--muted); max-width: 500px; }
+
+    .catalog-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 40px;
+      padding: 48px 0;
+    }
+
+    /* SIDEBAR */
+    .sidebar { position: sticky; top: 88px; align-self: start; }
+
+    .filter-group { margin-bottom: 28px; }
+    .filter-group h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+    .filter-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      color: var(--text);
+      transition: color var(--transition);
+    }
+    .filter-option:hover { color: var(--amber); }
+    .filter-option input[type="checkbox"] { accent-color: var(--amber); }
+    .filter-count {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--bg-3);
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+
+    /* MAIN */
+    .catalog-main {}
+
+    .catalog-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .catalog-count { font-size: 0.88rem; color: var(--muted); }
+    .catalog-count strong { color: var(--white); }
+
+    .sort-select {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      cursor: pointer;
+    }
+    .sort-select option { background: var(--bg-2); }
+
+    .courses-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+
+    @media (max-width: 1024px) {
+      .catalog-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .courses-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .courses-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
-<div id="nav-placeholder"></div>
-
-<main class="page-wrapper">
-
-  <div class="courses-page-hero">
-    <div class="section-inner">
-      <span class="section-label" style="color:var(--gold-light);">7 Career Tracks</span>
-      <h1>Choose Your Path</h1>
-      <p>All programmes are 4 months, fully live, and designed to make you job-ready with a portfolio that proves your skills.</p>
-    </div>
-  </div>
-
-  <section class="section" style="background:var(--surface);">
-    <div class="section-inner">
-
-      <!-- Filter bar -->
-      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;" id="filter-bar">
-        <button class="filter-btn active" data-filter="all" onclick="filterCourses('all',this)">All Tracks</button>
-        <button class="filter-btn" data-filter="Hot" onclick="filterCourses('Hot',this)">🔥 Hot</button>
-        <button class="filter-btn" data-filter="Popular" onclick="filterCourses('Popular',this)">⭐ Popular</button>
-        <button class="filter-btn" data-filter="New" onclick="filterCourses('New',this)">✨ New</button>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="inner">
+      <a href="index.html" class="logo">Next<span>Forge</span></a>
+      <ul class="nav-links">
+        <li><a href="courses.html" class="active">Courses</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="#">Instructors</a></li>
+        <li><a href="#">Pricing</a></li>
+      </ul>
+      <div class="nav-search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search courses..." />
       </div>
-
-      <div class="courses-grid" id="courses-grid"></div>
-
-    </div>
-  </section>
-
-  <!-- Why Nextforge -->
-  <section class="section" style="background:var(--white);">
-    <div class="section-inner">
-      <div style="text-align:center;margin-bottom:3rem;">
-        <span class="section-label">Why Us</span>
-        <h2 class="section-title">What Sets Every Track Apart</h2>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-          <div style="font-size:2rem;margin-bottom:0.75rem;">👨‍🏫</div>
-          <h4 style="margin-bottom:0.4rem;">Expert Instructors</h4>
-          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">Taught by active professionals working in Nigerian and global tech companies.</p>
-        </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-          <div style="font-size:2rem;margin-bottom:0.75rem;">🏗️</div>
-          <h4 style="margin-bottom:0.4rem;">Real Projects</h4>
-          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">Every track includes portfolio projects you can show on LinkedIn and in interviews.</p>
-        </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-          <div style="font-size:2rem;margin-bottom:0.75rem;">📜</div>
-          <h4 style="margin-bottom:0.4rem;">Certification</h4>
-          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">Receive a verifiable Nextforge Academy certificate upon successful completion.</p>
-        </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-          <div style="font-size:2rem;margin-bottom:0.75rem;">💼</div>
-          <h4 style="margin-bottom:0.4rem;">Career Support</h4>
-          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">CV reviews, mock interviews, and job placement assistance included for every student.</p>
-        </div>
+      <div class="nav-actions">
+        <a href="#" class="btn btn-ghost btn-sm">Log In</a>
+        <a href="#" class="btn btn-primary btn-sm">Sign Up Free</a>
       </div>
     </div>
-  </section>
+  </nav>
 
-  <div class="cta-band">
-    <div class="section-inner">
-      <h2>Not Sure Which Track to Pick?</h2>
-      <p>Send us a message and our advisors will help you choose based on your background and goals.</p>
-      <div class="cta-band-btns">
-        <a href="contact.html" class="btn-hero-primary">Talk to an Advisor →</a>
+  <!-- CATALOG HERO -->
+  <div class="catalog-hero">
+    <div class="container">
+      <div class="line"></div>
+      <h1>All Courses</h1>
+      <p>Practical, structured learning for operations professionals, project managers, and systems builders.</p>
+      <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap">
+        <span class="badge badge-amber">Project Management</span>
+        <span class="badge badge-green">Notion & Productivity</span>
+        <span class="badge badge-blue">Operations Systems</span>
+        <span class="badge" style="background:var(--bg-3);color:var(--muted);border:1px solid var(--border)">Professional Skills</span>
       </div>
     </div>
   </div>
 
-</main>
+  <!-- CATALOG LAYOUT -->
+  <div class="container">
+    <div class="catalog-layout">
 
-<div id="footer-placeholder"></div>
-
-<style>
-  .filter-btn {
-    padding: 0.45rem 1rem;
-    border: 1.5px solid var(--border);
-    border-radius: 100px;
-    font-size: 0.85rem; font-weight: 500;
-    background: var(--white);
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .filter-btn:hover { border-color: var(--ink); color: var(--ink); }
-  .filter-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
-</style>
-
-<script src="assets/js/main.js"></script>
-<script>
-  document.getElementById('nav-placeholder').innerHTML = renderNav('courses');
-  document.getElementById('footer-placeholder').innerHTML = renderFooter();
-
-  function renderCourses(filter) {
-    const filtered = filter === 'all' ? COURSES : COURSES.filter(c => c.tag === filter);
-    const grid = document.getElementById('courses-grid');
-    grid.innerHTML = filtered.map(c => `
-      <div class="course-card" onclick="window.location.href='enroll.html?course=${c.id}'">
-        <div class="course-card-top">
-          <span class="course-icon">${c.icon}</span>
-          <span class="course-tag ${c.tagClass}">${c.tag}</span>
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="filter-group">
+          <h4>Category</h4>
+          <label class="filter-option"><span>📋 Project Management</span><span class="filter-count">6</span></label>
+          <label class="filter-option"><span>🗂 Notion & Productivity</span><span class="filter-count">5</span></label>
+          <label class="filter-option"><span>⚙️ Operations Systems</span><span class="filter-count">4</span></label>
+          <label class="filter-option"><span>💡 Professional Skills</span><span class="filter-count">3</span></label>
         </div>
-        <h3 class="course-name">${c.name}</h3>
-        <p class="course-desc">${c.desc}</p>
-        <div style="margin-bottom:1rem;">
-          <div style="font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.05em;">You'll Learn</div>
-          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
-            ${c.outcomes.map(o => `<span style="background:var(--white);border:1px solid var(--border);border-radius:4px;padding:0.2rem 0.5rem;font-size:0.75rem;color:var(--text);">${o}</span>`).join('')}
-          </div>
+        <div class="filter-group">
+          <h4>Level</h4>
+          <label class="filter-option"><input type="checkbox" /> <span style="margin-left:8px">All Levels</span></label>
+          <label class="filter-option"><input type="checkbox" /> <span style="margin-left:8px">Beginner</span></label>
+          <label class="filter-option"><input type="checkbox" /> <span style="margin-left:8px">Intermediate</span></label>
+          <label class="filter-option"><input type="checkbox" /> <span style="margin-left:8px">Advanced</span></label>
         </div>
-        <div class="course-footer">
-          <div>
-            <div class="course-price">${c.priceFormatted}</div>
-            <div class="course-duration">${c.duration} · ${c.mode}</div>
-          </div>
-          <a href="enroll.html?course=${c.id}" class="course-enroll-btn" onclick="event.stopPropagation()">Enroll →</a>
+        <div class="filter-group">
+          <h4>Format</h4>
+          <label class="filter-option"><input type="checkbox" /> <span style="margin-left:8px">Self-Paced</span></label>
+          <label class="filter-option"><input type="checkbox" /> <span style="margin-left:8px">Live Cohort</span></label>
+          <label class="filter-option"><input type="checkbox" /> <span style="margin-left:8px">Hybrid</span></label>
         </div>
+        <div class="filter-group">
+          <h4>Price</h4>
+          <label class="filter-option"><input type="checkbox" /> <span style="margin-left:8px">Free</span></label>
+          <label class="filter-option"><input type="checkbox" /> <span style="margin-left:8px">Under ₦20,000</span></label>
+          <label class="filter-option"><input type="checkbox" /> <span style="margin-left:8px">₦20k – ₦50k</span></label>
+          <label class="filter-option"><input type="checkbox" /> <span style="margin-left:8px">Above ₦50,000</span></label>
+        </div>
+        <div class="filter-group">
+          <h4>Rating</h4>
+          <label class="filter-option"><span>★★★★★ 4.5 & above</span></label>
+          <label class="filter-option"><span>★★★★☆ 4.0 & above</span></label>
+          <label class="filter-option"><span>★★★☆☆ 3.5 & above</span></label>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="catalog-main">
+        <div class="catalog-toolbar">
+          <div class="catalog-count"><strong>18 courses</strong> found</div>
+          <select class="sort-select">
+            <option>Sort: Most Popular</option>
+            <option>Sort: Highest Rated</option>
+            <option>Sort: Newest</option>
+            <option>Sort: Price: Low to High</option>
+            <option>Sort: Price: High to Low</option>
+          </select>
+        </div>
+
+        <div class="courses-grid">
+
+          <a href="course-detail.html" class="course-card">
+            <div class="course-card-thumb" style="background:linear-gradient(135deg,#1a1a1e,#252530)">📋</div>
+            <div class="course-card-body">
+              <div class="course-card-category">Project Management</div>
+              <div class="course-card-title">PM Foundations — 14-Week Professional Programme</div>
+              <div class="course-card-instructor">Shedrack Ebete</div>
+              <div class="course-card-meta">
+                <span class="stars">★★★★★</span><span>4.9 (184)</span><span>·</span><span>14 weeks</span>
+              </div>
+              <div style="display:flex;gap:6px;margin-bottom:14px"><span class="badge badge-amber">Bestseller</span><span class="badge badge-blue">Certificate</span></div>
+              <div class="course-card-footer">
+                <div><span class="price">₦45,000</span><span class="price-old">₦75,000</span></div>
+                <span class="btn btn-primary btn-sm">Enroll</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="course-detail.html" class="course-card">
+            <div class="course-card-thumb" style="background:linear-gradient(135deg,#1a1e1a,#1f2a20)">🗂</div>
+            <div class="course-card-body">
+              <div class="course-card-category">Notion & Productivity</div>
+              <div class="course-card-title">Notion OS Mastery — 30-Day Second Brain Challenge</div>
+              <div class="course-card-instructor">Shedrack Ebete</div>
+              <div class="course-card-meta">
+                <span class="stars">★★★★★</span><span>4.8 (97)</span><span>·</span><span>30 days</span>
+              </div>
+              <div style="display:flex;gap:6px;margin-bottom:14px"><span class="badge badge-green">New</span></div>
+              <div class="course-card-footer">
+                <div><span class="price">₦18,000</span><span class="price-old">₦30,000</span></div>
+                <span class="btn btn-primary btn-sm">Enroll</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="course-detail.html" class="course-card">
+            <div class="course-card-thumb" style="background:linear-gradient(135deg,#1a181e,#221f2a)">⚙️</div>
+            <div class="course-card-body">
+              <div class="course-card-category">Operations Systems</div>
+              <div class="course-card-title">Ops Systems Design — SOPs, Workflows & Automation</div>
+              <div class="course-card-instructor">Shedrack Ebete</div>
+              <div class="course-card-meta">
+                <span class="stars">★★★★☆</span><span>4.7 (62)</span><span>·</span><span>8 weeks</span>
+              </div>
+              <div style="display:flex;gap:6px;margin-bottom:14px"><span class="badge badge-amber">Live Cohort</span></div>
+              <div class="course-card-footer">
+                <div><span class="price">₦35,000</span><span class="price-old">₦55,000</span></div>
+                <span class="btn btn-primary btn-sm">Enroll</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="course-detail.html" class="course-card">
+            <div class="course-card-thumb" style="background:linear-gradient(135deg,#1e1a18,#2a2018)">💡</div>
+            <div class="course-card-body">
+              <div class="course-card-category">Professional Skills</div>
+              <div class="course-card-title">Business Communication & Stakeholder Management</div>
+              <div class="course-card-instructor">Shedrack Ebete</div>
+              <div class="course-card-meta">
+                <span class="stars">★★★★★</span><span>4.8 (44)</span><span>·</span><span>4 weeks</span>
+              </div>
+              <div style="display:flex;gap:6px;margin-bottom:14px"><span class="badge badge-blue">Self-Paced</span></div>
+              <div class="course-card-footer">
+                <div><span class="price">₦12,000</span><span class="price-old">₦20,000</span></div>
+                <span class="btn btn-primary btn-sm">Enroll</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="course-detail.html" class="course-card">
+            <div class="course-card-thumb" style="background:linear-gradient(135deg,#181e1e,#1a2828)">📊</div>
+            <div class="course-card-body">
+              <div class="course-card-category">Project Management</div>
+              <div class="course-card-title">Agile & Scrum for Non-Tech Teams</div>
+              <div class="course-card-instructor">Shedrack Ebete</div>
+              <div class="course-card-meta">
+                <span class="stars">★★★★☆</span><span>4.6 (38)</span><span>·</span><span>6 weeks</span>
+              </div>
+              <div style="display:flex;gap:6px;margin-bottom:14px"><span class="badge badge-blue">Self-Paced</span></div>
+              <div class="course-card-footer">
+                <div><span class="price">₦22,000</span><span class="price-old">₦38,000</span></div>
+                <span class="btn btn-primary btn-sm">Enroll</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="course-detail.html" class="course-card">
+            <div class="course-card-thumb" style="background:linear-gradient(135deg,#1e181a,#28181e)">🔧</div>
+            <div class="course-card-body">
+              <div class="course-card-category">Notion & Productivity</div>
+              <div class="course-card-title">Notion for Freelancers — Client CRM & Project Tracker</div>
+              <div class="course-card-instructor">Shedrack Ebete</div>
+              <div class="course-card-meta">
+                <span class="stars">★★★★★</span><span>4.9 (71)</span><span>·</span><span>2 weeks</span>
+              </div>
+              <div style="display:flex;gap:6px;margin-bottom:14px"><span class="badge badge-green">New</span><span class="badge badge-amber">Hot 🔥</span></div>
+              <div class="course-card-footer">
+                <div><span class="price">₦9,500</span><span class="price-old">₦16,000</span></div>
+                <span class="btn btn-primary btn-sm">Enroll</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+
+        <!-- PAGINATION -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:48px">
+          <button class="btn btn-ghost btn-sm">← Prev</button>
+          <button class="btn btn-primary btn-sm">1</button>
+          <button class="btn btn-ghost btn-sm">2</button>
+          <button class="btn btn-ghost btn-sm">3</button>
+          <button class="btn btn-ghost btn-sm">Next →</button>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="font-size:1.1rem">Next<span style="color:var(--amber)">Forge</span> Academy</div>
+          <p>Practical skills for operations professionals, project managers, and systems thinkers across Africa and beyond.</p>
+        </div>
+        <div class="footer-col"><h4>Courses</h4><ul><li><a href="courses.html">All Courses</a></li><li><a href="#">Project Management</a></li><li><a href="#">Notion Mastery</a></li><li><a href="#">Operations Systems</a></li></ul></div>
+        <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About Us</a></li><li><a href="#">Become an Instructor</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li></ul></div>
+        <div class="footer-col"><h4>Support</h4><ul><li><a href="#">Help Centre</a></li><li><a href="#">Contact Us</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Use</a></li></ul></div>
       </div>
-    `).join('');
-  }
+      <div class="footer-bottom">
+        <span>© 2025 NextForge Academy · nextforgeacademy.online</span>
+        <span>Built for working professionals across Africa</span>
+      </div>
+    </div>
+  </footer>
 
-  function filterCourses(filter, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderCourses(filter);
-  }
-
-  renderCourses('all');
-</script>
 </body>
 </html>
