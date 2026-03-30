@@ -4,260 +4,139 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NextForge Academy</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
 
+<!-- NAVBAR -->
 <header class="navbar">
   <h1>NextForge Academy</h1>
   <nav>
     <a href="courses.html">Courses</a>
     <a href="about.html">About</a>
+    <a href="testimonials.html">Success Stories</a>
     <a href="contact.html">Contact</a>
   </nav>
 </header>
 
+<!-- HERO -->
 <section class="hero">
-  <h2>Become Job-Ready in Tech in Months — Not Years</h2>
-  <p>Practical tech training + career support to help you land global opportunities.</p>
-  <button>View Courses</button>
-  <button class="secondary">Talk to Advisor</button>
+  <h2>Launch a Global Tech Career in Months — Not Years</h2>
+  <p>Practical training, real projects, mentorship and career support.</p>
+  <button>Explore Programs</button>
 </section>
 
-<section class="stats">
+<!-- FLOATING STATS -->
+<div class="stats">
   <div>5000+ Students Trained</div>
   <div>85% Career Transition</div>
-  <div>Hands-On Projects</div>
+  <div>Project-Based Learning</div>
   <div>Career Support</div>
-</section>
+</div>
 
-<section class="courses">
-  <h2>Our Programs</h2>
+<!-- FEATURED COURSES -->
+<section>
+  <h2 style="text-align:center;font-size:38px;">Our Career Programs</h2>
   <div class="course-grid">
-    <div class="card">Cybersecurity</div>
-    <div class="card">Data Analytics</div>
-    <div class="card">Software Development</div>
-    <div class="card">Product Design</div>
-    <div class="card">Digital Marketing</div>
-    <div class="card">Cloud Computing</div>
+
+    <div class="card">
+      <h3>Cybersecurity</h3>
+      <p>Learn ethical hacking, networking and security operations.</p>
+      <button>View Program</button>
+    </div>
+
+    <div class="card">
+      <h3>Data Analytics</h3>
+      <p>Excel, SQL, Power BI and Python for business insights.</p>
+      <button>View Program</button>
+    </div>
+
+    <div class="card">
+      <h3>Software Development</h3>
+      <p>Frontend and backend engineering from scratch.</p>
+      <button>View Program</button>
+    </div>
+
+    <div class="card">
+      <h3>Product Design (UI/UX)</h3>
+      <p>User research, Figma, prototyping and portfolio building.</p>
+      <button>View Program</button>
+    </div>
+
+    <div class="card">
+      <h3>Cloud Computing</h3>
+      <p>AWS, DevOps and deployment fundamentals.</p>
+      <button>View Program</button>
+    </div>
+
+    <div class="card">
+      <h3>Digital Marketing</h3>
+      <p>SEO, ads, content strategy and analytics.</p>
+      <button>View Program</button>
+    </div>
+
   </div>
 </section>
 
+<!-- WHY CHOOSE US -->
 <section class="why">
-  <h2>Why Choose NextForge</h2>
+  <h2 style="font-size:38px;">Why Choose NextForge</h2>
   <div class="features">
-    <div>Hands-On Learning</div>
+    <div>Hands-On Training</div>
     <div>Industry Mentors</div>
+    <div>Portfolio Projects</div>
     <div>Career Support</div>
   </div>
 </section>
 
+<!-- CAREER SUPPORT -->
+<section>
+  <h2 style="text-align:center;font-size:38px;">We Don’t Just Train You — We Help You Get Hired</h2>
+  <div class="course-grid">
+    <div class="card">CV & LinkedIn Optimization</div>
+    <div class="card">Interview Preparation</div>
+    <div class="card">Job Search Strategy</div>
+    <div class="card">Portfolio Building</div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <h2 style="text-align:center;font-size:38px;">Student Success Stories</h2>
+  <div class="course-grid">
+    <div class="card">
+      <p>"I switched from banking to tech in 4 months."</p>
+      <strong>— Sarah K.</strong>
+    </div>
+    <div class="card">
+      <p>"The mentorship and projects helped me land my first role."</p>
+      <strong>— David M.</strong>
+    </div>
+    <div class="card">
+      <p>"Best investment I ever made."</p>
+      <strong>— Grace O.</strong>
+    </div>
+  </div>
+</section>
+
+<!-- HIRE GRADUATES -->
+<section class="why">
+  <h2 style="font-size:38px;">Hire Job-Ready Tech Talent</h2>
+  <p>We connect companies with trained and vetted graduates.</p>
+  <button style="margin-top:30px;padding:16px 30px;border:none;background:#00c2ff;color:white;border-radius:8px;font-weight:700;">Hire Our Graduates</button>
+</section>
+
+<!-- FINAL CTA -->
 <section class="cta">
   <h2>Start Your Tech Journey Today</h2>
   <button>Apply Now</button>
 </section>
 
+<!-- FOOTER -->
 <footer>
   <p>© 2026 NextForge Academy</p>
 </footer>
 
-</body>
-</html>          </div>
-          <div class="hero-stat">
-            <div class="num">4mo</div>
-            <div class="label">To Job-Ready</div>
-          </div>
-          <div class="hero-stat">
-            <div class="num">100%</div>
-            <div class="label">Live Classes</div>
-          </div>
-          <div class="hero-stat">
-            <div class="num">5+</div>
-            <div class="label">Cohorts Run</div>
-          </div>
-        </div>
-      </div>
-      <div class="hero-visual" id="hero-cards"></div>
-    </div>
-  </section>
-
-  <!-- COURSES PREVIEW -->
-  <section class="section courses-section">
-    <div class="section-inner">
-      <div class="courses-header">
-        <span class="section-label">Career Tracks</span>
-        <h2 class="section-title">Choose Your Path</h2>
-        <p class="section-sub">Every track takes you from zero to job-ready with expert instruction and portfolio-worthy projects. 4 months. Live classes. Real outcomes.</p>
-      </div>
-      <div class="courses-grid" id="courses-grid"></div>
-      <div style="text-align:center;margin-top:2.5rem;">
-        <a href="courses.html" class="btn-primary" style="font-size:1rem;padding:0.75rem 2rem;display:inline-block;">View All Courses →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="section how-section">
-    <div class="section-inner">
-      <div style="text-align:center;margin-bottom:1rem;">
-        <span class="section-label">The Process</span>
-        <h2 class="section-title">How It Works</h2>
-        <p class="section-sub" style="margin:0 auto;">Five steps from where you are to where you want to be.</p>
-      </div>
-      <div class="how-steps">
-        <div class="how-step">
-          <div class="how-num">1</div>
-          <h4>Enroll Online</h4>
-          <p>Pick your track and complete enrollment in minutes.</p>
-        </div>
-        <div class="how-step">
-          <div class="how-num">2</div>
-          <h4>Get Access</h4>
-          <p>Receive LMS portal access and full student onboarding within 48hrs.</p>
-        </div>
-        <div class="how-step">
-          <div class="how-num">3</div>
-          <h4>Live Classes</h4>
-          <p>Learn from verified Nigerian tech professionals every week.</p>
-        </div>
-        <div class="how-step">
-          <div class="how-num">4</div>
-          <h4>Build Projects</h4>
-          <p>Apply skills on real-world briefs and build your portfolio.</p>
-        </div>
-        <div class="how-step">
-          <div class="how-num">5</div>
-          <h4>Graduate</h4>
-          <p>Launch your career with a certified qualification and support.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT SNIPPET -->
-  <section class="section about-section">
-    <div class="section-inner">
-      <div class="about-grid">
-        <div>
-          <span class="section-label">About Nextforge</span>
-          <h2 class="section-title">We Build Tech Professionals, Not Just Graduates</h2>
-          <p class="section-sub">Nextforge Academy closes the gap between ambition and opportunity for Nigerians ready to enter tech. Every programme is built around real outcomes.</p>
-          <div class="about-features">
-            <div class="about-feature">
-              <div class="feature-icon">🎓</div>
-              <div class="feature-text">
-                <h4>Live Classes with Experienced Professionals</h4>
-                <p>Every session is taught by active Nigerian tech professionals, not pre-recorded content.</p>
-              </div>
-            </div>
-            <div class="about-feature">
-              <div class="feature-icon">🏗️</div>
-              <div class="feature-text">
-                <h4>Real Projects for Your Portfolio</h4>
-                <p>Build tangible portfolio assets during training that you can show to employers on day one.</p>
-              </div>
-            </div>
-            <div class="about-feature">
-              <div class="feature-icon">💼</div>
-              <div class="feature-text">
-                <h4>Career Coaching Included</h4>
-                <p>CV reviews, interview prep, and job-search support included in every track.</p>
-              </div>
-            </div>
-            <div class="about-feature">
-              <div class="feature-icon">🤝</div>
-              <div class="feature-text">
-                <h4>Community Even After Graduation</h4>
-                <p>Join a growing network of Nextforge alumni across Nigerian tech companies.</p>
-              </div>
-            </div>
-          </div>
-          <div style="margin-top:2rem;">
-            <a href="about.html" class="btn-primary" style="display:inline-block;padding:0.7rem 1.5rem;">Learn More About Us →</a>
-          </div>
-        </div>
-        <div class="about-stats">
-          <div class="about-stat-card">
-            <div class="big-num">4mo</div>
-            <div class="big-label">From beginner to job-ready</div>
-          </div>
-          <div class="about-stat-card">
-            <div class="big-num">7</div>
-            <div class="big-label">Career tracks available</div>
-          </div>
-          <div class="about-stat-card">
-            <div class="big-num">100%</div>
-            <div class="big-label">Live instruction — no recordings</div>
-          </div>
-          <div class="about-stat-card">
-            <div class="big-num">5+</div>
-            <div class="big-label">Cohorts graduated</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA BAND -->
-  <div class="cta-band">
-    <div class="section-inner">
-      <h2>Ready to Start Your Tech Journey?</h2>
-      <p>Join Cohort 5 and build skills that open real doors. Spots are limited per intake.</p>
-      <div class="cta-band-btns">
-        <a href="courses.html" class="btn-hero-primary">Apply for Cohort 5 →</a>
-        <a href="contact.html" class="btn-hero-secondary">Ask a Question</a>
-      </div>
-    </div>
-  </div>
-
-</main>
-
-<div id="footer-placeholder"></div>
-
-<script src="assets/js/main.js"></script>
-<script>
-  // Render nav and footer
-  document.getElementById('nav-placeholder').innerHTML = renderNav('home');
-  document.getElementById('footer-placeholder').innerHTML = renderFooter();
-
-  // Hero cards (show first 4 courses)
-  const heroCards = document.getElementById('hero-cards');
-  heroCards.innerHTML = COURSES.slice(0, 4).map(c => `
-    <div class="hero-card">
-      <div class="hero-card-header">
-        <div class="hero-card-track">
-          <span class="icon">${c.icon}</span>
-          <span class="hero-card-title">${c.name}</span>
-        </div>
-        <span class="hero-card-badge ${c.tag === 'Hot' ? 'badge-hot' : c.tag === 'Popular' ? 'badge-popular' : 'badge-new'}">${c.tag}</span>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span class="hero-card-price">${c.priceFormatted}</span>
-        <span class="hero-card-meta">${c.duration} · ${c.mode}</span>
-      </div>
-    </div>
-  `).join('');
-
-  // Courses grid (show all 7)
-  const grid = document.getElementById('courses-grid');
-  grid.innerHTML = COURSES.map(c => `
-    <div class="course-card" onclick="window.location.href='enroll.html?course=${c.id}'">
-      <div class="course-card-top">
-        <span class="course-icon">${c.icon}</span>
-        <span class="course-tag ${c.tagClass}">${c.tag}</span>
-      </div>
-      <h3 class="course-name">${c.name}</h3>
-      <p class="course-desc">${c.desc}</p>
-      <div class="course-footer">
-        <div>
-          <div class="course-price">${c.priceFormatted}</div>
-          <div class="course-duration">${c.duration} · ${c.mode}</div>
-        </div>
-        <a href="enroll.html?course=${c.id}" class="course-enroll-btn" onclick="event.stopPropagation()">Enroll →</a>
-      </div>
-    </div>
-  `).join('');
-</script>
 </body>
 </html>
