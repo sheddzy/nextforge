@@ -8,7 +8,7 @@ COPY index.html /usr/share/nginx/html/
 COPY courses.html /usr/share/nginx/html/
 COPY course-detail.html /usr/share/nginx/html/
 COPY about.html /usr/share/nginx/html/
-COPY styles.css /usr/share/nginx/html/
+COPY style.css /usr/share/nginx/html/
 
 # Write nginx config inline — no external nginx.conf file needed
 RUN printf 'server {\n\
