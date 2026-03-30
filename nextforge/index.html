@@ -1,162 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NextForge Academy</title>
-<link rel="stylesheet" href="assets/css/style.css">
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NextForge Academy — Build Systems. Lead Projects. Grow Skills.</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── HERO ─────────────────────────── */
+    .hero {
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 80px 0;
+    }
 
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 700px 500px at 60% 50%, rgba(245,166,35,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 400px at 80% 20%, rgba(245,166,35,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--amber-dim);
+      border: 1px solid rgba(245,166,35,0.2);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.8rem;
+      color: var(--amber);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--amber);
+      position: relative;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 440px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 44px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .hero-stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      animation: floatIn 0.7s ease both;
+    }
+
+    .hero-card:nth-child(2) { animation-delay: 0.15s; }
+    .hero-card:nth-child(3) { animation-delay: 0.3s; margin-left: 32px; }
+
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--amber), transparent);
+    }
+
+    .hero-card-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .hero-card-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    /* ── CATEGORIES ─────────────────────── */
+    .category-chip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+
+    .category-chip:hover {
+      border-color: var(--amber);
+      background: var(--amber-dim);
+      transform: translateY(-2px);
+    }
+
+    .category-chip-icon {
+      font-size: 1.6rem;
+      width: 40px;
+      text-align: center;
+    }
+
+    .category-chip-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .category-chip-count {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── TRUST BANNER ─────────────────────── */
+    .trust-banner {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 0;
+    }
+
+    .trust-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .trust-item strong { color: var(--white); }
+
+    /* ── TESTIMONIAL ─────────────────────── */
+    .testimonial-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+
+    .testimonial-text {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      border: 2px solid var(--border);
+    }
+
+    .author-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .author-title { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── CTA SECTION ─────────────────────── */
+    .cta-section {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 600px 300px at 50% 50%, rgba(245,166,35,0.07), transparent);
+      pointer-events: none;
+    }
+
+    .cta-section h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); margin-bottom: 14px; }
+    .cta-section p { color: var(--muted); max-width: 480px; margin: 0 auto 32px; }
+
+    @media (max-width: 768px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .cta-section { padding: 40px 24px; }
+    }
+  </style>
+</head>
 <body>
 
-<!-- NAVBAR -->
-<header class="navbar">
-  <h1 class="logo">NextForge</h1>
-  <nav>
-    <a href="#">Home</a>
-    <a href="#">About</a>
-    <a href="#">Programs</a>
-    <a href="#">Hire Talent</a>
-    <a href="#">Blog</a>
-    <a href="#">Contact</a>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="inner">
+      <a href="index.html" class="logo">Next<span>Forge</span></a>
+      <ul class="nav-links">
+        <li><a href="courses.html">Courses</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="#instructors">Instructors</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+      <div class="nav-search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search courses..." />
+      </div>
+      <div class="nav-actions">
+        <a href="#" class="btn btn-ghost btn-sm">Log In</a>
+        <a href="#" class="btn btn-primary btn-sm">Sign Up Free</a>
+      </div>
+    </div>
   </nav>
-</header>
 
-<!-- HERO SPLIT -->
-<section class="hero-split">
-  <div class="hero-text">
-    <h1>Learn Tech Skills That Get You Hired</h1>
-    <p>Practical training, real projects and career mentorship to help you transition into tech.</p>
-    <div class="hero-buttons">
-      <button class="primary-btn">Explore Programs</button>
-      <button class="secondary-btn">Speak With Advisor</button>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-eyebrow">⚡ New Cohorts Starting April 2025</div>
+          <h1>Build Systems.<br /><em>Lead Projects.</em><br />Grow Skills.</h1>
+          <p class="hero-sub">NextForge Academy teaches practical project management, Notion mastery, and operations systems — skills that get you hired, promoted, and paid more.</p>
+          <div class="hero-cta">
+            <a href="courses.html" class="btn btn-primary btn-lg">Explore Courses</a>
+            <a href="about.html" class="btn btn-ghost btn-lg">How It Works</a>
+          </div>
+          <div class="hero-stats">
+            <div>
+              <div class="hero-stat-num">2,400+</div>
+              <div class="hero-stat-label">Students Enrolled</div>
+            </div>
+            <div>
+              <div class="hero-stat-num">18</div>
+              <div class="hero-stat-label">Expert Courses</div>
+            </div>
+            <div>
+              <div class="hero-stat-num">4.8★</div>
+              <div class="hero-stat-label">Average Rating</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card">
+            <div class="hero-card-label">Most Popular Course</div>
+            <div class="hero-card-value">PM Foundations — 14-Week Programme</div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 82%"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:0.78rem;color:var(--muted)">
+              <span>82% completion rate</span><span class="text-amber">4.9 ★</span>
+            </div>
+          </div>
+          <div class="hero-card">
+            <div class="hero-card-label">New Release</div>
+            <div class="hero-card-value">Notion OS Mastery — Build Your Second Brain</div>
+            <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+              <span class="badge badge-amber">Beginner Friendly</span>
+              <span class="badge badge-green">Self-Paced</span>
+            </div>
+          </div>
+          <div class="hero-card">
+            <div class="hero-card-label">Live Cohort</div>
+            <div class="hero-card-value">Operations Systems Design — April Cohort</div>
+            <div style="font-size:0.82rem;color:var(--muted);margin-top:4px">🗓 Starts April 7 &nbsp;·&nbsp; 6 seats left</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST BANNER -->
+  <div class="trust-banner">
+    <div class="container">
+      <div class="trust-inner">
+        <div class="trust-item">🎓 <span><strong>2,400+</strong> learners across 12 countries</span></div>
+        <div class="trust-item">📜 <span>Industry-recognised <strong>certificates</strong></span></div>
+        <div class="trust-item">💼 <span><strong>Hands-on</strong> projects in every course</span></div>
+        <div class="trust-item">🔄 <span><strong>Lifetime access</strong> to course materials</span></div>
+        <div class="trust-item">💬 <span>Live <strong>Q&A sessions</strong> with instructors</span></div>
+      </div>
     </div>
   </div>
 
-  <div class="hero-img">
-    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f">
-  </div>
-</section>
-
-<!-- TRUST LOGOS -->
-<section class="logos">
-  <p>Trusted by students working at</p>
-  <div class="logo-row">
-    <span>Google</span>
-    <span>Amazon</span>
-    <span>Microsoft</span>
-    <span>Flutterwave</span>
-    <span>Paystack</span>
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section class="about">
-  <div class="about-img">
-    <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d">
-  </div>
-
-  <div class="about-text">
-    <h2>We Help You Break Into Tech</h2>
-    <p>Our programs are designed to take you from beginner to job-ready through hands-on learning.</p>
-    <ul>
-      <li>Live classes</li>
-      <li>Portfolio projects</li>
-      <li>Career mentorship</li>
-      <li>Job search support</li>
-    </ul>
-  </div>
-</section>
-
-<!-- PROGRAMS -->
-<section class="programs">
-  <h2>Our Programs</h2>
-
-  <div class="program-grid">
-    <div class="program-card">
-      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475">
-      <h3>Cybersecurity</h3>
-      <p>Learn ethical hacking and security operations.</p>
-      <button>Learn More</button>
+  <!-- CATEGORIES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="line"></div>
+        <h2>Browse by Category</h2>
+        <p>Everything you need to operate at a higher level — whether you're building teams, managing projects, or systematising your work.</p>
+      </div>
+      <div class="grid-4">
+        <a href="courses.html?cat=pm" class="category-chip">
+          <div class="category-chip-icon">📋</div>
+          <div>
+            <div class="category-chip-name">Project Management</div>
+            <div class="category-chip-count">6 courses</div>
+          </div>
+        </a>
+        <a href="courses.html?cat=notion" class="category-chip">
+          <div class="category-chip-icon">🗂</div>
+          <div>
+            <div class="category-chip-name">Notion & Productivity</div>
+            <div class="category-chip-count">5 courses</div>
+          </div>
+        </a>
+        <a href="courses.html?cat=ops" class="category-chip">
+          <div class="category-chip-icon">⚙️</div>
+          <div>
+            <div class="category-chip-name">Operations & Systems</div>
+            <div class="category-chip-count">4 courses</div>
+          </div>
+        </a>
+        <a href="courses.html?cat=tech" class="category-chip">
+          <div class="category-chip-icon">💡</div>
+          <div>
+            <div class="category-chip-name">Professional Skills</div>
+            <div class="category-chip-count">3 courses</div>
+          </div>
+        </a>
+      </div>
     </div>
+  </section>
 
-    <div class="program-card">
-      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71">
-      <h3>Data Analytics</h3>
-      <p>Excel, SQL, Power BI and Python.</p>
-      <button>Learn More</button>
+  <!-- FEATURED COURSES -->
+  <section class="section" style="padding-top: 0">
+    <div class="container">
+      <div class="section-header" style="display:flex;align-items:flex-end;justify-content:space-between">
+        <div>
+          <div class="line"></div>
+          <h2>Featured Courses</h2>
+          <p>Curated picks from our top instructors — practical, structured, and built for working professionals.</p>
+        </div>
+        <a href="courses.html" class="btn btn-outline" style="flex-shrink:0">View All →</a>
+      </div>
+      <div class="grid-3">
+
+        <a href="course-detail.html" class="course-card">
+          <div class="course-card-thumb" style="background:linear-gradient(135deg,#1a1a1e,#252530)">📋</div>
+          <div class="course-card-body">
+            <div class="course-card-category">Project Management</div>
+            <div class="course-card-title">PM Foundations — 14-Week Professional Programme</div>
+            <div class="course-card-instructor">Shedrack Ebete</div>
+            <div class="course-card-meta">
+              <span class="stars">★★★★★</span>
+              <span>4.9 (184 ratings)</span>
+              <span>·</span>
+              <span>14 weeks</span>
+            </div>
+            <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+              <span class="badge badge-amber">Bestseller</span>
+              <span class="badge badge-blue">Certificate</span>
+            </div>
+            <div class="course-card-footer">
+              <div><span class="price">₦45,000</span><span class="price-old">₦75,000</span></div>
+              <span class="btn btn-primary btn-sm">Enroll Now</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="course-detail.html" class="course-card">
+          <div class="course-card-thumb" style="background:linear-gradient(135deg,#1a1e1a,#1f2a20)">🗂</div>
+          <div class="course-card-body">
+            <div class="course-card-category">Notion & Productivity</div>
+            <div class="course-card-title">Notion OS Mastery — Build Your Second Brain in 30 Days</div>
+            <div class="course-card-instructor">Shedrack Ebete</div>
+            <div class="course-card-meta">
+              <span class="stars">★★★★★</span>
+              <span>4.8 (97 ratings)</span>
+              <span>·</span>
+              <span>30 days</span>
+            </div>
+            <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+              <span class="badge badge-green">New</span>
+              <span class="badge badge-blue">Self-Paced</span>
+            </div>
+            <div class="course-card-footer">
+              <div><span class="price">₦18,000</span><span class="price-old">₦30,000</span></div>
+              <span class="btn btn-primary btn-sm">Enroll Now</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="course-detail.html" class="course-card">
+          <div class="course-card-thumb" style="background:linear-gradient(135deg,#1a181e,#221f2a)">⚙️</div>
+          <div class="course-card-body">
+            <div class="course-card-category">Operations & Systems</div>
+            <div class="course-card-title">Operations Systems Design — SOPs, Workflows & Tools</div>
+            <div class="course-card-instructor">Shedrack Ebete</div>
+            <div class="course-card-meta">
+              <span class="stars">★★★★☆</span>
+              <span>4.7 (62 ratings)</span>
+              <span>·</span>
+              <span>8 weeks</span>
+            </div>
+            <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+              <span class="badge badge-amber">Live Cohort</span>
+            </div>
+            <div class="course-card-footer">
+              <div><span class="price">₦35,000</span><span class="price-old">₦55,000</span></div>
+              <span class="btn btn-primary btn-sm">Enroll Now</span>
+            </div>
+          </div>
+        </a>
+
+      </div>
     </div>
+  </section>
 
-    <div class="program-card">
-      <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159">
-      <h3>Software Development</h3>
-      <p>Frontend and backend engineering.</p>
-      <button>Learn More</button>
+  <!-- TESTIMONIALS -->
+  <section class="section" style="background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="container">
+      <div class="section-header">
+        <div class="line"></div>
+        <h2>What Our Students Say</h2>
+        <p>Real outcomes from working professionals who levelled up with NextForge Academy.</p>
+      </div>
+      <div class="grid-3">
+        <div class="testimonial-card">
+          <div class="stars" style="font-size:1rem;margin-bottom:12px">★★★★★</div>
+          <p class="testimonial-text">"The PM Foundations programme changed how I operate at work. I went from reactive to proactive within weeks. Got promoted 3 months after completing it."</p>
+          <div class="testimonial-author">
+            <div class="avatar">👩🏾</div>
+            <div>
+              <div class="author-name">Adaeze Okonkwo</div>
+              <div class="author-title">Senior Operations Manager, Lagos</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars" style="font-size:1rem;margin-bottom:12px">★★★★★</div>
+          <p class="testimonial-text">"Notion OS Mastery is the most practical course I've taken online. I now have a full client management system built in Notion and charge ₦80k per setup."</p>
+          <div class="testimonial-author">
+            <div class="avatar">👨🏿</div>
+            <div>
+              <div class="author-name">Emeka Nwosu</div>
+              <div class="author-title">Freelance Ops Consultant, Abuja</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars" style="font-size:1rem;margin-bottom:12px">★★★★★</div>
+          <p class="testimonial-text">"The Operations Systems Design cohort gave me frameworks I immediately applied to my startup. Worth every naira — and the community is gold."</p>
+          <div class="testimonial-author">
+            <div class="avatar">👩🏽</div>
+            <div>
+              <div class="author-name">Funke Adeyemi</div>
+              <div class="author-title">Co-Founder, EarlyStage Nigeria</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- HIRE TALENT -->
-<section class="hire">
-  <h2>Hire Job-Ready Tech Talent</h2>
-  <p>We connect companies with trained and vetted graduates.</p>
-  <button class="primary-btn">Hire Graduates</button>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="testimonials">
-  <h2>Student Success Stories</h2>
-  <div class="testimonial-grid">
-    <div class="testimonial">“I landed my first tech job in 4 months.”</div>
-    <div class="testimonial">“Best career decision ever.”</div>
-    <div class="testimonial">“The mentorship changed my life.”</div>
-  </div>
-</section>
-
-<!-- BLOG -->
-<section class="blog">
-  <h2>From Our Blog</h2>
-  <div class="blog-grid">
-    <div class="blog-card">How to start tech in 2026</div>
-    <div class="blog-card">Top skills to learn</div>
-    <div class="blog-card">Building your portfolio</div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta">
-  <h2>Start Your Tech Journey Today</h2>
-  <button class="primary-btn">Apply Now</button>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div>
-      <h3>NextForge</h3>
-      <p>Tech career accelerator.</p>
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-section">
+        <span class="badge badge-amber" style="margin-bottom:16px">Join 2,400+ learners</span>
+        <h2>Ready to Forge Your Next Level?</h2>
+        <p>Start with any course — self-paced or cohort. No fluff, no padding. Just systems that work.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a href="courses.html" class="btn btn-primary btn-lg">Browse All Courses</a>
+          <a href="about.html" class="btn btn-ghost btn-lg">Learn About NextForge</a>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div>
-      <h4>Programs</h4>
-      <p>Cybersecurity</p>
-      <p>Data Analytics</p>
-      <p>Software Dev</p>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo" style="font-size:1.1rem">Next<span style="color:var(--amber)">Forge</span> Academy</div>
+          <p>Practical skills for operations professionals, project managers, and systems thinkers across Africa and beyond.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Courses</h4>
+          <ul>
+            <li><a href="courses.html">All Courses</a></li>
+            <li><a href="#">Project Management</a></li>
+            <li><a href="#">Notion Mastery</a></li>
+            <li><a href="#">Operations Systems</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="#">Become an Instructor</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Centre</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Use</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 NextForge Academy · nextforgeacademy.online</span>
+        <span>Built for working professionals across Africa</span>
+      </div>
     </div>
-
-    <div>
-      <h4>Company</h4>
-      <p>About</p>
-      <p>Blog</p>
-      <p>Contact</p>
-    </div>
-
-    <div>
-      <h4>Contact</h4>
-      <p>info@nextforge.com</p>
-    </div>
-  </div>
-</footer>
+  </footer>
 
 </body>
 </html>
