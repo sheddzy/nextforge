@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Courses — Nextforge Academy</title>
+  <meta name="description" content="Explore all 7 career tracks at Nextforge Academy. Cyber Security, Product Management, Data Analysis, UI/UX Design, Data Science, Graphic Design and more." />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<main class="page-wrapper">
+
+  <div class="courses-page-hero">
+    <div class="section-inner">
+      <span class="section-label" style="color:var(--gold-light);">7 Career Tracks</span>
+      <h1>Choose Your Path</h1>
+      <p>All programmes are 4 months, fully live, and designed to make you job-ready with a portfolio that proves your skills.</p>
+    </div>
+  </div>
+
+  <section class="section" style="background:var(--surface);">
+    <div class="section-inner">
+
+      <!-- Filter bar -->
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;" id="filter-bar">
+        <button class="filter-btn active" data-filter="all" onclick="filterCourses('all',this)">All Tracks</button>
+        <button class="filter-btn" data-filter="Hot" onclick="filterCourses('Hot',this)">🔥 Hot</button>
+        <button class="filter-btn" data-filter="Popular" onclick="filterCourses('Popular',this)">⭐ Popular</button>
+        <button class="filter-btn" data-filter="New" onclick="filterCourses('New',this)">✨ New</button>
+      </div>
+
+      <div class="courses-grid" id="courses-grid"></div>
+
+    </div>
+  </section>
+
+  <!-- Why Nextforge -->
+  <section class="section" style="background:var(--white);">
+    <div class="section-inner">
+      <div style="text-align:center;margin-bottom:3rem;">
+        <span class="section-label">Why Us</span>
+        <h2 class="section-title">What Sets Every Track Apart</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">👨‍🏫</div>
+          <h4 style="margin-bottom:0.4rem;">Expert Instructors</h4>
+          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">Taught by active professionals working in Nigerian and global tech companies.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">🏗️</div>
+          <h4 style="margin-bottom:0.4rem;">Real Projects</h4>
+          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">Every track includes portfolio projects you can show on LinkedIn and in interviews.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">📜</div>
+          <h4 style="margin-bottom:0.4rem;">Certification</h4>
+          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">Receive a verifiable Nextforge Academy certificate upon successful completion.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">💼</div>
+          <h4 style="margin-bottom:0.4rem;">Career Support</h4>
+          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">CV reviews, mock interviews, and job placement assistance included for every student.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-band">
+    <div class="section-inner">
+      <h2>Not Sure Which Track to Pick?</h2>
+      <p>Send us a message and our advisors will help you choose based on your background and goals.</p>
+      <div class="cta-band-btns">
+        <a href="contact.html" class="btn-hero-primary">Talk to an Advisor →</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div id="footer-placeholder"></div>
+
+<style>
+  .filter-btn {
+    padding: 0.45rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    font-size: 0.85rem; font-weight: 500;
+    background: var(--white);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .filter-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
+</style>
+
+<script src="assets/js/main.js"></script>
+<script>
+  document.getElementById('nav-placeholder').innerHTML = renderNav('courses');
+  document.getElementById('footer-placeholder').innerHTML = renderFooter();
+
+  function renderCourses(filter) {
+    const filtered = filter === 'all' ? COURSES : COURSES.filter(c => c.tag === filter);
+    const grid = document.getElementById('courses-grid');
+    grid.innerHTML = filtered.map(c => `
+      <div class="course-card" onclick="window.location.href='enroll.html?course=${c.id}'">
+        <div class="course-card-top">
+          <span class="course-icon">${c.icon}</span>
+          <span class="course-tag ${c.tagClass}">${c.tag}</span>
+        </div>
+        <h3 class="course-name">${c.name}</h3>
+        <p class="course-desc">${c.desc}</p>
+        <div style="margin-bottom:1rem;">
+          <div style="font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.05em;">You'll Learn</div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
+            ${c.outcomes.map(o => `<span style="background:var(--white);border:1px solid var(--border);border-radius:4px;padding:0.2rem 0.5rem;font-size:0.75rem;color:var(--text);">${o}</span>`).join('')}
+          </div>
+        </div>
+        <div class="course-footer">
+          <div>
+            <div class="course-price">${c.priceFormatted}</div>
+            <div class="course-duration">${c.duration} · ${c.mode}</div>
+          </div>
+          <a href="enroll.html?course=${c.id}" class="course-enroll-btn" onclick="event.stopPropagation()">Enroll →</a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterCourses(filter, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderCourses(filter);
+  }
+
+  renderCourses('all');
+</script>
+</body>
+</html>
