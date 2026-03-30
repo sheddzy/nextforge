@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — NextForge Academy</title>
+  <link rel="stylesheet" href="/styles.css"/>
+  <style>
+    body { display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px; }
+    body::before {
+      content:'';position:fixed;inset:0;
+      background:radial-gradient(ellipse 600px 400px at 50% 30%,rgba(245,166,35,0.06),transparent);
+      pointer-events:none;
+    }
+    .auth-card {
+      width:100%;max-width:460px;
+      background:var(--bg-2);border:1px solid var(--border);
+      border-radius:var(--radius-lg);padding:40px;position:relative;
+    }
+    .auth-card::before {
+      content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,var(--amber),transparent);
+      border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    .auth-title { font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:var(--white);text-align:center;margin-bottom:6px; }
+    .auth-sub { color:var(--muted);font-size:0.88rem;text-align:center;margin-bottom:28px; }
+    .role-tabs { display:flex;background:var(--bg-3);border-radius:8px;padding:4px;margin-bottom:24px; }
+    .role-tab { flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;font-size:0.88rem;color:var(--muted);transition:all var(--transition); }
+    .role-tab.active { background:var(--amber);color:#0e0e0f;font-weight:600; }
+    .form-group { margin-bottom:16px; }
+    .form-label { display:block;font-size:0.82rem;color:var(--muted);margin-bottom:6px; }
+    .form-input {
+      width:100%;background:var(--bg-3);border:1px solid var(--border);
+      border-radius:8px;padding:11px 14px;color:var(--white);
+      font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;
+      transition:border-color var(--transition);
+    }
+    .form-input:focus { border-color:var(--amber); }
+    .form-input::placeholder { color:var(--muted); }
+    select.form-input option { background:var(--bg-2); }
+    .error-msg { color:#f87171;font-size:0.82rem;margin-top:12px;text-align:center;display:none; }
+    .success-msg { color:#4ade80;font-size:0.88rem;margin-top:12px;text-align:center;display:none; }
+    .auth-footer { text-align:center;margin-top:20px;font-size:0.85rem;color:var(--muted); }
+    .auth-footer a { color:var(--amber); }
+    #staffTrack { display:none; }
+  </style>
+</head>
+<body>
+  <div class="auth-card">
+    <div style="text-align:center;margin-bottom:20px">
+      <a href="/" style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--white)">
+        Next<span style="color:var(--amber)">Forge</span>
+      </a>
+    </div>
+    <div class="auth-title">Create Your Account</div>
+    <div class="auth-sub">Join 2,400+ learners building real skills</div>
+
+    <div class="role-tabs">
+      <div class="role-tab active" onclick="setRole('student', this)">👨‍🎓 Student</div>
+      <div class="role-tab" onclick="setRole('staff', this)">👨‍💼 Staff</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input class="form-input" type="text" id="full_name" placeholder="Your full name"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input class="form-input" type="email" id="email" placeholder="you@example.com"/>
+    </div>
+    <div class="form-group" id="studentTrack">
+      <label class="form-label">Select Your Course</label>
+      <select class="form-input" id="track">
+        <option value="">Choose a course...</option>
+        <option value="PM Foundations">📋 PM Foundations — ₦45,000</option>
+        <option value="Notion OS">🗂 Notion OS Mastery — ₦18,000</option>
+        <option value="Operations Systems">⚙️ Operations Systems Design — ₦35,000</option>
+        <option value="Agile">📊 Agile & Scrum — ₦22,000</option>
+        <option value="Notion Freelancers">🔧 Notion for Freelancers — ₦9,500</option>
+        <option value="Business Communication">💡 Business Communication — ₦12,000</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="password" placeholder="Min. 8 characters"/>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="handleRegister()">
+      Create Account →
+    </button>
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="success-msg" id="successMsg">Account created! Redirecting...</div>
+
+    <div class="auth-footer">
+      Already have an account? <a href="/login.html">Sign in</a>
+    </div>
+  </div>
+
+  <script>
+    let selectedRole = 'student';
+
+    function setRole(role, el) {
+      selectedRole = role;
+      document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('studentTrack').style.display = role === 'student' ? 'block' : 'none';
+    }
+
+    async function handleRegister() {
+      const full_name = document.getElementById('full_name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const track = document.getElementById('track')?.value;
+      const errorMsg = document.getElementById('errorMsg');
+      const successMsg = document.getElementById('successMsg');
+      errorMsg.style.display = 'none';
+
+      if (!full_name || !email || !password) {
+        errorMsg.textContent = 'Please fill in all fields.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      if (password.length < 8) {
+        errorMsg.textContent = 'Password must be at least 8 characters.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ full_name, email, password, track, role: selectedRole })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorMsg.textContent = data.error || 'Registration failed';
+          errorMsg.style.display = 'block';
+          return;
+        }
+
+        localStorage.setItem('nf_token', data.token);
+        localStorage.setItem('nf_role', data.role);
+        localStorage.setItem('nf_name', data.name);
+
+        successMsg.style.display = 'block';
+        setTimeout(() => {
+          window.location.href = data.role === 'staff' ? '/admin/dashboard.html' : '/student/dashboard.html';
+        }, 1500);
+      } catch {
+        errorMsg.textContent = 'Network error. Please try again.';
+        errorMsg.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
