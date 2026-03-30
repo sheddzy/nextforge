@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — NextForge Academy</title>
+  <link rel="stylesheet" href="/styles.css"/>
+  <style>
+    body { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:24px; }
+    body::before {
+      content:'';position:fixed;inset:0;
+      background:radial-gradient(ellipse 600px 400px at 50% 30%, rgba(245,166,35,0.06), transparent);
+      pointer-events:none;
+    }
+    .auth-card {
+      width:100%;max-width:420px;
+      background:var(--bg-2);border:1px solid var(--border);
+      border-radius:var(--radius-lg);padding:40px;
+      position:relative;
+    }
+    .auth-card::before {
+      content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,var(--amber),transparent);
+      border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    .auth-logo { text-align:center;margin-bottom:28px; }
+    .auth-logo .logo { font-size:1.4rem;justify-content:center; }
+    .auth-title { font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:var(--white);text-align:center;margin-bottom:6px; }
+    .auth-sub { color:var(--muted);font-size:0.88rem;text-align:center;margin-bottom:28px; }
+    .role-tabs { display:flex;background:var(--bg-3);border-radius:8px;padding:4px;margin-bottom:24px; }
+    .role-tab {
+      flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;
+      font-size:0.88rem;color:var(--muted);transition:all var(--transition);
+    }
+    .role-tab.active { background:var(--amber);color:#0e0e0f;font-weight:600; }
+    .form-group { margin-bottom:18px; }
+    .form-label { display:block;font-size:0.82rem;color:var(--muted);margin-bottom:6px;font-weight:500; }
+    .form-input {
+      width:100%;background:var(--bg-3);border:1px solid var(--border);
+      border-radius:8px;padding:11px 14px;color:var(--white);
+      font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;
+      transition:border-color var(--transition);
+    }
+    .form-input:focus { border-color:var(--amber); }
+    .form-input::placeholder { color:var(--muted); }
+    .error-msg { color:#f87171;font-size:0.82rem;margin-top:12px;text-align:center;display:none; }
+    .auth-footer { text-align:center;margin-top:20px;font-size:0.85rem;color:var(--muted); }
+    .auth-footer a { color:var(--amber); }
+  </style>
+</head>
+<body>
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo" style="display:flex;align-items:center;gap:6px;justify-content:center">
+        <a href="/" style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--white)">
+          Next<span style="color:var(--amber)">Forge</span>
+        </a>
+      </div>
+    </div>
+    <div class="auth-title">Welcome Back</div>
+    <div class="auth-sub">Sign in to your NextForge Academy account</div>
+
+    <div class="role-tabs">
+      <div class="role-tab active" onclick="setRole('student', this)">👨‍🎓 Student</div>
+      <div class="role-tab" onclick="setRole('staff', this)">👨‍💼 Staff</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input class="form-input" type="email" id="email" placeholder="you@example.com"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="password" placeholder="Your password"/>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="handleLogin()">
+      Sign In →
+    </button>
+    <div class="error-msg" id="errorMsg"></div>
+
+    <div class="auth-footer">
+      Don't have an account? <a href="/register.html">Sign up free</a>
+    </div>
+  </div>
+
+  <script>
+    let selectedRole = 'student';
+
+    function setRole(role, el) {
+      selectedRole = role;
+      document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    async function handleLogin() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.style.display = 'none';
+
+      if (!email || !password) {
+        errorMsg.textContent = 'Please fill in all fields.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorMsg.textContent = data.error || 'Login failed';
+          errorMsg.style.display = 'block';
+          return;
+        }
+
+        localStorage.setItem('nf_token', data.token);
+        localStorage.setItem('nf_role', data.role);
+        localStorage.setItem('nf_name', data.name);
+
+        if (data.role === 'staff') {
+          window.location.href = '/admin/dashboard.html';
+        } else {
+          window.location.href = '/student/dashboard.html';
+        }
+      } catch {
+        errorMsg.textContent = 'Network error. Please try again.';
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+  </script>
+</body>
+</html>
