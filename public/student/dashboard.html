@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard — NextForge Academy</title>
+  <link rel="stylesheet" href="/styles.css"/>
+  <style>
+    .portal { display:grid;grid-template-columns:240px 1fr;min-height:100vh; }
+    .sidebar {
+      background:var(--bg-2);border-right:1px solid var(--border);
+      padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;
+    }
+    .sidebar-logo { margin-bottom:32px;padding:0 8px; }
+    .nav-item {
+      display:flex;align-items:center;gap:10px;padding:10px 12px;
+      border-radius:8px;cursor:pointer;font-size:0.88rem;color:var(--muted);
+      transition:all var(--transition);margin-bottom:4px;text-decoration:none;
+    }
+    .nav-item:hover,.nav-item.active { background:var(--amber-dim);color:var(--amber); }
+    .nav-section { font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;padding:16px 12px 6px;margin-top:8px; }
+    .main-content { background:var(--bg);overflow-y:auto; }
+    .top-bar {
+      position:sticky;top:0;z-index:10;
+      background:rgba(14,14,15,0.9);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+      padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+    }
+    .page-title { font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white); }
+    .content-area { padding:32px; }
+    .stats-row { display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px; }
+    .stat-card {
+      background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);
+      padding:20px;text-align:center;
+    }
+    .stat-card-num { font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--amber); }
+    .stat-card-label { font-size:0.78rem;color:var(--muted);margin-top:4px; }
+    .course-row {
+      background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);
+      padding:20px 24px;margin-bottom:14px;
+      display:flex;align-items:center;gap:20px;
+    }
+    .course-row-icon { font-size:2rem;width:48px;text-align:center;flex-shrink:0; }
+    .course-row-info { flex:1; }
+    .course-row-title { font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:600;color:var(--white);margin-bottom:4px; }
+    .course-row-meta { font-size:0.78rem;color:var(--muted);margin-bottom:10px; }
+    .notif-item {
+      background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);
+      padding:14px 18px;margin-bottom:8px;font-size:0.85rem;
+      display:flex;align-items:center;gap:12px;
+    }
+    .notif-item.unread { border-left:3px solid var(--amber); }
+    @media(max-width:768px){
+      .portal{grid-template-columns:1fr}
+      .sidebar{display:none}
+      .stats-row{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <div class="portal">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <a href="/" style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--white)">
+          Next<span style="color:var(--amber)">Forge</span>
+        </a>
+      </div>
+      <a href="/student/dashboard.html" class="nav-item active">🏠 Dashboard</a>
+      <a href="#courses" class="nav-item">📚 My Courses</a>
+      <a href="/student/lesson.html" class="nav-item">▶️ Continue Learning</a>
+      <div class="nav-section">Account</div>
+      <a href="#notifications" class="nav-item">🔔 Notifications <span id="unreadCount" style="margin-left:auto;background:var(--amber);color:#0e0e0f;border-radius:10px;padding:1px 7px;font-size:0.7rem;font-weight:700;display:none"></span></a>
+      <a href="#" class="nav-item">👤 Profile</a>
+      <a href="#" class="nav-item" onclick="logout()">🚪 Sign Out</a>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-content">
+      <div class="top-bar">
+        <div class="page-title" id="pageTitle">Dashboard</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:0.85rem;color:var(--muted)">👋 <span id="userName">Student</span></span>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <!-- STATS -->
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-card-num" id="statCourses">0</div><div class="stat-card-label">Courses Enrolled</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="statCompleted">0</div><div class="stat-card-label">Lessons Completed</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="statProgress">0%</div><div class="stat-card-label">Overall Progress</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="statNotifs">0</div><div class="stat-card-label">Notifications</div></div>
+        </div>
+
+        <!-- MY COURSES -->
+        <div id="courses" style="margin-bottom:40px">
+          <h3 style="margin-bottom:16px">My Courses</h3>
+          <div id="coursesList"><div style="color:var(--muted)">Loading courses...</div></div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div id="notifications">
+          <h3 style="margin-bottom:16px">Notifications</h3>
+          <div id="notifList"><div style="color:var(--muted)">Loading...</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('nf_token');
+    if (!token) window.location.href = '/login.html';
+
+    document.getElementById('userName').textContent = localStorage.getItem('nf_name') || 'Student';
+
+    async function authFetch(url) {
+      const res = await fetch(url, {
+        credentials: 'include',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return res.json();
+    }
+
+    async function loadDashboard() {
+      // Load enrollments
+      const enrollments = await authFetch('/api/courses/my/enrollments');
+      document.getElementById('statCourses').textContent = enrollments.length || 0;
+
+      let totalCompleted = 0, totalLessons = 0;
+      const coursesList = document.getElementById('coursesList');
+      coursesList.innerHTML = '';
+
+      if (!enrollments.length) {
+        coursesList.innerHTML = '<div style="color:var(--muted);padding:20px;text-align:center">No courses yet. <a href="/" style="color:var(--amber)">Browse courses →</a></div>';
+      } else {
+        enrollments.forEach(course => {
+          totalCompleted += course.completed_lessons || 0;
+          totalLessons += course.total_lessons || 0;
+          const pct = course.total_lessons > 0 ? Math.round((course.completed_lessons / course.total_lessons) * 100) : 0;
+
+          coursesList.innerHTML += `
+            <div class="course-row">
+              <div class="course-row-icon">${course.thumbnail}</div>
+              <div class="course-row-info">
+                <div class="course-row-title">${course.title}</div>
+                <div class="course-row-meta">${course.instructor} · ${course.duration} · Enrolled ${new Date(course.enrolled_at).toLocaleDateString()}</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+                <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">${pct}% complete · ${course.completed_lessons}/${course.total_lessons} lessons</div>
+              </div>
+              <a href="/student/lesson.html?course=${course.id}" class="btn btn-primary btn-sm" style="flex-shrink:0">Continue →</a>
+            </div>
+          `;
+        });
+      }
+
+      document.getElementById('statCompleted').textContent = totalCompleted;
+      const overallPct = totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0;
+      document.getElementById('statProgress').textContent = overallPct + '%';
+
+      // Load notifications
+      const notifs = await authFetch('/api/progress/notifications');
+      const unread = notifs.filter(n => !n.is_read).length;
+      document.getElementById('statNotifs').textContent = unread;
+
+      if (unread > 0) {
+        const badge = document.getElementById('unreadCount');
+        badge.textContent = unread;
+        badge.style.display = 'inline';
+      }
+
+      const notifList = document.getElementById('notifList');
+      notifList.innerHTML = notifs.length ? notifs.map(n => `
+        <div class="notif-item ${n.is_read ? '' : 'unread'}">
+          <span>🔔</span>
+          <span style="flex:1">${n.message}</span>
+          <span style="font-size:0.75rem;color:var(--muted)">${new Date(n.created_at).toLocaleDateString()}</span>
+        </div>
+      `).join('') : '<div style="color:var(--muted)">No notifications yet.</div>';
+    }
+
+    function logout() {
+      fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      localStorage.clear();
+      window.location.href = '/login.html';
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>
