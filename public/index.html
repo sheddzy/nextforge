@@ -1,65 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NextForge Academy — Build Systems. Lead Projects. Grow Skills.</title>
-  <link rel="stylesheet" href="/styles.css"/>
-  <style>
-    .hero {
-      min-height: 620px;
-      display: flex;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-      padding: 80px 0;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 700px 500px at 60% 50%, rgba(245,166,35,0.07) 0%, transparent 70%),
-        radial-gradient(ellipse 400px 400px at 20% 80%, rgba(245,166,35,0.04) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      align-items: center;
-      position: relative;
-    }
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--amber-dim);
-      border: 1px solid rgba(245,166,35,0.2);
-      border-radius: 20px;
-      padding: 5px 14px;
-      font-size: 0.8rem;
-      color: var(--amber);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 20px;
-    }
-    .hero h1 {
-      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 20px;
-    }
-    .hero h1 em { font-style: normal; color: var(--amber); }
-    .hero-sub {
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 440px;
-      margin-bottom: 36px;
-      line-height: 1.7;
-    }
-    .hero-cta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nextforge Academy</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="container nav-flex">
+    <h2 class="logo">Nextforge Academy</h2>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="programs.html">Programs</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <h1>Become Job-Ready in Project Management, Notion & Operations</h1>
+      <p>Hands-on cohort programs designed to help you build real projects and land opportunities.</p>
+      <div class="hero-buttons">
+        <a href="programs.html" class="btn">Explore Programs</a>
+        <a href="contact.html" class="btn-outline">Talk to Advisor</a>
+      </div>
+    </div>
+    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f" alt="students">
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust">
+  <p>Trusted by learners building careers across Africa & beyond</p>
+</section>
+
+<!-- ABOUT PREVIEW -->
+<section class="about-preview container">
+  <img src="https://images.unsplash.com/photo-1552664730-d307ca884978">
+  <div>
+    <h2>Practical Learning That Gets Results</h2>
+    <p>Our programs focus on real projects, mentorship and career readiness.</p>
+    <ul>
+      <li>Live Cohort Classes</li>
+      <li>Portfolio Projects</li>
+      <li>Mentorship & Support</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section class="programs">
+  <h2>Our Programs</h2>
+  <div class="program-grid container">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40">
+      <h3>Project Management</h3>
+      <p>Learn Agile, Scrum and real project delivery.</p>
+      <a href="programs.html" class="btn">Learn More</a>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71">
+      <h3>Notion Systems</h3>
+      <p>Become a highly paid Notion expert.</p>
+      <a href="programs.html" class="btn">Learn More</a>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1551434678-e076c223a692">
+      <h3>Operations Management</h3>
+      <p>Build systems that run businesses.</p>
+      <a href="programs.html" class="btn">Learn More</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <h2>Student Success Stories</h2>
+  <div class="testimonial-grid container">
+    <div class="testimonial">
+      <p>“I landed a PM role 3 months after graduating!”</p>
+      <strong>— Ada</strong>
+    </div>
+    <div class="testimonial">
+      <p>“I now earn as a Notion freelancer.”</p>
+      <strong>— Tunde</strong>
+    </div>
+    <div class="testimonial">
+      <p>“The operations course changed my career.”</p>
+      <strong>— Chioma</strong>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Next Cohort Starts Soon</h2>
+  <a href="programs.html" class="btn">Enroll Now</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Nextforge Academy</p>
+</footer>
+
+</body>
+</html>    .hero-cta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
     .hero-stats {
       display: flex;
       gap: 32px;
