@@ -103,5 +103,26 @@ async function sendPasswordResetEmail(user, resetLink) {
     `,
   });
 }
+async function sendOTPEmail(user, otp) {
+  await transporter.sendMail({
+    from: `"NextForge Academy" <${FROM}>`,
+    to: user.email,
+    subject: `${otp} — Your NextForge Verification Code`,
+    html: `
+      <div style="font-family:'Segoe UI',sans-serif;background:#0a1628;color:#cbd5e1;max-width:520px;margin:0 auto;padding:40px 32px;border-radius:16px">
+        <h2 style="color:#c9a84c;margin-bottom:8px">NextForge Academy</h2>
+        <p style="margin-bottom:24px">Hi ${user.full_name}, here is your verification code:</p>
+        <div style="background:#0f1f3d;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:32px;text-align:center;margin-bottom:24px">
+          <div style="font-size:3rem;font-weight:800;letter-spacing:12px;color:#ffffff">${otp}</div>
+          <div style="font-size:0.82rem;color:#64748b;margin-top:8px">Expires in 10 minutes</div>
+        </div>
+        <p style="color:#64748b;font-size:0.85rem">If you didn't request this, please ignore this email.</p>
+      </div>
+    `
+  });
+}
+
+// Add to module.exports:
+module.exports = { sendWelcomeEmail, sendStaffNewStudentEmail, sendPasswordResetEmail, sendOTPEmail };
 
 module.exports = { sendWelcomeEmail, sendStaffNewStudentEmail, sendPasswordResetEmail };
