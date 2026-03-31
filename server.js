@@ -67,13 +67,3 @@ app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.ht
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`NextForge Academy running on port ${PORT}`));
-```
-
----
-
-## Add to Northflank Environment Variables
-
-Add these two new ones alongside the existing ones:
-```
-PAYSTACK_PUBLIC_KEY=pk_test_55f401306378cea0e66d1d6044ba3cce8ed23482
-PAYSTACK_SECRET_KEY=sk_test_YOUR_SECRET_KEY_FROM_PAYSTACK_DASHBOARD
