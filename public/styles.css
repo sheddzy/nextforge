@@ -358,4 +358,4 @@ select.form-input option { background: var(--navy-2); }
 @media (max-width: 480px) {
   .grid-4 { grid-template-columns: 1fr; }
   .btn-xl { padding: 14px 28px; }
-   }
+}
