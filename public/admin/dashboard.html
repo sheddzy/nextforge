@@ -152,45 +152,4 @@
   </script>
 </body>
 </html>
-```
 
----
-
-## ✅ Final File Structure
-```
-nextforge/
-├── Dockerfile
-├── package.json
-├── .env                    ← never commit this
-├── server.js
-├── database.js
-├── middleware/
-│   └── auth.js
-├── routes/
-│   ├── auth.js
-│   ├── courses.js
-│   ├── progress.js
-│   └── admin.js
-├── emails/
-│   └── templates.js
-└── public/
-    ├── styles.css
-    ├── index.html          ← your existing landing page
-    ├── login.html
-    ├── register.html
-    ├── student/
-    │   ├── dashboard.html
-    │   └── lesson.html
-    └── admin/
-        └── dashboard.html
-```
-
----
-
-## ⚠️ Before pushing — add `.env` to `.gitignore`
-
-Create a `.gitignore` file:
-```
-.env
-nextforge.db
-node_modules/
