@@ -7,6 +7,8 @@ const db = new Database(path.join(__dirname, 'nextforge.db'));
 db.pragma('journal_mode = WAL');
 
 // ── TABLES ────────────────────────────────────────
+
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -75,6 +77,19 @@ db.exec(`
     is_read INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+  // Add inside the db.exec(` ... `); block after existing tables:
+
+  CREATE TABLE IF NOT EXISTS otp_store (
+    email TEXT PRIMARY KEY,
+    otp TEXT NOT NULL,
+    expires_at INTEGER NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS password_resets (
+    email TEXT PRIMARY KEY,
+    token TEXT NOT NULL,
+    expires_at INTEGER NOT NULL
   );
 `);
 
