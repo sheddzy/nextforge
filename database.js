@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 const Database = require('better-sqlite3');
 const bcrypt = require('bcryptjs');
@@ -151,5 +150,3 @@ if (!adminExists) {
 }
 
 module.exports = db;
-```
-
