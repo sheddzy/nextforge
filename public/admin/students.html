@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>All Students — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+<div class="portal">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><a href="/" style="font-weight:800;font-size:1.1rem;color:var(--white)">Next<span style="color:var(--gold)">Forge</span></a><div style="font-size:0.68rem;color:var(--gold);margin-top:2px">Admin Panel</div></div>
+    <a href="/admin/dashboard.html" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="/admin/students.html" class="nav-item active"><span class="nav-icon">👥</span> All Students</a>
+    <a href="/admin/payments.html" class="nav-item"><span class="nav-icon">💳</span> Payments</a>
+    <a href="/instructor/course.html" class="nav-item"><span class="nav-icon">📚</span> Manage Courses</a>
+    <div class="nav-section">Account</div>
+    <a href="#" class="nav-item" onclick="logout()" style="margin-top:auto"><span class="nav-icon">🚪</span> Sign Out</a>
+  </aside>
+  <div class="portal-main">
+    <div class="topbar">
+      <div style="font-weight:700;color:var(--white)">All Students</div>
+      <input type="text" class="form-input" id="searchInput" placeholder="Search by name or email..." onkeyup="filterStudents()" style="max-width:280px;padding:8px 13px;font-size:0.85rem"/>
+    </div>
+    <div class="portal-content">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Email</th><th>Track</th><th>Phone</th><th>Joined</th><th>Enrollments</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="studentsTable"><tr><td colspan="8" style="text-align:center;color:var(--text);padding:24px">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const token=localStorage.getItem('nf_token');
+if(!token||localStorage.getItem('nf_role')!=='admin')window.location.href='/login.html';
+const authH={credentials:'include',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}};
+let allStudents=[];
+
+function logout(){fetch('/api/auth/logout',{method:'POST',credentials:'include'});localStorage.clear();window.location.href='/login.html';}
+
+function filterStudents(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  render(allStudents.filter(s=>s.full_name.toLowerCase().includes(q)||s.email.toLowerCase().includes(q)));
+}
+
+function render(students){
+  document.getElementById('studentsTable').innerHTML=students.length?students.map(s=>`
+    <tr>
+      <td style="color:var(--white);font-weight:600">${s.full_name}</td>
+      <td style="font-size:0.82rem">${s.email}</td>
+      <td>${s.track||'—'}</td>
+      <td style="font-size:0.82rem">${s.phone||'—'}</td>
+      <td style="font-size:0.82rem">${new Date(s.created_at).toLocaleDateString()}</td>
+      <td style="text-align:center"><span class="badge badge-blue">${s.enrollments}</span></td>
+      <td><span class="badge ${s.is_active?'badge-green':'badge-red'}">${s.is_active?'Active':'Suspended'}</span></td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <a href="/instructor/students.html" class="btn btn-outline btn-sm">View</a>
+          <button class="btn btn-danger btn-sm" onclick="toggleStatus(${s.id},${s.is_active})">${s.is_active?'Suspend':'Restore'}</button>
+        </div>
+      </td>
+    </tr>`).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--text);padding:24px">No students found.</td></tr>';
+}
+
+async function toggleStatus(id,current){
+  if(!confirm(current?'Suspend this student?':'Restore this student?'))return;
+  await fetch(`/api/admin/students/${id}/toggle`,{method:'POST',...authH});
+  loadStudents();
+}
+
+async function loadStudents(){
+  const res=await fetch('/api/admin/students',authH);
+  allStudents=await res.json();
+  render(allStudents);
+}
+loadStudents();
+</script>
+</body>
+</html>
