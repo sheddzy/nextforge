@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Payment Successful — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+<style>
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;text-align:center}
+.success-card{background:var(--navy-2);border:1px solid var(--border-light);border-radius:var(--radius-xl);padding:48px 40px;max-width:480px;width:100%;position:relative;overflow:hidden}
+.success-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--gold))}
+.success-icon{font-size:4rem;margin-bottom:16px}
+</style>
+</head>
+<body>
+<div class="success-card">
+  <div class="success-icon" id="icon">⏳</div>
+  <h2 id="title" style="margin-bottom:8px">Verifying Payment...</h2>
+  <p id="desc" style="color:var(--text);margin-bottom:24px">Please wait while we confirm your payment.</p>
+  <div class="progress-bar" style="margin-bottom:24px"><div class="progress-fill" id="bar" style="width:0%"></div></div>
+  <div id="actions" style="display:none;flex-direction:column;gap:10px">
+    <a href="/student/dashboard.html" class="btn btn-gold" style="width:100%">Go to My Dashboard →</a>
+    <a href="/courses.html" class="btn btn-ghost" style="width:100%">Browse More Courses</a>
+  </div>
+</div>
+
+<script>
+const ref=new URLSearchParams(location.search).get('reference')||new URLSearchParams(location.search).get('trxref');
+const token=localStorage.getItem('nf_token');
+
+async function verify(){
+  if(!ref||!token){
+    document.getElementById('icon').textContent='❌';
+    document.getElementById('title').textContent='Verification Failed';
+    document.getElementById('desc').textContent='No payment reference found. Please contact support.';
+    return;
+  }
+  let w=0;
+  const iv=setInterval(()=>{w+=3;document.getElementById('bar').style.width=Math.min(w,90)+'%';},50);
+  try{
+    const res=await fetch('/api/payments/verify',{
+      method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      credentials:'include',body:JSON.stringify({reference:ref})
+    });
+    const data=await res.json();
+    clearInterval(iv);
+    document.getElementById('bar').style.width='100%';
+    if(res.ok&&data.success){
+      document.getElementById('icon').textContent='🎉';
+      document.getElementById('title').textContent='Payment Successful!';
+      document.getElementById('desc').textContent=`You are now enrolled in ${data.course?.title||'your course'}. Check your email for confirmation.`;
+      document.getElementById('actions').style.display='flex';
+    } else {
+      document.getElementById('icon').textContent='⚠️';
+      document.getElementById('title').textContent='Payment Pending';
+      document.getElementById('desc').textContent=data.error||'Payment verification is taking longer than expected. Please contact support on WhatsApp.';
+      document.getElementById('actions').style.display='flex';
+    }
+  }catch{
+    clearInterval(iv);
+    document.getElementById('icon').textContent='❌';
+    document.getElementById('title').textContent='Verification Error';
+    document.getElementById('desc').textContent='Please contact support: +2349060914286';
+    document.getElementById('actions').style.display='flex';
+  }
+}
+verify();
+</script>
+</body>
+</html>
