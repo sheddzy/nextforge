@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Create Account — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+<style>
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+body::before{content:'';position:fixed;inset:0;background:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=60') center/cover;filter:brightness(0.1);pointer-events:none}
+.auth-wrap{position:relative;z-index:1;width:100%;max-width:480px}
+.auth-card{background:rgba(15,31,61,0.96);backdrop-filter:blur(20px);border:1px solid var(--border-light);border-radius:var(--radius-xl);padding:40px;position:relative;overflow:hidden}
+.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--blue-light),transparent)}
+.step-dots{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:24px}
+.step-dot{width:30px;height:30px;border-radius:50%;border:2px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:var(--text);transition:all var(--transition)}
+.step-dot.active{background:var(--blue);border-color:var(--blue);color:var(--white)}
+.step-dot.done{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.step-line{flex:1;height:2px;background:var(--border);max-width:36px}
+.role-tabs{display:flex;background:var(--navy-3);border-radius:10px;padding:4px;margin-bottom:22px}
+.role-tab{flex:1;text-align:center;padding:9px;border-radius:8px;cursor:pointer;font-size:0.86rem;font-weight:600;color:var(--text);transition:all var(--transition)}
+.role-tab.active{background:var(--blue);color:var(--white)}
+.otp-row{display:flex;gap:8px;justify-content:center;margin:18px 0}
+.otp-input{width:48px;height:54px;text-align:center;font-size:1.4rem;font-weight:700;background:var(--navy-3);border:1.5px solid var(--border-light);border-radius:10px;color:var(--white);outline:none;transition:border-color var(--transition)}
+.otp-input:focus{border-color:var(--blue-light)}
+.step{display:none}.step.active{display:block}
+</style>
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div style="text-align:center;margin-bottom:22px">
+      <a href="/" style="font-weight:800;font-size:1.25rem;color:var(--white)">Next<span style="color:var(--gold)">Forge</span> Academy</a>
+    </div>
+    <div class="step-dots">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-line"></div>
+      <div class="step-dot" id="dot2">2</div>
+      <div class="step-line"></div>
+      <div class="step-dot" id="dot3">✓</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="step active" id="step1">
+      <div style="font-size:1.3rem;font-weight:800;color:var(--white);text-align:center;margin-bottom:4px">Create Your Account</div>
+      <div style="color:var(--text);font-size:0.86rem;text-align:center;margin-bottom:22px">Join Nigeria's fastest-growing tech academy</div>
+      <div class="role-tabs">
+        <div class="role-tab active" onclick="setRole('student',this)">👨‍🎓 Student</div>
+        <div class="role-tab" onclick="setRole('instructor',this)">👨‍🏫 Instructor</div>
+      </div>
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" type="text" id="reg_name" placeholder="Your full name"/></div>
+      <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="reg_email" placeholder="you@example.com"/></div>
+      <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" type="tel" id="reg_phone" placeholder="+234 900 000 0000"/></div>
+      <div class="form-group" id="trackGroup">
+        <label class="form-label">Select Your Course</label>
+        <select class="form-input" id="reg_track">
+          <option value="">Choose a course...</option>
+          <option value="project-management">📋 Project Management — ₦250,000 (12 weeks)</option>
+          <option value="product-management">🧭 Product Management — ₦250,000 (13 weeks)</option>
+          <option value="data-analysis">📊 Data Analysis — ₦300,000 (12 weeks)</option>
+          <option value="notion-mastery">🗂 Notion Mastery — ₦160,000 (6 weeks)</option>
+          <option value="operations-systems">⚙️ Operations Systems — ₦200,000 (8 weeks)</option>
+          <option value="business-communication">💡 Business Communication — ₦200,000 (8 weeks)</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="reg_password" placeholder="Min. 8 characters"/></div>
+      <div class="alert alert-error" id="step1Err" style="display:none"></div>
+      <button class="btn btn-gold" style="width:100%" id="step1Btn" onclick="submitStep1()">Continue → Get Verification Code</button>
+      <div style="text-align:center;margin-top:16px;font-size:0.84rem;color:var(--text)">Already have an account? <a href="/login.html" style="color:var(--gold)">Sign in</a></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="step2">
+      <div style="font-size:1.3rem;font-weight:800;color:var(--white);text-align:center;margin-bottom:4px">Verify Your Email</div>
+      <div style="color:var(--text);font-size:0.86rem;text-align:center;margin-bottom:6px" id="otpSubtext">Enter the 6-digit code sent to your email</div>
+      <div class="otp-row">
+        <input class="otp-input" maxlength="1" id="otp0" oninput="otpMove(this,0)" onkeydown="otpBack(event,0)"/>
+        <input class="otp-input" maxlength="1" id="otp1" oninput="otpMove(this,1)" onkeydown="otpBack(event,1)"/>
+        <input class="otp-input" maxlength="1" id="otp2" oninput="otpMove(this,2)" onkeydown="otpBack(event,2)"/>
+        <input class="otp-input" maxlength="1" id="otp3" oninput="otpMove(this,3)" onkeydown="otpBack(event,3)"/>
+        <input class="otp-input" maxlength="1" id="otp4" oninput="otpMove(this,4)" onkeydown="otpBack(event,4)"/>
+        <input class="otp-input" maxlength="1" id="otp5" oninput="otpMove(this,5)" onkeydown="otpBack(event,5)"/>
+      </div>
+      <div class="alert alert-error" id="step2Err" style="display:none"></div>
+      <button class="btn btn-gold" style="width:100%" id="step2Btn" onclick="verifyOTP()">Verify & Create Account →</button>
+      <div style="text-align:center;margin-top:14px;font-size:0.82rem;color:var(--text)">Didn't receive it? <a href="#" style="color:var(--gold)" onclick="resendOTP()">Resend code</a></div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" id="step3">
+      <div style="text-align:center;padding:16px 0">
+        <div style="font-size:3.5rem;margin-bottom:14px">🎉</div>
+        <div style="font-size:1.3rem;font-weight:800;color:var(--white);margin-bottom:6px">Account Created!</div>
+        <div style="color:var(--text);font-size:0.86rem;margin-bottom:20px">Welcome to NextForge Academy. Redirecting to your dashboard...</div>
+        <div class="progress-bar"><div class="progress-fill" id="redirectBar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedRole='student';
+
+function setRole(r,el){
+  selectedRole=r;
+  document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('trackGroup').style.display=r==='student'?'block':'none';
+}
+
+function setStep(n){
+  document.querySelectorAll('.step').forEach((s,i)=>s.classList.toggle('active',i===n-1));
+  for(let i=1;i<=3;i++){
+    const d=document.getElementById(`dot${i}`);
+    if(i<n){d.classList.add('done');d.classList.remove('active');d.textContent='✓';}
+    else if(i===n){d.classList.add('active');d.classList.remove('done');}
+    else{d.classList.remove('active','done');}
+  }
+}
+
+function showErr(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block';}
+
+async function submitStep1(){
+  const name=document.getElementById('reg_name').value.trim();
+  const email=document.getElementById('reg_email').value.trim();
+  const password=document.getElementById('reg_password').value;
+  document.getElementById('step1Err').style.display='none';
+  if(!name||!email||!password)return showErr('step1Err','Please fill in all required fields.');
+  if(password.length<8)return showErr('step1Err','Password must be at least 8 characters.');
+  const btn=document.getElementById('step1Btn');
+  btn.textContent='Sending code...';btn.disabled=true;
+  try{
+    const res=await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name})});
+    const data=await res.json();
+    if(!res.ok)return showErr('step1Err',data.error||'Failed to send code.');
+    document.getElementById('otpSubtext').textContent=`Enter the 6-digit code sent to ${email}`;
+    setStep(2);
+    setTimeout(()=>document.getElementById('otp0').focus(),100);
+  }catch{showErr('step1Err','Network error. Please try again.');}
+  finally{btn.textContent='Continue → Get Verification Code';btn.disabled=false;}
+}
+
+function otpMove(input,i){if(input.value.length===1&&i<5)document.getElementById(`otp${i+1}`).focus();}
+function otpBack(e,i){if(e.key==='Backspace'&&!e.target.value&&i>0)document.getElementById(`otp${i-1}`).focus();}
+
+async function verifyOTP(){
+  const otp=Array.from({length:6},(_,i)=>document.getElementById(`otp${i}`).value).join('');
+  document.getElementById('step2Err').style.display='none';
+  if(otp.length<6)return showErr('step2Err','Please enter the complete 6-digit code.');
+  const btn=document.getElementById('step2Btn');
+  btn.textContent='Verifying...';btn.disabled=true;
+  try{
+    const res=await fetch('/api/auth/register',{
+      method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+      body:JSON.stringify({
+        full_name:document.getElementById('reg_name').value.trim(),
+        email:document.getElementById('reg_email').value.trim(),
+        password:document.getElementById('reg_password').value,
+        phone:document.getElementById('reg_phone').value.trim(),
+        track:document.getElementById('reg_track')?.value||null,
+        role:selectedRole,otp
+      })
+    });
+    const data=await res.json();
+    if(!res.ok)return showErr('step2Err',data.error||'Verification failed.');
+    localStorage.setItem('nf_token',data.token);
+    localStorage.setItem('nf_role',data.role);
+    localStorage.setItem('nf_name',data.name);
+    setStep(3);
+    let w=0;
+    const iv=setInterval(()=>{
+      w+=2;document.getElementById('redirectBar').style.width=w+'%';
+      if(w>=100){clearInterval(iv);window.location.href=data.role==='admin'?'/admin/dashboard.html':data.role==='instructor'?'/instructor/dashboard.html':'/student/dashboard.html';}
+    },30);
+  }catch{showErr('step2Err','Network error. Please try again.');}
+  finally{btn.textContent='Verify & Create Account →';btn.disabled=false;}
+}
+
+async function resendOTP(){
+  const email=document.getElementById('reg_email').value.trim();
+  const name=document.getElementById('reg_name').value.trim();
+  await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name})});
+  document.getElementById('step2Err').textContent='New code sent! Check your inbox.';
+  document.getElementById('step2Err').className='alert alert-success';
+  document.getElementById('step2Err').style.display='block';
+}
+</script>
+</body>
+</html>
