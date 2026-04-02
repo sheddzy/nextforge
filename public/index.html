@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="NextForge Academy — Launch your tech career with mentor-led training in Project Management, Product Management, Data Analysis and more. Small cohorts. Real projects. Lagos, Nigeria."/>
+<meta name="keywords" content="tech training Nigeria, project management course Lagos, data analysis course Nigeria, product management training, NextForge Academy"/>
+<meta property="og:title" content="NextForge Academy — Launch Your Tech Career"/>
+<meta property="og:description" content="Mentor-led tech training in Lagos. Small cohorts, real projects, career guidance."/>
+<meta property="og:image" content="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"/>
+<title>NextForge Academy — Launch Your Tech Career. Grow Without Limits.</title>
+<link rel="stylesheet" href="/styles.css"/>
+<style>
+body{padding-top:70px}
+.hero{min-height:calc(100vh - 70px);display:flex;align-items:center;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1800&q=80');background-size:cover;background-position:center;filter:brightness(0.18)}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,0.97) 45%,rgba(26,86,219,0.12) 100%)}
+.hero-content{position:relative;z-index:1;padding:72px 0;width:100%}
+.hero-grid{display:grid;grid-template-columns:1fr 440px;gap:64px;align-items:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.28);border-radius:20px;padding:5px 14px;font-size:0.75rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:20px}
+.hero h1{font-size:clamp(2.1rem,4.5vw,3.5rem);font-weight:800;line-height:1.08;margin-bottom:18px}
+.hero h1 span{color:var(--gold)}
+.hero-sub{font-size:1rem;color:var(--text-dark);max-width:500px;margin-bottom:32px;line-height:1.8}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px}
+.hero-stats{display:flex;gap:32px;padding-top:32px;border-top:1px solid var(--border-light);flex-wrap:wrap}
+.stat-num{font-size:1.5rem;font-weight:800;color:var(--white)}
+.stat-lbl{font-size:0.75rem;color:var(--text);margin-top:1px}
+
+.hero-panel{background:rgba(15,31,61,0.92);backdrop-filter:blur(20px);border:1px solid var(--border-light);border-radius:var(--radius-xl);padding:24px}
+.panel-title{font-size:0.72rem;color:var(--text);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px;font-weight:600}
+.panel-course{display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--radius);background:var(--navy-3);border:1px solid var(--border);margin-bottom:8px;text-decoration:none;transition:border-color var(--transition)}
+.panel-course:hover{border-color:var(--gold)}
+.panel-icon{width:40px;height:40px;border-radius:9px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+.panel-name{font-size:0.85rem;font-weight:600;color:var(--white)}
+.panel-meta{font-size:0.72rem;color:var(--text);margin-top:1px}
+.panel-price{font-size:0.85rem;font-weight:700;color:var(--gold);margin-left:auto;flex-shrink:0}
+
+.trust-bar{background:var(--navy-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:18px 0}
+.trust-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:9px;font-size:0.83rem;color:var(--text)}
+.trust-item strong{color:var(--white)}
+.trust-div{width:1px;height:22px;background:var(--border)}
+
+.why-card{background:var(--navy-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px 22px;transition:all var(--transition)}
+.why-card:hover{border-color:var(--blue-light);transform:translateY(-3px)}
+.why-icon{font-size:1.9rem;margin-bottom:13px}
+.why-title{font-size:0.95rem;font-weight:700;color:var(--white);margin-bottom:7px}
+.why-desc{font-size:0.85rem;color:var(--text);line-height:1.7}
+
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.process-grid::before{content:'';position:absolute;top:24px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--blue-dim),var(--blue),var(--blue-dim));z-index:0}
+.process-step{text-align:center;padding:0 16px;position:relative;z-index:1}
+.process-num{width:48px;height:48px;border-radius:50%;background:var(--navy-2);border:2px solid var(--blue);color:var(--blue-light);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;margin:0 auto 16px}
+.process-title{font-weight:700;color:var(--white);font-size:0.9rem;margin-bottom:6px}
+.process-desc{font-size:0.8rem;color:var(--text);line-height:1.6}
+
+.testimonial-card{background:var(--navy-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px 28px;position:relative}
+.testimonial-card::before{content:'"';font-size:4.5rem;color:var(--blue);opacity:0.15;position:absolute;top:6px;left:18px;line-height:1;font-family:Georgia,serif}
+.testimonial-text{font-size:0.9rem;color:var(--text-dark);line-height:1.75;margin-bottom:18px;position:relative;z-index:1}
+.t-author{display:flex;align-items:center;gap:11px}
+.t-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--border-light)}
+.t-name{font-weight:700;font-size:0.875rem;color:var(--white)}
+.t-role{font-size:0.75rem;color:var(--text);margin-top:1px}
+
+.instructor-grid{display:grid;grid-template-columns:380px 1fr;gap:64px;align-items:center}
+.instr-img-wrap{position:relative}
+.instr-img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg)}
+.instr-badge{position:absolute;bottom:20px;left:20px;right:20px;background:rgba(10,22,40,0.93);backdrop-filter:blur(12px);border:1px solid var(--border-light);border-radius:var(--radius);padding:14px 18px;display:flex;align-items:center;gap:12px}
+.instr-badge-img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}
+.cred-row{display:flex;gap:24px;margin-top:22px;flex-wrap:wrap}
+.cred-num{font-size:1.5rem;font-weight:800;color:var(--gold)}
+.cred-lbl{font-size:0.72rem;color:var(--text);margin-top:1px}
+
+.chat-box{background:var(--navy);border:1px solid var(--border-light);border-radius:var(--radius-xl);overflow:hidden}
+.chat-header{padding:15px 20px;border-bottom:1px solid var(--border);background:var(--navy-3);display:flex;align-items:center;gap:9px}
+.chat-dot{width:7px;height:7px;border-radius:50%;background:#34d399;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+.chat-messages{min-height:180px;max-height:280px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:11px}
+.chat-msg{padding:10px 14px;border-radius:11px;font-size:0.85rem;line-height:1.6;max-width:86%}
+.chat-msg.ai{background:var(--navy-3);color:var(--text-dark);align-self:flex-start;border:1px solid var(--border);border-bottom-left-radius:3px}
+.chat-msg.user{background:var(--blue);color:var(--white);align-self:flex-end;border-bottom-right-radius:3px}
+.chat-footer{padding:13px 16px;border-top:1px solid var(--border);display:flex;gap:9px}
+.chat-input{flex:1;background:var(--navy-3);border:1.5px solid var(--border-light);border-radius:9px;padding:9px 13px;color:var(--white);font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;outline:none;transition:border-color var(--transition)}
+.chat-input:focus{border-color:var(--blue-light)}
+.chat-input::placeholder{color:rgba(148,163,184,0.4)}
+
+.cta-section{position:relative;overflow:hidden;background-image:url('https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1600&q=80');background-size:cover;background-position:center}
+.cta-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,0.97),rgba(26,86,219,0.5))}
+.cta-content{position:relative;z-index:1;text-align:center;padding:88px 0}
+
+@media(max-width:1024px){.hero-grid{grid-template-columns:1fr}.hero-panel{display:none}.instructor-grid{grid-template-columns:1fr}.instr-img-wrap{max-width:320px;margin:0 auto}}
+@media(max-width:768px){.process-grid{grid-template-columns:1fr 1fr;gap:24px}.process-grid::before{display:none}}
+@media(max-width:480px){.process-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="inner">
+    <a href="/" class="logo"><div class="logo-icon">N</div>Next<span>Forge</span></a>
+    <ul class="nav-links">
+      <li><a href="/courses.html">Courses</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li><a href="#advisor">AI Advisor</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/login.html" class="btn btn-ghost btn-sm">Log In</a>
+      <a href="/register.html" class="btn btn-gold btn-sm">Enroll Now</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="container hero-content">
+    <div class="hero-grid">
+      <div class="fade-up">
+        <div class="hero-eyebrow">🎓 April 2025 Cohort — Limited Seats</div>
+        <h1>Launch Your Tech Career.<br/><span>Master Your Operations.</span><br/>Grow Without Limits.</h1>
+        <p class="hero-sub">Join small, mentor-led cohorts designed to take you from beginner to job-ready. Hands-on projects, live instruction, and real career guidance — built for Nigeria's next generation of tech professionals.</p>
+        <div class="hero-cta">
+          <a href="/courses.html" class="btn btn-gold btn-xl">Explore Courses →</a>
+          <a href="https://wa.me/2349060914286?text=Hi%2C%20I%27d%20like%20to%20speak%20with%20an%20advisor" target="_blank" class="btn btn-ghost btn-lg">Speak With an Advisor</a>
+        </div>
+        <div class="hero-stats">
+          <div><div class="stat-num">1,200+</div><div class="stat-lbl">Students Enrolled</div></div>
+          <div><div class="stat-num">6</div><div class="stat-lbl">Expert Programmes</div></div>
+          <div><div class="stat-num">Small</div><div class="stat-lbl">Cohort Sizes</div></div>
+          <div><div class="stat-num">100%</div><div class="stat-lbl">Live Instruction</div></div>
+        </div>
+      </div>
+      <div class="hero-panel fade-up fade-up-delay-2">
+        <div class="panel-title">Our Programmes</div>
+        <a href="/courses.html" class="panel-course"><div class="panel-icon">📋</div><div><div class="panel-name">Project Management</div><div class="panel-meta">12 weeks · Beginner friendly</div></div><div class="panel-price">₦250,000</div></a>
+        <a href="/courses.html" class="panel-course"><div class="panel-icon">🧭</div><div><div class="panel-name">Product Management</div><div class="panel-meta">13 weeks · Beginner friendly</div></div><div class="panel-price">₦250,000</div></a>
+        <a href="/courses.html" class="panel-course"><div class="panel-icon">📊</div><div><div class="panel-name">Data Analysis</div><div class="panel-meta">12 weeks · Excel, SQL & Power BI</div></div><div class="panel-price">₦300,000</div></a>
+        <a href="/courses.html" class="panel-course"><div class="panel-icon">🗂</div><div><div class="panel-name">Notion Mastery</div><div class="panel-meta">6 weeks · Self-paced option</div></div><div class="panel-price">₦160,000</div></a>
+        <a href="/register.html" class="btn btn-gold" style="width:100%;margin-top:8px">Create Free Account →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="container">
+    <div class="trust-inner">
+      <div class="trust-item">👨‍🏫 <span><strong>Experienced</strong> instructors</span></div>
+      <div class="trust-div"></div>
+      <div class="trust-item">🏗️ <span><strong>Hands-on</strong> real projects</span></div>
+      <div class="trust-div"></div>
+      <div class="trust-item">🎯 <span><strong>Live</strong> mentorship</span></div>
+      <div class="trust-div"></div>
+      <div class="trust-item">💼 <span><strong>Career</strong> guidance included</span></div>
+      <div class="trust-div"></div>
+      <div class="trust-item">📜 <span><strong>Certificates</strong> on completion</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- WHY NEXTFORGE -->
+<section class="section">
+  <div class="container">
+    <div class="section-header centered fade-up">
+      <div class="section-eyebrow">Why NextForge</div>
+      <h2>We're Different By Design</h2>
+      <p>Large academies give you scale. NextForge gives you mentorship, accountability, and a direct path to employment.</p>
+    </div>
+    <div class="grid-4">
+      <div class="why-card fade-up fade-up-delay-1"><div class="why-icon">👥</div><div class="why-title">Small Cohorts</div><div class="why-desc">You won't get lost in a crowd. Every student gets direct access to their instructor and personalised feedback on their work.</div></div>
+      <div class="why-card fade-up fade-up-delay-2"><div class="why-icon">🔧</div><div class="why-title">Practical Training</div><div class="why-desc">Learn by working on real projects. Every programme ends with a portfolio piece you can show to employers immediately.</div></div>
+      <div class="why-card fade-up fade-up-delay-3"><div class="why-icon">🧭</div><div class="why-title">Mentor Support</div><div class="why-desc">Guidance throughout your entire journey — not just during class. Our instructors are available for 1-on-1 sessions.</div></div>
+      <div class="why-card fade-up fade-up-delay-4"><div class="why-icon">🎯</div><div class="why-title">Career Focus</div><div class="why-desc">Every skill we teach is aligned with what employers actively hire for across Nigeria and beyond. No filler content.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-header fade-up" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:14px">
+      <div><div class="section-eyebrow">Our Programmes</div><h2>Choose Your Path</h2><p>Every programme takes you from zero to job-ready with expert instruction and real projects.</p></div>
+      <a href="/courses.html" class="btn btn-outline">View All Courses →</a>
+    </div>
+    <div class="grid-3" id="coursesGrid"><div style="grid-column:1/-1;text-align:center;color:var(--text);padding:48px">Loading courses...</div></div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section" style="background:var(--navy-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div class="section-header centered fade-up"><div class="section-eyebrow">How It Works</div><h2>Four Steps to Job-Ready</h2><p>A clear path from where you are to where you want to be.</p></div>
+    <div class="process-grid">
+      <div class="process-step fade-up fade-up-delay-1"><div class="process-num">1</div><div class="process-title">Enroll Online</div><div class="process-desc">Pick your programme and enroll in minutes. Get instant LMS portal access.</div></div>
+      <div class="process-step fade-up fade-up-delay-2"><div class="process-num">2</div><div class="process-title">Attend Live Classes</div><div class="process-desc">Learn from expert instructors weekly. All sessions recorded for replay.</div></div>
+      <div class="process-step fade-up fade-up-delay-3"><div class="process-num">3</div><div class="process-title">Build Real Projects</div><div class="process-desc">Apply skills on real briefs. Build a portfolio that gets you hired.</div></div>
+      <div class="process-step fade-up fade-up-delay-4"><div class="process-num">4</div><div class="process-title">Get Career Guidance</div><div class="process-desc">Graduate with a certificate, career coaching, and lifetime community access.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTRUCTOR -->
+<section class="section" style="background:var(--navy-3);border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div class="instructor-grid">
+      <div class="instr-img-wrap fade-up">
+        <img src="https://i.ibb.co/fVWq6FNP/1759002518772.png" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80'" alt="Shedrack Ebete" class="instr-img"/>
+        <div class="instr-badge">
+          <img src="https://i.ibb.co/fVWq6FNP/1759002518772.png" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80'" alt="Shedrack" class="instr-badge-img"/>
+          <div><div style="font-weight:700;color:var(--white);font-size:0.875rem">Shedrack Ebete</div><div style="font-size:0.72rem;color:var(--gold)">Founder & Lead Instructor</div></div>
+          <div style="margin-left:auto"><span class="badge badge-green">● Live</span></div>
+        </div>
+      </div>
+      <div class="fade-up fade-up-delay-2">
+        <div class="section-eyebrow">Meet Your Instructor</div>
+        <h2 style="margin-bottom:14px">Built by a Practitioner.<br/>Not a Theorist.</h2>
+        <p style="color:var(--text);line-height:1.8;margin-bottom:12px">Shedrack Ebete is an Operations Officer, Project Management Instructor, and systems designer based in Lagos, Nigeria. He has designed and deployed operational systems across multiple organisations, led live PM cohorts, and actively works in the industry he teaches.</p>
+        <p style="color:var(--text);line-height:1.8;margin-bottom:24px">Every lesson at NextForge Academy is built from firsthand experience. If it has not been tested in the real world, it does not make the curriculum.</p>
+        <div class="cred-row">
+          <div><div class="cred-num">1,200+</div><div class="cred-lbl">Students Taught</div></div>
+          <div><div class="cred-num">8+</div><div class="cred-lbl">Systems Deployed</div></div>
+          <div><div class="cred-num">5 yrs</div><div class="cred-lbl">Industry Exp.</div></div>
+          <div><div class="cred-num">4.9★</div><div class="cred-lbl">Student Rating</div></div>
+        </div>
+        <div style="margin-top:28px;display:flex;gap:10px;flex-wrap:wrap">
+          <a href="/courses.html" class="btn btn-gold">View All Courses →</a>
+          <a href="/about.html" class="btn btn-ghost">About NextForge</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header centered fade-up"><div class="section-eyebrow">Student Outcomes</div><h2>Real People. Real Results.</h2><p>Career switchers and professionals who transformed their careers with NextForge Academy.</p></div>
+    <div class="grid-3">
+      <div class="testimonial-card fade-up fade-up-delay-1">
+        <div class="stars" style="font-size:0.875rem;margin-bottom:12px">★★★★★</div>
+        <p class="testimonial-text">"I had zero background in tech. After the PM programme, I landed a project coordinator role at a fintech in Lagos. The small cohort made all the difference — I actually got feedback on my work."</p>
+        <div class="t-author"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&q=80" alt="" class="t-avatar"/><div><div class="t-name">Adaeze Okonkwo</div><div class="t-role">Project Coordinator, Lagos Fintech</div></div></div>
+      </div>
+      <div class="testimonial-card fade-up fade-up-delay-2">
+        <div class="stars" style="font-size:0.875rem;margin-bottom:12px">★★★★★</div>
+        <p class="testimonial-text">"The Data Analysis course taught me Excel, SQL and Power BI from scratch. I went from admin officer to data analyst in 3 months. The career guidance sessions were incredibly helpful."</p>
+        <div class="t-author"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="" class="t-avatar"/><div><div class="t-name">Emeka Nwosu</div><div class="t-role">Junior Data Analyst, Abuja</div></div></div>
+      </div>
+      <div class="testimonial-card fade-up fade-up-delay-3">
+        <div class="stars" style="font-size:0.875rem;margin-bottom:12px">★★★★★</div>
+        <p class="testimonial-text">"Notion Mastery changed how I run my freelance business completely. I built a full client management system and now charge ₦80k per setup. Best investment I made this year."</p>
+        <div class="t-author"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=100&q=80" alt="" class="t-avatar"/><div><div class="t-name">Funke Adeyemi</div><div class="t-role">Freelance Ops Consultant, Lagos</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI ADVISOR -->
+<section class="section" id="advisor" style="background:var(--navy-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div class="grid-2" style="align-items:center;gap:56px">
+      <div class="fade-up">
+        <div class="section-eyebrow">AI-Powered</div>
+        <h2 style="margin-bottom:14px">Not Sure Which Course to Take?</h2>
+        <p style="color:var(--text);line-height:1.8;margin-bottom:22px">Tell our AI Advisor your background and goals. Get a personalised recommendation instantly — or speak to a real human advisor on WhatsApp.</p>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:24px">
+          <li style="display:flex;align-items:center;gap:11px;font-size:0.875rem;color:var(--text-dark)"><span style="width:26px;height:26px;background:var(--blue-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.75rem">🎯</span>Understands your background and recommends the right course</li>
+          <li style="display:flex;align-items:center;gap:11px;font-size:0.875rem;color:var(--text-dark)"><span style="width:26px;height:26px;background:var(--blue-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.75rem">⚡</span>Instant AI-powered response — no signup required</li>
+          <li style="display:flex;align-items:center;gap:11px;font-size:0.875rem;color:var(--text-dark)"><span style="width:26px;height:26px;background:var(--blue-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.75rem">💬</span>Prefer a human? WhatsApp us directly</li>
+        </ul>
+        <a href="https://wa.me/2349060914286?text=Hi%2C%20I%27d%20like%20to%20speak%20with%20an%20advisor%20about%20NextForge%20Academy" target="_blank" class="btn btn-gold btn-lg">💬 Speak With a Human Advisor</a>
+      </div>
+      <div class="chat-box fade-up fade-up-delay-2">
+        <div class="chat-header"><div class="chat-dot"></div><div style="font-weight:700;color:var(--white);font-size:0.875rem">NextForge AI Advisor</div><div style="margin-left:auto;font-size:0.7rem;color:var(--text)">Powered by Claude AI</div></div>
+        <div class="chat-messages" id="chatMessages"><div class="chat-msg ai">👋 Hi! I'm the NextForge AI Advisor. Tell me about your background and what you want to achieve — I'll recommend the best programme for you.</div></div>
+        <div class="chat-footer"><input class="chat-input" id="chatInput" type="text" placeholder="e.g. I'm a graduate looking to break into tech..."/><button class="btn btn-primary btn-sm" onclick="sendMessage()">Send</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-overlay"></div>
+  <div class="container cta-content">
+    <span class="badge badge-gold" style="margin-bottom:18px">Join 1,200+ Learners</span>
+    <h2 style="font-size:clamp(1.7rem,4vw,2.8rem);margin-bottom:14px;max-width:520px;margin-left:auto;margin-right:auto">Ready to Launch Your Tech Career?</h2>
+    <p style="color:var(--text-dark);max-width:460px;margin:0 auto 32px;line-height:1.8">Enroll in a cohort, get a mentor, build real projects, and land your first tech role. Seats are limited per intake.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="/courses.html" class="btn btn-gold btn-xl">View Courses</a>
+      <a href="https://wa.me/2349060914286?text=Hi%2C%20I%27d%20like%20to%20speak%20with%20an%20advisor" target="_blank" class="btn btn-white btn-xl">Talk to Advisor</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo" style="font-size:1.1rem"><div class="logo-icon" style="width:30px;height:30px;font-size:0.8rem">N</div>Next<span>Forge</span> Academy</div>
+        <p>Practical, mentor-led tech training for Nigeria's next generation of professionals. Small cohorts. Real projects. Real careers.</p>
+        <div class="social-links" style="margin-top:18px">
+          <a href="https://wa.me/2349060914286" class="social-btn" target="_blank" title="WhatsApp">💬</a>
+          <a href="mailto:info@nextforgeacademy.online" class="social-btn" title="Email">✉️</a>
+          <a href="#" class="social-btn" title="LinkedIn">in</a>
+          <a href="#" class="social-btn" title="Twitter/X">𝕏</a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Programmes</h4><ul><li><a href="/courses.html">Project Management</a></li><li><a href="/courses.html">Product Management</a></li><li><a href="/courses.html">Data Analysis</a></li><li><a href="/courses.html">Notion Mastery</a></li><li><a href="/courses.html">Operations Systems</a></li><li><a href="/courses.html">Business Communication</a></li></ul></div>
+      <div class="footer-col"><h4>Company</h4><ul><li><a href="/about.html">About Us</a></li><li><a href="/contact.html">Contact</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li></ul></div>
+      <div class="footer-col"><h4>Student</h4><ul><li><a href="/login.html">Log In</a></li><li><a href="/register.html">Sign Up</a></li><li><a href="/student/dashboard.html">My Dashboard</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Use</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 NextForge Academy · nextforgeacademy.online · Lagos, Nigeria</span>
+      <span>Launch Your Tech Career. Grow Without Limits.</span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/2349060914286" class="whatsapp-btn" target="_blank" title="Chat on WhatsApp">💬</a>
+
+<script>
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>20));
+const obs=new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible')}),{threshold:0.1});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+async function loadCourses(){
+  try{
+    const res=await fetch('/api/courses');
+    const courses=await res.json();
+    const g=document.getElementById('coursesGrid');
+    g.innerHTML=courses.slice(0,6).map(c=>`
+      <a href="/course-detail.html?slug=${c.slug}" class="course-card fade-up">
+        <div class="course-card-thumb">
+          <img src="${c.image_url||'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80'}" alt="${c.title}" loading="lazy"/>
+          <div class="course-thumb-overlay"></div>
+        </div>
+        <div class="course-card-body">
+          <div class="course-card-cat">${c.category}</div>
+          <div class="course-card-title">${c.title}</div>
+          <div class="course-card-instructor">👤 Shedrack Ebete</div>
+          <div class="course-card-meta"><span class="stars">★★★★★</span><span>4.9</span><span>·</span><span>${c.duration}</span><span>·</span><span>${c.level}</span></div>
+          <div style="display:flex;gap:6px;margin-bottom:14px"><span class="badge badge-blue">Certificate</span><span class="badge badge-gold">${c.weeks<=6?'Self-Paced Option':'Live Cohort'}</span></div>
+          <div class="course-card-footer">
+            <div><span class="price">₦${Number(c.price).toLocaleString()}</span></div>
+            <span class="btn btn-primary btn-sm">Enroll Now</span>
+          </div>
+        </div>
+      </a>`).join('');
+    document.querySelectorAll('#coursesGrid .fade-up').forEach(el=>obs.observe(el));
+  }catch{
+    document.getElementById('coursesGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--text);padding:48px">Unable to load courses. <a href="/courses.html" style="color:var(--gold)">View all →</a></div>';
+  }
+}
+
+const chatHistory=[];
+async function sendMessage(){
+  const input=document.getElementById('chatInput');
+  const msgs=document.getElementById('chatMessages');
+  const text=input.value.trim();
+  if(!text)return;
+  msgs.innerHTML+=`<div class="chat-msg user">${text}</div>`;
+  input.value='';msgs.scrollTop=msgs.scrollHeight;
+  msgs.innerHTML+=`<div class="chat-msg ai" id="thinking">✦ Thinking...</div>`;
+  chatHistory.push({role:'user',content:text});
+  try{
+    const res=await fetch('/api/ai/advisor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,history:chatHistory})});
+    const data=await res.json();
+    document.getElementById('thinking')?.remove();
+    const reply=data.reply||'Sorry, I could not get a response. Please try WhatsApp.';
+    chatHistory.push({role:'assistant',content:reply});
+    msgs.innerHTML+=`<div class="chat-msg ai">${reply}</div>`;
+  }catch{
+    document.getElementById('thinking')?.remove();
+    msgs.innerHTML+=`<div class="chat-msg ai">Advisor unavailable. <a href="https://wa.me/2349060914286" style="color:var(--gold)">Chat on WhatsApp →</a></div>`;
+  }
+  msgs.scrollTop=msgs.scrollHeight;
+}
+document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage()});
+loadCourses();
+</script>
+</body>
+</html>
