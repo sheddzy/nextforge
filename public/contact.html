@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="Contact NextForge Academy — WhatsApp, email, or send us a message. Lagos, Nigeria."/>
+<title>Contact Us — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+<style>
+body{padding-top:70px}
+.contact-item{display:flex;align-items:flex-start;gap:15px;padding:18px;background:var(--navy-2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;text-decoration:none;transition:border-color var(--transition)}
+.contact-item:hover{border-color:var(--blue-light)}
+.contact-icon{width:42px;height:42px;border-radius:10px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.contact-label{font-size:0.72rem;color:var(--text);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px}
+.contact-value{font-weight:600;color:var(--white);font-size:0.9rem}
+</style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="inner">
+    <a href="/" class="logo"><div class="logo-icon">N</div>Next<span>Forge</span></a>
+    <ul class="nav-links"><li><a href="/courses.html">Courses</a></li><li><a href="/about.html">About</a></li><li><a href="/contact.html" class="active">Contact</a></li></ul>
+    <div class="nav-actions"><a href="/login.html" class="btn btn-ghost btn-sm">Log In</a><a href="/register.html" class="btn btn-gold btn-sm">Enroll Now</a></div>
+  </div>
+</nav>
+
+<div style="background:var(--navy-2);border-bottom:1px solid var(--border);padding:52px 0;text-align:center">
+  <div class="container" style="position:relative;z-index:1">
+    <div class="section-eyebrow" style="justify-content:center">Get In Touch</div>
+    <h1 style="font-size:clamp(1.7rem,3.5vw,2.6rem);margin-bottom:12px">We'd Love to Hear From You</h1>
+    <p style="color:var(--text);max-width:460px;margin:0 auto">Questions about our programmes? Ready to enroll? Our team responds within 24 hours — fastest on WhatsApp.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="grid-2" style="gap:52px;align-items:start">
+      <div class="fade-up">
+        <h3 style="margin-bottom:20px">Contact Information</h3>
+        <a href="https://wa.me/2349060914286?text=Hi%2C%20I%27m%20interested%20in%20NextForge%20Academy" class="contact-item" target="_blank">
+          <div class="contact-icon">💬</div>
+          <div><div class="contact-label">WhatsApp — Fastest Response</div><div class="contact-value">+234 906 091 4286</div></div>
+        </a>
+        <a href="mailto:info@nextforgeacademy.online" class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div><div class="contact-label">Email</div><div class="contact-value">info@nextforgeacademy.online</div></div>
+        </a>
+        <div class="contact-item" style="cursor:default">
+          <div class="contact-icon">📍</div>
+          <div><div class="contact-label">Location</div><div class="contact-value">Lagos, Nigeria</div></div>
+        </div>
+        <div class="contact-item" style="cursor:default">
+          <div class="contact-icon">🕐</div>
+          <div><div class="contact-label">Response Time</div><div class="contact-value">Within 24 hours (Mon–Sat)</div></div>
+        </div>
+        <div style="margin-top:24px;display:flex;flex-direction:column;gap:8px">
+          <a href="/courses.html" class="btn btn-outline" style="justify-content:flex-start">📋 Browse All Courses →</a>
+          <a href="https://wa.me/2349060914286?text=Hi%2C%20I%20want%20to%20speak%20with%20an%20advisor" target="_blank" class="btn btn-gold" style="justify-content:flex-start">💬 Speak With an Advisor →</a>
+        </div>
+      </div>
+
+      <div class="fade-up fade-up-delay-2">
+        <div class="card">
+          <h3 style="margin-bottom:6px">Send a Message</h3>
+          <p style="color:var(--text);font-size:0.85rem;margin-bottom:22px">We'll respond within 24 hours.</p>
+          <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="cName" placeholder="Your full name"/></div>
+          <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="cEmail" placeholder="you@example.com"/></div>
+          <div class="form-group"><label class="form-label">Phone (optional)</label><input class="form-input" type="tel" id="cPhone" placeholder="+234 000 000 0000"/></div>
+          <div class="form-group"><label class="form-label">Subject</label>
+            <select class="form-input" id="cSubject">
+              <option value="">Select a topic...</option>
+              <option>Course enquiry</option>
+              <option>Enrollment & payment</option>
+              <option>Technical support</option>
+              <option>Partnership / Corporate training</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="cMessage" rows="4" placeholder="How can we help?"></textarea></div>
+          <div class="alert alert-error" id="cErr" style="display:none"></div>
+          <div class="alert alert-success" id="cOk" style="display:none"></div>
+          <button class="btn btn-gold" style="width:100%" id="cBtn" onclick="sendContact()">Send Message →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <span>© 2025 NextForge Academy · nextforgeacademy.online · Lagos, Nigeria</span>
+      <a href="/" style="color:var(--gold)">← Back to Home</a>
+    </div>
+  </div>
+</footer>
+<a href="https://wa.me/2349060914286" class="whatsapp-btn" target="_blank">💬</a>
+
+<script>
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>20));
+const obs=new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible')}),{threshold:0.1});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+async function sendContact(){
+  const name=document.getElementById('cName').value.trim();
+  const email=document.getElementById('cEmail').value.trim();
+  const message=document.getElementById('cMessage').value.trim();
+  const err=document.getElementById('cErr');const ok=document.getElementById('cOk');
+  err.style.display='none';ok.style.display='none';
+  if(!name||!email||!message)return (err.textContent='Please fill in name, email and message.',err.style.display='block');
+  const btn=document.getElementById('cBtn');btn.textContent='Sending...';btn.disabled=true;
+  try{
+    const res=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,phone:document.getElementById('cPhone').value,subject:document.getElementById('cSubject').value,message})});
+    const data=await res.json();
+    if(!res.ok)return (err.textContent=data.error,err.style.display='block');
+    ok.textContent='✓ Message sent! We will respond within 24 hours.';ok.style.display='block';
+    ['cName','cEmail','cPhone','cMessage'].forEach(id=>document.getElementById(id).value='');
+  }catch{err.textContent='Network error. Please WhatsApp us directly.';err.style.display='block';}
+  finally{btn.textContent='Send Message →';btn.disabled=false;}
+}
+</script>
+</body>
+</html>
