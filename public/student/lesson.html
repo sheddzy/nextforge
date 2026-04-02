@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Assignments — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+<style>
+.assignment-card{background:var(--navy-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;margin-bottom:14px}
+.assignment-card.submitted{border-color:rgba(16,185,129,0.3)}
+.assignment-card.graded{border-color:rgba(201,168,76,0.3)}
+.score-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:700}
+</style>
+</head>
+<body>
+<div class="portal">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><a href="/" style="font-weight:800;font-size:1.1rem;color:var(--white)">Next<span style="color:var(--gold)">Forge</span></a></div>
+    <a href="/student/dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+    <a href="#" class="nav-item"><span class="nav-icon">📚</span> My Courses</a>
+    <a href="/student/assignments.html" class="nav-item active"><span class="nav-icon">📝</span> Assignments</a>
+    <div class="nav-section">Account</div>
+    <a href="#" class="nav-item" onclick="logout()"><span class="nav-icon">🚪</span> Sign Out</a>
+  </aside>
+  <div class="portal-main">
+    <div class="topbar">
+      <div style="font-weight:700;color:var(--white)">My Assignments</div>
+      <span style="font-size:0.82rem;color:var(--text)" id="topUser"></span>
+    </div>
+    <div class="portal-content">
+      <div id="assignmentsList"><div style="color:var(--text);text-align:center;padding:40px">Loading assignments...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMIT MODAL -->
+<div class="modal-overlay" id="submitModal">
+  <div class="modal">
+    <div class="modal-close" onclick="closeSubmit()">✕</div>
+    <h3 style="margin-bottom:6px" id="submitTitle">Submit Assignment</h3>
+    <p style="color:var(--text);font-size:0.85rem;margin-bottom:18px" id="submitDesc"></p>
+    <div class="form-group"><label class="form-label">Your Submission</label><textarea class="form-input" id="submitContent" rows="6" placeholder="Write your submission here. Include links, descriptions, or any relevant details..."></textarea></div>
+    <div class="alert alert-error" id="submitErr" style="display:none"></div>
+    <button class="btn btn-gold" style="width:100%" onclick="doSubmit()" id="submitBtn">Submit Assignment →</button>
+  </div>
+</div>
+
+<script>
+const token=localStorage.getItem('nf_token');
+if(!token)window.location.href='/login.html';
+document.getElementById('topUser').textContent=localStorage.getItem('nf_name')||'';
+const authH={credentials:'include',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}};
+let currentAssignmentId=null;
+
+function logout(){fetch('/api/auth/logout',{method:'POST',credentials:'include'});localStorage.clear();window.location.href='/login.html';}
+function closeSubmit(){document.getElementById('submitModal').classList.remove('open');}
+
+function openSubmit(id,title,desc){
+  currentAssignmentId=id;
+  document.getElementById('submitTitle').textContent='Submit: '+title;
+  document.getElementById('submitDesc').textContent=desc||'';
+  document.getElementById('submitContent').value='';
+  document.getElementById('submitErr').style.display='none';
+  document.getElementById('submitModal').classList.add('open');
+}
+
+async function doSubmit(){
+  const content=document.getElementById('submitContent').value.trim();
+  const err=document.getElementById('submitErr');
+  err.style.display='none';
+  if(!content)return (err.textContent='Please write your submission.',err.style.display='block');
+  const btn=document.getElementById('submitBtn');btn.textContent='Submitting...';btn.disabled=true;
+  try{
+    const res=await fetch(`/api/assignments/${currentAssignmentId}/submit`,{method:'POST',...authH,body:JSON.stringify({content})});
+    const data=await res.json();
+    if(!res.ok)return (err.textContent=data.error,err.style.display='block');
+    closeSubmit();loadAssignments();
+  }catch{err.textContent='Network error.';err.style.display='block';}
+  finally{btn.textContent='Submit Assignment →';btn.disabled=false;}
+}
+
+async function loadAssignments(){
+  try{
+    const enrollRes=await fetch('/api/courses/my/enrollments',authH);
+    const enrollments=await enrollRes.json();
+    const list=document.getElementById('assignmentsList');
+    if(!enrollments.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text)">No courses enrolled yet. <a href="/courses.html" style="color:var(--gold)">Browse courses →</a></div>';return;}
+
+    let html='';
+    for(const e of enrollments){
+      const aRes=await fetch(`/api/assignments/course/${e.id}`,authH);
+      const assignments=await aRes.json();
+      if(!assignments.length)continue;
+      html+=`<div style="margin-bottom:28px"><h3 style="margin-bottom:14px">${e.thumbnail} ${e.title}</h3>`;
+      html+=assignments.map(a=>{
+        const statusColor=a.submission_status==='graded'?'gold':a.submission_status==='submitted'?'green':'blue';
+        return `<div class="assignment-card ${a.submission_status||''}">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap">
+            <div>
+              <div style="font-weight:700;color:var(--white);margin-bottom:4px">${a.title}</div>
+              <div style="font-size:0.82rem;color:var(--text);margin-bottom:10px">${a.description||''}</div>
+              ${a.instructions?`<div style="font-size:0.8rem;color:var(--text-dark);background:var(--navy-3);border-radius:var(--radius);padding:10px;margin-bottom:10px">${a.instructions}</div>`:''}
+              ${a.submission_status==='graded'?`
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                  <span class="score-badge" style="background:var(--gold-dim);color:var(--gold);border:1px solid rgba(201,168,76,0.2)">Score: ${a.score}/100</span>
+                  ${a.score>=70?'<span class="badge badge-green">✓ Passed</span>':'<span class="badge badge-red">Retry Needed</span>'}
+                </div>
+                ${a.feedback?`<div style="font-size:0.82rem;color:var(--text-dark);font-style:italic">Instructor feedback: "${a.feedback}"</div>`:''}`:
+              a.submission_status==='submitted'?'<span class="badge badge-green">✓ Submitted — Awaiting Review</span>':
+              `<span style="font-size:0.78rem;color:var(--text)">Due ${a.due_days} days after enrollment</span>`}
+            </div>
+            ${!a.submission_status?`<button class="btn btn-gold btn-sm" onclick="openSubmit(${a.id},'${a.title.replace(/'/g,"\\'")}','${(a.description||'').replace(/'/g,"\\'")}')" style="flex-shrink:0">Submit →</button>`:''}
+          </div>
+        </div>`;
+      }).join('');
+      html+='</div>';
+    }
+    list.innerHTML=html||'<div style="color:var(--text);text-align:center;padding:40px">No assignments yet.</div>';
+  }catch(e){console.error(e);}
+}
+
+document.getElementById('submitModal').addEventListener('click',function(e){if(e.target===this)closeSubmit();});
+loadAssignments();
+</script>
+</body>
+</html>
