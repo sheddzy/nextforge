@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Course Detail — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+<style>
+body{padding-top:70px}
+.course-hero{background:var(--navy-2);border-bottom:1px solid var(--border);padding:52px 0;position:relative;overflow:hidden}
+.course-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 700px 400px at 70% 50%,rgba(26,86,219,0.06),transparent);pointer-events:none}
+.course-hero-grid{display:grid;grid-template-columns:1fr 360px;gap:52px;align-items:start;position:relative}
+.breadcrumb{font-size:0.78rem;color:var(--text);margin-bottom:14px}
+.breadcrumb a{color:var(--gold)}
+.breadcrumb span{margin:0 6px}
+.course-body{display:grid;grid-template-columns:1fr 360px;gap:44px;padding:48px 0;align-items:start}
+.sticky-card{position:sticky;top:88px;background:var(--navy-2);border:1px solid var(--border-light);border-radius:var(--radius-xl);padding:26px}
+.sticky-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--blue-light),transparent);border-radius:var(--radius-xl) var(--radius-xl) 0 0}
+.buy-price{font-size:2.2rem;font-weight:800;color:var(--gold);margin-bottom:4px}
+.buy-timer{font-size:0.78rem;color:#f87171;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.15);border-radius:6px;padding:7px 11px;margin-bottom:16px}
+.includes-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin:16px 0}
+.includes-list li{display:flex;align-items:center;gap:9px;font-size:0.84rem;color:var(--text)}
+.includes-list li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+.outcomes-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.outcome-item{display:flex;align-items:flex-start;gap:9px;font-size:0.84rem;color:var(--text);background:var(--navy-2);border:1px solid var(--border);border-radius:var(--radius);padding:11px 13px}
+.outcome-item::before{content:'✦';color:var(--gold);flex-shrink:0;margin-top:1px}
+.module-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden}
+.module-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--navy-2);cursor:pointer;transition:background var(--transition)}
+.module-header:hover{background:var(--navy-3)}
+.module-title{font-weight:600;color:var(--white);font-size:0.9rem}
+.module-meta{font-size:0.75rem;color:var(--text)}
+.module-lessons{padding:0 18px 14px;display:none}
+.module-lessons.open{display:block}
+.lesson-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.84rem;color:var(--text)}
+.lesson-row:last-child{border-bottom:none}
+.lesson-left{display:flex;align-items:center;gap:9px}
+.lesson-icon{color:var(--text);font-size:0.85rem}
+@media(max-width:1024px){.course-hero-grid,.course-body{grid-template-columns:1fr}.sticky-card{position:static}.outcomes-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="inner">
+    <a href="/" class="logo"><div class="logo-icon">N</div>Next<span>Forge</span></a>
+    <ul class="nav-links"><li><a href="/courses.html">Courses</a></li><li><a href="/about.html">About</a></li><li><a href="/contact.html">Contact</a></li></ul>
+    <div class="nav-actions"><a href="/login.html" class="btn btn-ghost btn-sm">Log In</a><a href="/register.html" class="btn btn-gold btn-sm">Enroll Now</a></div>
+  </div>
+</nav>
+
+<div class="course-hero">
+  <div class="container">
+    <div class="course-hero-grid">
+      <div>
+        <div class="breadcrumb"><a href="/">Home</a><span>›</span><a href="/courses.html">Courses</a><span>›</span><span id="breadcrumbCat">Course</span></div>
+        <div style="display:flex;gap:7px;margin-bottom:14px" id="heroBadges"></div>
+        <h1 id="courseTitle" style="font-size:clamp(1.6rem,3.5vw,2.4rem);margin-bottom:12px">Loading...</h1>
+        <p id="courseDesc" style="color:var(--text-dark);font-size:1rem;line-height:1.75;max-width:580px;margin-bottom:18px"></p>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="stars">★★★★★</span>
+          <span style="color:var(--gold);font-weight:700">4.9</span>
+          <span style="color:var(--text);font-size:0.84rem">(124 ratings · 800+ students)</span>
+        </div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:0.84rem;color:var(--text);margin-top:14px">
+          <span>👤 <strong style="color:var(--white)">Shedrack Ebete</strong></span>
+          <span id="heroDuration">🕒 Duration</span>
+          <span id="heroLevel">📊 Level</span>
+          <span>🌍 English</span>
+          <span>📜 Certificate included</span>
+        </div>
+      </div>
+      <div class="sticky-card" id="heroCard" style="position:relative">
+        <div class="buy-price" id="heroPrice">₦—</div>
+        <div class="buy-timer">⏱ April cohort — Limited seats remaining</div>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:16px">
+          <button class="btn btn-gold btn-lg" style="width:100%" onclick="handleEnroll()" id="enrollBtn">Enroll Now →</button>
+          <a href="https://wa.me/2349060914286?text=Hi%2C%20I%27m%20interested%20in%20this%20course" target="_blank" class="btn btn-ghost" style="width:100%;text-align:center">💬 Ask a Question</a>
+        </div>
+        <ul class="includes-list">
+          <li id="inclDuration">Duration loading...</li>
+          <li>Live instructor-led sessions</li>
+          <li>All recordings included</li>
+          <li>Real project assignments</li>
+          <li>Certificate on completion</li>
+          <li>Lifetime community access</li>
+          <li>Career guidance sessions</li>
+          <li>30-day money-back guarantee</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="course-body">
+    <div>
+      <div class="tabs">
+        <div class="tab active" onclick="showTab('overview',this)">Overview</div>
+        <div class="tab" onclick="showTab('curriculum',this)">Curriculum</div>
+        <div class="tab" onclick="showTab('instructor',this)">Instructor</div>
+      </div>
+
+      <!-- OVERVIEW TAB -->
+      <div id="tab-overview">
+        <div style="margin-bottom:40px">
+          <h3 style="margin-bottom:6px">About This Course</h3>
+          <p id="courseAbout" style="color:var(--text);line-height:1.8;font-size:0.9rem"></p>
+        </div>
+        <div style="margin-bottom:40px">
+          <h3 style="margin-bottom:6px">What You Will Learn</h3>
+          <div class="outcomes-grid" id="outcomesGrid"></div>
+        </div>
+        <div style="margin-bottom:40px">
+          <h3 style="margin-bottom:14px">Tools You Will Use</h3>
+          <div id="toolsList" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
+        <div>
+          <h3 style="margin-bottom:14px">This Course Is For</h3>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;gap:11px;align-items:flex-start;font-size:0.88rem;color:var(--text)"><span>✓</span><span>Complete beginners with no prior experience in this field</span></div>
+            <div style="display:flex;gap:11px;align-items:flex-start;font-size:0.88rem;color:var(--text)"><span>✓</span><span>Recent graduates looking to break into tech roles</span></div>
+            <div style="display:flex;gap:11px;align-items:flex-start;font-size:0.88rem;color:var(--text)"><span>✓</span><span>Working professionals wanting to upskill and advance their career</span></div>
+            <div style="display:flex;gap:11px;align-items:flex-start;font-size:0.88rem;color:var(--text)"><span>✓</span><span>NYSC corps members building skills for the job market</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CURRICULUM TAB -->
+      <div id="tab-curriculum" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <h3>Course Curriculum</h3>
+          <span id="curriculumMeta" style="font-size:0.82rem;color:var(--text)"></span>
+        </div>
+        <div id="modulesContainer"></div>
+      </div>
+
+      <!-- INSTRUCTOR TAB -->
+      <div id="tab-instructor" style="display:none">
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:18px;margin-bottom:18px">
+            <img src="https://i.ibb.co/fVWq6FNP/1759002518772.png" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80'" alt="Shedrack" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)"/>
+            <div>
+              <div style="font-size:1.05rem;font-weight:700;color:var(--white)">Shedrack Ebete</div>
+              <div style="font-size:0.82rem;color:var(--gold);margin-top:3px">Founder & Lead Instructor</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:22px;margin-bottom:16px;flex-wrap:wrap">
+            <div style="text-align:center"><div style="font-size:1.2rem;font-weight:800;color:var(--gold)">4.9★</div><div style="font-size:0.72rem;color:var(--text)">Rating</div></div>
+            <div style="text-align:center"><div style="font-size:1.2rem;font-weight:800;color:var(--gold)">1,200+</div><div style="font-size:0.72rem;color:var(--text)">Students</div></div>
+            <div style="text-align:center"><div style="font-size:1.2rem;font-weight:800;color:var(--gold)">6</div><div style="font-size:0.72rem;color:var(--text)">Courses</div></div>
+            <div style="text-align:center"><div style="font-size:1.2rem;font-weight:800;color:var(--gold)">5 yrs</div><div style="font-size:0.72rem;color:var(--text)">Experience</div></div>
+          </div>
+          <p style="font-size:0.875rem;color:var(--text);line-height:1.8">Shedrack Ebete is an Operations Officer, Project Management Instructor, and systems designer based in Lagos, Nigeria. He has designed and deployed operational systems across multiple organisations, led live PM cohorts at Codarhq, and actively works in the industries he teaches. Every course is built from real-world experience — not textbooks.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STICKY SIDEBAR (desktop) -->
+    <div>
+      <div class="sticky-card" style="position:sticky;top:88px">
+        <div class="buy-price" id="sidePrice">₦—</div>
+        <div class="buy-timer">⏱ April cohort — Limited seats remaining</div>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:16px">
+          <button class="btn btn-gold btn-lg" style="width:100%" onclick="handleEnroll()" id="enrollBtn2">Enroll Now →</button>
+          <a href="https://wa.me/2349060914286" target="_blank" class="btn btn-ghost" style="width:100%;text-align:center">💬 Ask a Question</a>
+        </div>
+        <ul class="includes-list">
+          <li id="sideInclDuration">Duration loading...</li>
+          <li>Live instructor-led sessions</li>
+          <li>All recordings included</li>
+          <li>Real project assignments</li>
+          <li>Certificate on completion</li>
+          <li>Lifetime community access</li>
+          <li>30-day money-back guarantee</li>
+        </ul>
+        <div style="text-align:center;margin-top:16px;font-size:0.78rem;color:var(--text)">🔒 Secure payment via Paystack</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <span>© 2025 NextForge Academy · Lagos, Nigeria</span>
+      <a href="/courses.html" style="color:var(--gold)">← All Courses</a>
+    </div>
+  </div>
+</footer>
+<a href="https://wa.me/2349060914286" class="whatsapp-btn" target="_blank">💬</a>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModal()">✕</div>
+    <h3 style="margin-bottom:6px" id="modalTitle">Enroll in Course</h3>
+    <p style="color:var(--text);font-size:0.85rem;margin-bottom:20px" id="modalDesc">Complete your enrollment below.</p>
+    <div id="modalNotAuth" style="display:none">
+      <div class="alert alert-info" style="display:block">You need an account to enroll.</div>
+      <a href="/register.html" class="btn btn-gold" style="width:100%;margin-bottom:8px">Create Free Account →</a>
+      <a href="/login.html" class="btn btn-ghost" style="width:100%">Already have an account? Log In</a>
+    </div>
+    <div id="modalPayment" style="display:none">
+      <div style="background:var(--navy-3);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px">
+        <div style="font-size:0.78rem;color:var(--text);margin-bottom:4px">Total Amount</div>
+        <div style="font-size:1.6rem;font-weight:800;color:var(--gold)" id="modalPrice">₦—</div>
+        <div style="font-size:0.78rem;color:var(--text);margin-top:4px">Full payment · No installments</div>
+      </div>
+      <div class="alert alert-error" id="payError" style="display:none"></div>
+      <button class="btn btn-gold" style="width:100%" onclick="initPayment()" id="payBtn">Pay with Paystack 🔒</button>
+      <div style="text-align:center;margin-top:12px;font-size:0.78rem;color:var(--text)">Secured by Paystack · Cards, Bank Transfer, USSD</div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>20));
+const slug=new URLSearchParams(location.search).get('slug')||new URLSearchParams(location.search).get('id');
+let course=null;
+let paystackPublicKey='';
+
+function showTab(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['overview','curriculum','instructor'].forEach(t=>{
+    document.getElementById(`tab-${t}`).style.display=t===name?'block':'none';
+  });
+}
+
+function toggleModule(id){
+  const el=document.getElementById(`mod-${id}`);
+  el.classList.toggle('open');
+}
+
+function closeModal(){document.getElementById('payModal').classList.remove('open')}
+
+async function handleEnroll(){
+  const token=localStorage.getItem('nf_token');
+  document.getElementById('payModal').classList.add('open');
+  if(!token){
+    document.getElementById('modalNotAuth').style.display='block';
+    document.getElementById('modalPayment').style.display='none';
+  } else {
+    document.getElementById('modalNotAuth').style.display='none';
+    document.getElementById('modalPayment').style.display='block';
+    document.getElementById('modalPrice').textContent='₦'+Number(course.price).toLocaleString();
+  }
+}
+
+async function initPayment(){
+  const btn=document.getElementById('payBtn');
+  const err=document.getElementById('payError');
+  err.style.display='none';
+  btn.textContent='Initializing...';btn.disabled=true;
+  try{
+    const res=await fetch('/api/payments/initialize',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+localStorage.getItem('nf_token')},
+      credentials:'include',
+      body:JSON.stringify({course_id:course.id})
+    });
+    const data=await res.json();
+    if(!res.ok){err.textContent=data.error;err.style.display='block';return;}
+    window.location.href=data.authorization_url;
+  }catch{
+    err.textContent='Payment initialization failed. Please try again.';err.style.display='block';
+  }finally{btn.textContent='Pay with Paystack 🔒';btn.disabled=false;}
+}
+
+async function loadCourse(){
+  try{
+    const res=await fetch(`/api/courses/${slug}`);
+    course=await res.json();
+
+    document.title=`${course.title} — NextForge Academy`;
+    document.getElementById('breadcrumbCat').textContent=course.category;
+    document.getElementById('courseTitle').textContent=course.title;
+    document.getElementById('courseDesc').textContent=course.description;
+    document.getElementById('courseAbout').textContent=course.about||course.description;
+    document.getElementById('heroDuration').textContent=`🕒 ${course.duration}`;
+    document.getElementById('heroLevel').textContent=`📊 ${course.level}`;
+    document.getElementById('heroPrice').textContent='₦'+Number(course.price).toLocaleString();
+    document.getElementById('sidePrice').textContent='₦'+Number(course.price).toLocaleString();
+    document.getElementById('inclDuration').textContent=course.duration+' programme';
+    document.getElementById('sideInclDuration').textContent=course.duration+' programme';
+    document.getElementById('modalTitle').textContent='Enroll in '+course.title;
+
+    document.getElementById('heroBadges').innerHTML=`
+      <span class="badge badge-gold">${course.level}</span>
+      <span class="badge badge-blue">Certificate</span>
+      <span class="badge badge-green">${course.weeks<=6?'Self-Paced Option':'Live Cohort'}</span>`;
+
+    // Outcomes
+    if(course.outcomes){
+      document.getElementById('outcomesGrid').innerHTML=course.outcomes.split('|').map(o=>`<div class="outcome-item">${o}</div>`).join('');
+    }
+
+    // Tools
+    if(course.tools){
+      document.getElementById('toolsList').innerHTML=course.tools.split('|').map(t=>`<span class="badge badge-white" style="padding:6px 12px;font-size:0.78rem;text-transform:none;letter-spacing:0">${t}</span>`).join('');
+    }
+
+    // Modules
+    if(course.modules?.length){
+      const totalLessons=course.modules.reduce((s,m)=>s+(m.lessons?.length||0),0);
+      document.getElementById('curriculumMeta').textContent=`${course.modules.length} modules · ${totalLessons} lessons`;
+      document.getElementById('modulesContainer').innerHTML=course.modules.map(m=>`
+        <div class="module-item">
+          <div class="module-header" onclick="toggleModule(${m.id})">
+            <div><div class="module-title">${m.title}</div><div class="module-meta">${m.lessons?.length||0} lessons · ${m.description||''}</div></div>
+            <span style="color:var(--text);font-size:0.85rem">▼</span>
+          </div>
+          <div class="module-lessons" id="mod-${m.id}">
+            ${(m.lessons||[]).map(l=>`
+              <div class="lesson-row">
+                <div class="lesson-left"><span class="lesson-icon">▶</span><span>${l.title}</span></div>
+                <span style="font-size:0.75rem;color:var(--text)">${l.duration_mins}min</span>
+              </div>`).join('')}
+            ${(m.assignments||[]).map(a=>`
+              <div class="lesson-row">
+                <div class="lesson-left"><span class="lesson-icon">📝</span><span>${a.title}</span></div>
+                <span style="font-size:0.75rem;color:var(--text)">Assignment</span>
+              </div>`).join('')}
+          </div>
+        </div>`).join('');
+      // Open first module
+      const first=course.modules[0];
+      if(first)document.getElementById(`mod-${first.id}`)?.classList.add('open');
+    }
+
+    // Paystack key
+    const cfg=await fetch('/api/payments/config');
+    const cfgData=await cfg.json();
+    paystackPublicKey=cfgData.publicKey;
+
+  }catch(e){
+    document.getElementById('courseTitle').textContent='Course not found';
+  }
+}
+
+document.getElementById('payModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+loadCourse();
+</script>
+</body>
+</html>
