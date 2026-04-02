@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin Dashboard — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+<div class="portal">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><a href="/" style="font-weight:800;font-size:1.1rem;color:var(--white)">Next<span style="color:var(--gold)">Forge</span></a><div style="font-size:0.68rem;color:var(--gold);margin-top:2px">Admin Panel</div></div>
+    <a href="/admin/dashboard.html" class="nav-item active"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="/admin/students.html" class="nav-item"><span class="nav-icon">👥</span> All Students</a>
+    <a href="/admin/payments.html" class="nav-item"><span class="nav-icon">💳</span> Payments</a>
+    <a href="/instructor/course.html" class="nav-item"><span class="nav-icon">📚</span> Manage Courses</a>
+    <a href="/instructor/students.html" class="nav-item"><span class="nav-icon">📈</span> Progress Tracker</a>
+    <div class="nav-section">Tools</div>
+    <a href="#" class="nav-item" onclick="openIssueCert()"><span class="nav-icon">🎓</span> Issue Certificate</a>
+    <a href="#" class="nav-item" onclick="openAnnounce()"><span class="nav-icon">📢</span> Announcement</a>
+    <div class="nav-section">Site</div>
+    <a href="/" class="nav-item"><span class="nav-icon">🌐</span> View Site</a>
+    <a href="#" class="nav-item" onclick="logout()" style="margin-top:auto"><span class="nav-icon">🚪</span> Sign Out</a>
+  </aside>
+  <div class="portal-main">
+    <div class="topbar">
+      <div><div style="font-weight:700;color:var(--white)">Admin Dashboard</div><div style="font-size:0.78rem;color:var(--text)">⚙️ <span id="adminName"></span></div></div>
+      <div style="display:flex;gap:8px">
+        <a href="/instructor/course.html" class="btn btn-outline btn-sm">+ Add Lesson</a>
+        <a href="/admin/students.html" class="btn btn-gold btn-sm">View All Students</a>
+      </div>
+    </div>
+    <div class="portal-content">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-card-icon">👥</div><div class="stat-card-num" id="sStudents">—</div><div class="stat-card-label">Total Students</div></div>
+        <div class="stat-card"><div class="stat-card-icon">📚</div><div class="stat-card-num" id="sEnrollments">—</div><div class="stat-card-label">Total Enrollments</div></div>
+        <div class="stat-card"><div class="stat-card-icon">💰</div><div class="stat-card-num" id="sRevenue">—</div><div class="stat-card-label">Total Revenue</div></div>
+        <div class="stat-card"><div class="stat-card-icon">📋</div><div class="stat-card-num" id="sCourses">—</div><div class="stat-card-label">Active Courses</div></div>
+      </div>
+
+      <h3 style="margin-bottom:14px">Recent Enrollments</h3>
+      <div class="table-wrap" style="margin-bottom:28px">
+        <table>
+          <thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Enrolled</th><th>Enrollments</th></tr></thead>
+          <tbody id="recentTable"><tr><td colspan="5" style="text-align:center;color:var(--text);padding:20px">Loading...</td></tr></tbody>
+        </table>
+      </div>
+
+      <h3 style="margin-bottom:14px">Recent Payments</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Course</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody id="paymentsTable"><tr><td colspan="5" style="text-align:center;color:var(--text);padding:20px">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ISSUE CERT MODAL -->
+<div class="modal-overlay" id="certModal">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModals()">✕</div>
+    <h3 style="margin-bottom:16px">Issue Certificate Manually</h3>
+    <div class="form-group"><label class="form-label">Student ID</label><input class="form-input" type="number" id="certUserId" placeholder="Student user ID"/></div>
+    <div class="form-group"><label class="form-label">Course ID</label><input class="form-input" type="number" id="certCourseId" placeholder="Course ID"/></div>
+    <div class="alert alert-error" id="certErr" style="display:none"></div>
+    <div class="alert alert-success" id="certOk" style="display:none"></div>
+    <button class="btn btn-gold" style="width:100%" onclick="issueCert()">Issue Certificate →</button>
+  </div>
+</div>
+
+<!-- ANNOUNCE MODAL -->
+<div class="modal-overlay" id="announceModal">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModals()">✕</div>
+    <h3 style="margin-bottom:16px">Post Announcement</h3>
+    <div class="form-group"><label class="form-label">Audience</label><select class="form-input" id="announceScope"><option value="global">All Students (Global)</option></select></div>
+    <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="announceTitle" placeholder="Announcement title"/></div>
+    <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="announceBody" rows="4" placeholder="Write your announcement..."></textarea></div>
+    <div class="alert alert-error" id="announceErr" style="display:none"></div>
+    <button class="btn btn-gold" style="width:100%" onclick="postAnnouncement()">Post →</button>
+  </div>
+</div>
+
+<script>
+const token=localStorage.getItem('nf_token');
+if(!token||localStorage.getItem('nf_role')!=='admin')window.location.href='/login.html';
+document.getElementById('adminName').textContent=localStorage.getItem('nf_name')||'Admin';
+const authH={credentials:'include',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}};
+
+function logout(){fetch('/api/auth/logout',{method:'POST',credentials:'include'});localStorage.clear();window.location.href='/login.html';}
+function closeModals(){document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open'));}
+function openIssueCert(){document.getElementById('certModal').classList.add('open');}
+function openAnnounce(){document.getElementById('announceModal').classList.add('open');}
+
+async function loadDashboard(){
+  const [statsRes,paymentsRes]=await Promise.all([fetch('/api/admin/stats',authH),fetch('/api/admin/payments',authH)]);
+  const stats=await statsRes.json();
+  const payments=await paymentsRes.json();
+
+  document.getElementById('sStudents').textContent=stats.totalStudents;
+  document.getElementById('sEnrollments').textContent=stats.totalEnrollments;
+  document.getElementById('sCourses').textContent=stats.totalCourses;
+  document.getElementById('sRevenue').textContent='₦'+Number(stats.totalRevenue||0).toLocaleString();
+
+  const rt=document.getElementById('recentTable');
+  rt.innerHTML=stats.recentStudents.length?stats.recentStudents.map(s=>`
+    <tr>
+      <td style="color:var(--white);font-weight:600">${s.full_name}</td>
+      <td style="font-size:0.82rem">${s.email}</td>
+      <td>${s.track||'—'}</td>
+      <td>${new Date(s.created_at).toLocaleDateString()}</td>
+      <td><span class="badge badge-blue">${s.enrollments}</span></td>
+    </tr>`)
+    .join(''):'<tr><td colspan="5" style="text-align:center;color:var(--text);padding:20px">No students yet</td></tr>';
+
+  const pt=document.getElementById('paymentsTable');
+  pt.innerHTML=payments.length?payments.slice(0,10).map(p=>`
+    <tr>
+      <td style="color:var(--white)">${p.full_name}</td>
+      <td style="font-size:0.82rem">${p.course_title}</td>
+      <td style="color:var(--gold);font-weight:600">₦${Number(p.amount).toLocaleString()}</td>
+      <td><span class="badge ${p.status==='success'?'badge-green':'badge-red'}">${p.status}</span></td>
+      <td style="font-size:0.8rem">${new Date(p.created_at).toLocaleDateString()}</td>
+    </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--text);padding:20px">No payments yet</td></tr>';
+}
+
+async function issueCert(){
+  const user_id=document.getElementById('certUserId').value;
+  const course_id=document.getElementById('certCourseId').value;
+  const err=document.getElementById('certErr');const ok=document.getElementById('certOk');
+  err.style.display='none';ok.style.display='none';
+  if(!user_id||!course_id)return (err.textContent='Both fields required.',err.style.display='block');
+  const res=await fetch('/api/admin/certificates',{method:'POST',...authH,body:JSON.stringify({user_id,course_id})});
+  const d=await res.json();
+  if(res.ok){ok.textContent='Certificate issued! Code: '+d.cert_code;ok.style.display='block';}
+  else{err.textContent=d.error;err.style.display='block';}
+}
+
+async function postAnnouncement(){
+  const title=document.getElementById('announceTitle').value.trim();
+  const body=document.getElementById('announceBody').value.trim();
+  const err=document.getElementById('announceErr');err.style.display='none';
+  if(!title||!body)return (err.textContent='Please fill in all fields.',err.style.display='block');
+  const res=await fetch('/api/admin/announcements',{method:'POST',...authH,body:JSON.stringify({title,body,is_global:true})});
+  if(res.ok){closeModals();alert('Announcement posted to all students!');}
+  else{const d=await res.json();err.textContent=d.error;err.style.display='block';}
+}
+
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)closeModals();}));
+loadDashboard();
+</script>
+</body>
+</html>
