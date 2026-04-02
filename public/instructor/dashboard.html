@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Manage Course — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+<div class="portal">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><a href="/" style="font-weight:800;font-size:1.1rem;color:var(--white)">Next<span style="color:var(--gold)">Forge</span></a><div style="font-size:0.68rem;color:var(--gold);margin-top:2px">Instructor Portal</div></div>
+    <a href="/instructor/dashboard.html" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="/instructor/course.html" class="nav-item active"><span class="nav-icon">📚</span> Manage Courses</a>
+    <a href="/instructor/students.html" class="nav-item"><span class="nav-icon">👥</span> My Students</a>
+    <div class="nav-section">Account</div>
+    <a href="#" class="nav-item" onclick="logout()" style="margin-top:auto"><span class="nav-icon">🚪</span> Sign Out</a>
+  </aside>
+  <div class="portal-main">
+    <div class="topbar">
+      <div><div style="font-weight:700;color:var(--white)" id="courseTitle">Course Manager</div><div style="font-size:0.78rem;color:var(--text)">Upload lessons, videos and resources</div></div>
+      <select class="form-input" id="courseSelect" onchange="loadCourse(this.value)" style="max-width:240px;padding:8px 12px;font-size:0.85rem"></select>
+    </div>
+    <div class="portal-content">
+      <div class="tabs">
+        <div class="tab active" onclick="showTab('modules',this)">Modules & Lessons</div>
+        <div class="tab" onclick="showTab('assignments',this)">Assignments</div>
+        <div class="tab" onclick="showTab('submissions',this)">Submissions to Grade</div>
+      </div>
+
+      <!-- MODULES TAB -->
+      <div id="tab-modules">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <h3>Course Content</h3>
+          <button class="btn btn-gold btn-sm" onclick="openAddModule()">+ Add Module</button>
+        </div>
+        <div id="modulesList"><div style="color:var(--text);padding:20px;text-align:center">Select a course above to manage its content.</div></div>
+      </div>
+
+      <!-- ASSIGNMENTS TAB -->
+      <div id="tab-assignments" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <h3>Assignments</h3>
+          <button class="btn btn-gold btn-sm" onclick="openAddAssignment()">+ Add Assignment</button>
+        </div>
+        <div id="assignmentsList"><div style="color:var(--text);padding:20px;text-align:center">Select a course to view assignments.</div></div>
+      </div>
+
+      <!-- SUBMISSIONS TAB -->
+      <div id="tab-submissions" style="display:none">
+        <h3 style="margin-bottom:16px">Submissions to Grade</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Student</th><th>Assignment</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="submissionsTable"><tr><td colspan="5" style="text-align:center;color:var(--text);padding:20px">Select a course to view submissions.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODULE MODAL -->
+<div class="modal-overlay" id="moduleModal">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModals()">✕</div>
+    <h3 style="margin-bottom:16px">Add Module</h3>
+    <div class="form-group"><label class="form-label">Module Title</label><input class="form-input" id="modTitle" placeholder="e.g. Week 1: Foundations"/></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="modDesc" rows="2" placeholder="What students will learn in this module"></textarea></div>
+    <div class="form-group"><label class="form-label">Week Number</label><input class="form-input" type="number" id="modWeek" value="1" min="1"/></div>
+    <div class="alert alert-error" id="modErr" style="display:none"></div>
+    <button class="btn btn-gold" style="width:100%" onclick="submitModule()">Add Module →</button>
+  </div>
+</div>
+
+<!-- ADD LESSON MODAL -->
+<div class="modal-overlay" id="lessonModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-close" onclick="closeModals()">✕</div>
+    <h3 style="margin-bottom:16px">Add Lesson</h3>
+    <div class="form-group"><label class="form-label">Lesson Title</label><input class="form-input" id="lesTitle" placeholder="Lesson title"/></div>
+    <div class="form-group"><label class="form-label">Lesson Content / Notes</label><textarea class="form-input" id="lesContent" rows="3" placeholder="Lesson description or notes for students"></textarea></div>
+    <div class="form-group"><label class="form-label">Video URL (YouTube/Vimeo embed or direct link)</label><input class="form-input" id="lesVideoUrl" placeholder="https://youtube.com/embed/..."/></div>
+    <div class="form-group"><label class="form-label">Resource URL (PDF, Doc, Slides)</label><input class="form-input" id="lesResourceUrl" placeholder="https://drive.google.com/..."/></div>
+    <div class="form-group"><label class="form-label">Resource Name</label><input class="form-input" id="lesResourceName" placeholder="e.g. Week 1 Slides.pdf"/></div>
+    <div class="form-group"><label class="form-label">Duration (minutes)</label><input class="form-input" type="number" id="lesDuration" value="45" min="1"/></div>
+    <div class="alert alert-error" id="lesErr" style="display:none"></div>
+    <button class="btn btn-gold" style="width:100%" onclick="submitLesson()">Add Lesson →</button>
+  </div>
+</div>
+
+<!-- ADD ASSIGNMENT MODAL -->
+<div class="modal-overlay" id="assignmentModal">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModals()">✕</div>
+    <h3 style="margin-bottom:16px">Add Assignment</h3>
+    <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="asgTitle" placeholder="Assignment title"/></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="asgDesc" rows="2" placeholder="Brief description"></textarea></div>
+    <div class="form-group"><label class="form-label">Instructions for Students</label><textarea class="form-input" id="asgInstr" rows="3" placeholder="Detailed instructions..."></textarea></div>
+    <div class="form-group"><label class="form-label">Days to Complete</label><input class="form-input" type="number" id="asgDays" value="7" min="1"/></div>
+    <div class="alert alert-error" id="asgErr" style="display:none"></div>
+    <button class="btn btn-gold" style="width:100%" onclick="submitAssignment()">Add Assignment →</button>
+  </div>
+</div>
+
+<!-- GRADE MODAL -->
+<div class="modal-overlay" id="gradeModal">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModals()">✕</div>
+    <h3 style="margin-bottom:6px">Grade Submission</h3>
+    <div style="background:var(--navy-3);border-radius:var(--radius);padding:14px;margin-bottom:16px;font-size:0.85rem;color:var(--text-dark)" id="gradeContent"></div>
+    <div class="form-group"><label class="form-label">Score (out of 100)</label><input class="form-input" type="number" id="gradeScore" min="0" max="100" placeholder="e.g. 85"/></div>
+    <div class="form-group"><label class="form-label">Feedback</label><textarea class="form-input" id="gradeFeedback" rows="3" placeholder="Write feedback for the student..."></textarea></div>
+    <div class="alert alert-error" id="gradeErr" style="display:none"></div>
+    <button class="btn btn-gold" style="width:100%" id="gradeBtn" onclick="submitGrade()">Submit Grade →</button>
+  </div>
+</div>
+
+<script>
+const token=localStorage.getItem('nf_token');
+if(!token||!['instructor','admin'].includes(localStorage.getItem('nf_role')))window.location.href='/login.html';
+const authH={credentials:'include',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}};
+let currentCourseId=null;
+let currentModuleId=null;
+let currentSubmission=null;
+
+function logout(){fetch('/api/auth/logout',{method:'POST',credentials:'include'});localStorage.clear();window.location.href='/login.html';}
+function closeModals(){document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open'));}
+function showTab(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  ['modules','assignments','submissions'].forEach(t=>{document.getElementById(`tab-${t}`).style.display=t===name?'block':'none';});
+  if(name==='submissions'&&currentCourseId)loadSubmissions();
+  if(name==='assignments'&&currentCourseId)loadAssignments();
+}
+function openAddModule(){document.getElementById('moduleModal').classList.add('open');}
+function openAddAssignment(){document.getElementById('assignmentModal').classList.add('open');}
+function openAddLesson(moduleId){currentModuleId=moduleId;document.getElementById('lessonModal').classList.add('open');}
+
+async function loadCourseList(){
+  const res=await fetch('/api/admin/courses',authH);
+  const courses=await res.json();
+  const sel=document.getElementById('courseSelect');
+  sel.innerHTML='<option value="">Select course...</option>'+courses.map(c=>`<option value="${c.id}">${c.title}</option>`).join('');
+  const urlCourse=new URLSearchParams(location.search).get('course');
+  if(urlCourse){sel.value=urlCourse;loadCourse(urlCourse);}
+}
+
+async function loadCourse(id){
+  if(!id){currentCourseId=null;return;}
+  currentCourseId=id;
+  const res=await fetch(`/api/courses/${id}`);
+  const course=await res.json();
+  document.getElementById('courseTitle').textContent=course.title;
+
+  const ml=document.getElementById('modulesList');
+  if(!course.modules?.length){
+    ml.innerHTML='<div style="color:var(--text);padding:20px;text-align:center">No modules yet. Add your first module above.</div>';return;
+  }
+  ml.innerHTML=course.modules.map(m=>`
+    <div style="background:var(--navy-2);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--navy-3)">
+        <div><div style="font-weight:700;color:var(--white);font-size:0.9rem">${m.title}</div><div style="font-size:0.75rem;color:var(--text)">${m.lessons?.length||0} lessons</div></div>
+        <button class="btn btn-gold btn-sm" onclick="openAddLesson(${m.id})">+ Add Lesson</button>
+      </div>
+      ${(m.lessons||[]).map(l=>`
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 18px;border-top:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="color:var(--text);font-size:0.85rem">▶</span>
+            <span style="font-size:0.85rem;color:var(--text-dark)">${l.title}</span>
+            ${l.video_url||l.video_embed?'<span class="badge badge-green" style="font-size:0.65rem">Video ✓</span>':'<span class="badge badge-red" style="font-size:0.65rem">No Video</span>'}
+            ${l.resource_url?'<span class="badge badge-blue" style="font-size:0.65rem">Resource ✓</span>':''}
+          </div>
+          <span style="font-size:0.75rem;color:var(--text)">${l.duration_mins}min</span>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+async function submitModule(){
+  const title=document.getElementById('modTitle').value.trim();
+  const desc=document.getElementById('modDesc').value.trim();
+  const week=document.getElementById('modWeek').value;
+  const err=document.getElementById('modErr');err.style.display='none';
+  if(!title)return (err.textContent='Title required.',err.style.display='block');
+  const res=await fetch(`/api/admin/courses/${currentCourseId}/modules`,{method:'POST',...authH,body:JSON.stringify({title,description:desc,week_number:week})});
+  if(res.ok){closeModals();loadCourse(currentCourseId);}
+  else{const d=await res.json();err.textContent=d.error;err.style.display='block';}
+}
+
+async function submitLesson(){
+  const title=document.getElementById('lesTitle').value.trim();
+  const content=document.getElementById('lesContent').value.trim();
+  const video_url=document.getElementById('lesVideoUrl').value.trim();
+  const resource_url=document.getElementById('lesResourceUrl').value.trim();
+  const resource_name=document.getElementById('lesResourceName').value.trim();
+  const duration_mins=document.getElementById('lesDuration').value;
+  const err=document.getElementById('lesErr');err.style.display='none';
+  if(!title)return (err.textContent='Title required.',err.style.display='block');
+
+  // Handle YouTube embed conversion
+  let video_embed=video_url;
+  if(video_url.includes('youtube.com/watch?v=')){
+    const vid=new URL(video_url).searchParams.get('v');
+    video_embed=`https://www.youtube.com/embed/${vid}`;
+  } else if(video_url.includes('youtu.be/')){
+    const vid=video_url.split('youtu.be/')[1];
+    video_embed=`https://www.youtube.com/embed/${vid}`;
+  }
+
+  const res=await fetch(`/api/admin/modules/${currentModuleId}/lessons`,{method:'POST',...authH,body:JSON.stringify({title,content,video_url,video_embed,resource_url,resource_name,duration_mins,course_id:currentCourseId})});
+  if(res.ok){closeModals();loadCourse(currentCourseId);}
+  else{const d=await res.json();err.textContent=d.error;err.style.display='block';}
+}
+
+async function submitAssignment(){
+  const title=document.getElementById('asgTitle').value.trim();
+  const desc=document.getElementById('asgDesc').value.trim();
+  const instr=document.getElementById('asgInstr').value.trim();
+  const days=document.getElementById('asgDays').value;
+  const err=document.getElementById('asgErr');err.style.display='none';
+  if(!title)return (err.textContent='Title required.',err.style.display='block');
+  const res=await fetch(`/api/admin/courses/${currentCourseId}/assignments`,{method:'POST',...authH,body:JSON.stringify({title,description:desc,instructions:instr,due_days:days})});
+  if(res.ok){closeModals();loadAssignments();}
+  else{const d=await res.json();err.textContent=d.error;err.style.display='block';}
+}
+
+async function loadAssignments(){
+  const res=await fetch(`/api/assignments/submissions/${currentCourseId}`,authH);
+  const data=await res.json();
+  document.getElementById('assignmentsList').innerHTML=data.length?data.map(a=>`
+    <div style="background:var(--navy-2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <div><div style="font-weight:600;color:var(--white);font-size:0.875rem">${a.assignment_title}</div><div style="font-size:0.78rem;color:var(--text)">${a.full_name} · ${new Date(a.submitted_at).toLocaleDateString()}</div></div>
+        <span class="badge ${a.status==='graded'?'badge-gold':a.status==='submitted'?'badge-green':'badge-blue'}">${a.status}</span>
+      </div>
+    </div>`).join(''):'<div style="color:var(--text);padding:20px;text-align:center">No submissions yet.</div>';
+}
+
+async function loadSubmissions(){
+  const res=await fetch(`/api/assignments/submissions/${currentCourseId}`,authH);
+  const subs=await res.json();
+  const pending=subs.filter(s=>s.status==='submitted');
+  const tb=document.getElementById('submissionsTable');
+  tb.innerHTML=pending.length?pending.map(s=>`
+    <tr>
+      <td style="color:var(--white);font-weight:600">${s.full_name}</td>
+      <td>${s.assignment_title}</td>
+      <td>${new Date(s.submitted_at).toLocaleDateString()}</td>
+      <td><span class="badge badge-green">Submitted</span></td>
+      <td><button class="btn btn-gold btn-sm" onclick="openGrade(${JSON.stringify(s).replace(/"/g,'&quot;')})">Grade →</button></td>
+    </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--text);padding:20px">No pending submissions.</td></tr>';
+}
+
+function openGrade(submission){
+  currentSubmission=submission;
+  document.getElementById('gradeContent').textContent=submission.content||'No content submitted.';
+  document.getElementById('gradeScore').value='';
+  document.getElementById('gradeFeedback').value='';
+  document.getElementById('gradeErr').style.display='none';
+  document.getElementById('gradeModal').classList.add('open');
+}
+
+async function submitGrade(){
+  const score=document.getElementById('gradeScore').value;
+  const feedback=document.getElementById('gradeFeedback').value.trim();
+  const err=document.getElementById('gradeErr');err.style.display='none';
+  if(!score)return (err.textContent='Please enter a score.',err.style.display='block');
+  const btn=document.getElementById('gradeBtn');btn.textContent='Grading...';btn.disabled=true;
+  const res=await fetch(`/api/assignments/${currentSubmission.assignment_id}/grade/${currentSubmission.user_id}`,{method:'POST',...authH,body:JSON.stringify({score:parseInt(score),feedback})});
+  if(res.ok){closeModals();loadSubmissions();}
+  else{const d=await res.json();err.textContent=d.error;err.style.display='block';}
+  btn.textContent='Submit Grade →';btn.disabled=false;
+}
+
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)closeModals();}));
+loadCourseList();
+</script>
+</body>
+</html>
