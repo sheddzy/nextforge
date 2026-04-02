@@ -1,0 +1,5 @@
+.env
+nextforge.db
+node_modules/
+*.db-shm
+*.db-wal
