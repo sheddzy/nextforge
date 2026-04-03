@@ -147,9 +147,47 @@ async function postAnnouncement(){
   if(res.ok){closeModals();alert('Announcement posted to all students!');}
   else{const d=await res.json();err.textContent=d.error;err.style.display='block';}
 }
+// Add to admin dashboard script
+
+async function loadPrices() {
+  const res = await fetch('/api/admin/courses', authH);
+  const courses = await res.json();
+  document.getElementById('priceTable').innerHTML = courses.map(c => `
+    <tr>
+      <td style="color:var(--white);font-weight:600">${c.thumbnail} ${c.title}</td>
+      <td>${c.duration}</td>
+      <td style="color:var(--gold);font-weight:600">₦${Number(c.price).toLocaleString()}</td>
+      <td><input type="number" id="price_${c.id}" value="${c.price}"
+          style="background:var(--navy-3);border:1px solid var(--border-light);border-radius:8px;
+          padding:7px 11px;color:var(--white);font-family:'Plus Jakarta Sans',sans-serif;
+          font-size:0.85rem;outline:none;width:140px"/></td>
+      <td><button class="btn btn-gold btn-sm" onclick="updatePrice(${c.id})">Update</button></td>
+    </tr>`).join('');
+}
+
+async function updatePrice(courseId) {
+  const newPrice = document.getElementById('price_' + courseId).value;
+  if (!newPrice || isNaN(newPrice)) return alert('Please enter a valid price.');
+  const res = await fetch('/api/admin/courses/' + courseId + '/price', {
+    method: 'POST', ...authH,
+    body: JSON.stringify({ price: parseInt(newPrice) })
+  });
+  if (res.ok) {
+    alert('Price updated successfully!');
+    loadDashboard();
+    loadPrices();
+  } else {
+    const d = await res.json();
+    alert(d.error || 'Failed to update price.');
+  }
+}
+
+// Call at the bottom
 
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)closeModals();}));
 loadDashboard();
+  loadPrices();
+  
 </script>
 </body>
 </html>
