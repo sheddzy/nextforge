@@ -50,9 +50,9 @@ app.post('/api/ai/advisor', async (req, res) => {
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'},
+      headers: { 'Content-Type': 'application/json' 
+               'x-api-key': process.env.ANTHROPIC_API_KEY'
+               'anthropic-version' : '2023-06-01'},
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 800,
@@ -71,15 +71,7 @@ Contact: WhatsApp +2349060914286 | info@nextforgeacademy.online | Lagos, Nigeria
 
 Be warm, concise and specific. If someone seems unsure, ask one clarifying question. Always end with a clear next step.`,
         messages: [...(history || []), { role: 'user', content: message }]
-      });
-    const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
-    res.json({ reply: data.content[0].text });
-  } catch(e) {
-    console.error('AI error:', e.message);
-    res.status(500).json({ error: 'AI advisor unavailable. Please WhatsApp us: +2349060914286' });
-  }
-});
+      })
     });
     const data = await response.json();
     res.json({ reply: data.content?.[0]?.text || 'Sorry, I could not get a response. Please try again.' });
