@@ -50,7 +50,7 @@ app.post('/api/ai/advisor', async (req, res) => {
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {         'Content-Type': 'application/json',
+      headers: {'Content-Type': 'application/json',
         'x-api-key': process.env.ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01'},
       body: JSON.stringify({
@@ -71,9 +71,7 @@ Contact: WhatsApp +2349060914286 | info@nextforgeacademy.online | Lagos, Nigeria
 
 Be warm, concise and specific. If someone seems unsure, ask one clarifying question. Always end with a clear next step.`,
         messages: [...(history || []), { role: 'user', content: message }]
-      })
-     
-    });
+      });
     const data = await response.json();
     if (data.error) throw new Error(data.error.message);
     res.json({ reply: data.content[0].text });
