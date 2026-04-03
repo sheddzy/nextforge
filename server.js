@@ -43,23 +43,42 @@ app.post('/api/contact', async (req, res) => {
     res.status(500).json({ error: 'Failed to send. Please WhatsApp us directly.' });
   }
 });
-    const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
-    res.json({ reply: data.content[0].text });
-  } catch(e) {
-    console.error('AI error:', e.message);
-    res.status(500).json({ error: 'AI advisor unavailable. Please WhatsApp us: +2349060914286' });
-  }
-});
 
+// AI Advisor
 app.post('/api/ai/advisor', async (req, res) => {
+  const { message, history } = req.body;
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        system: `You are the NextForge Academy AI Advisor — a friendly, knowledgeable assistant helping people in Nigeria choose the right tech training programme.
+
+NextForge Academy is a Lagos-based academy offering mentor-led, small-cohort programmes:
+1. Project Management — 12 weeks, ₦250,000. Agile, Waterfall, Trello, Jira, ClickUp. Beginners welcome.
+2. Product Management — 13 weeks, ₦250,000. User research, roadmaps, PRDs, product strategy. Beginners welcome.
+3. Data Analysis — 12 weeks, ₦300,000. Excel, SQL, Power BI. Complete beginners welcome.
+4. Notion Mastery — 6 weeks, ₦160,000. Build a second brain, client systems, monetise Notion. Self-paced option.
+5. Operations Systems Design — 8 weeks, ₦200,000. SOPs, workflows, automation. Intermediate level.
+6. Business Communication — 8 weeks, ₦200,000. Reports, presentations, stakeholder management. Beginners welcome.
+
+Key benefits: Small cohorts, live instruction, real projects, career guidance, certificates at 80% completion.
+Contact: WhatsApp +2349060914286 | info@nextforgeacademy.online | Lagos, Nigeria.
+
+Be warm, concise and specific. If someone seems unsure, ask one clarifying question. Always end with a clear next step.`,
+        messages: [...(history || []), { role: 'user', content: message }]
+      })
+
+      app.post('/api/ai/advisor', async (req, res) => {
   const { message, history } = req.body;
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.antropic,
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
@@ -77,20 +96,6 @@ app.post('/api/ai/advisor', async (req, res) => {
     res.status(500).json({ error: 'AI advisor unavailable. Please WhatsApp us: +2349060914286' });
   }
 });
-NextForge Academy is a Lagos-based academy offering mentor-led, small-cohort programmes:
-1. Project Management — 12 weeks, ₦250,000. Agile, Waterfall, Trello, Jira, ClickUp. Beginners welcome.
-2. Product Management — 13 weeks, ₦250,000. User research, roadmaps, PRDs, product strategy. Beginners welcome.
-3. Data Analysis — 12 weeks, ₦300,000. Excel, SQL, Power BI. Complete beginners welcome.
-4. Notion Mastery — 6 weeks, ₦160,000. Build a second brain, client systems, monetise Notion. Self-paced option.
-5. Operations Systems Design — 8 weeks, ₦200,000. SOPs, workflows, automation. Intermediate level.
-6. Business Communication — 8 weeks, ₦200,000. Reports, presentations, stakeholder management. Beginners welcome.
-
-Key benefits: Small cohorts, live instruction, real projects, career guidance, certificates at 80% completion.
-Contact: WhatsApp +2349060914286 | info@nextforgeacademy.online | Lagos, Nigeria.
-
-Be warm, concise and specific. If someone seems unsure, ask one clarifying question. Always end with a clear next step.`,
-        messages: [...(history || []), { role: 'user', content: message }]
-      })
     });
     const data = await response.json();
     res.json({ reply: data.content?.[0]?.text || 'Sorry, I could not get a response. Please try again.' });
