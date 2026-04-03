@@ -133,5 +133,16 @@ router.post('/reset-password', (req, res) => {
   db.prepare('DELETE FROM password_resets WHERE token = ?').run(token);
   res.json({ success: true });
 });
+// Add this route to routes/auth.js (before module.exports)
 
+const { requireAuth } = require('../middleware/auth');
+
+// Update profile
+router.post('/profile', requireAuth, (req, res) => {
+  const { full_name, phone, bio } = req.body;
+  if (!full_name) return res.status(400).json({ error: 'Full name required' });
+  db.prepare('UPDATE users SET full_name=?, phone=?, bio=? WHERE id=?')
+    .run(full_name, phone || null, bio || null, req.user.id);
+  res.json({ success: true });
+  
 module.exports = router;
