@@ -51,6 +51,7 @@ app.post('/api/contact', async (req, res) => {
     res.status(500).json({ error: 'AI advisor unavailable. Please WhatsApp us: +2349060914286' });
   }
 });
+
 app.post('/api/ai/advisor', async (req, res) => {
   const { message, history } = req.body;
   try {
@@ -58,7 +59,7 @@ app.post('/api/ai/advisor', async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': process.env.antropic,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
