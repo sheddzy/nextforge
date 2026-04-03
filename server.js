@@ -50,7 +50,9 @@ app.post('/api/ai/advisor', async (req, res) => {
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {         'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'},
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 800,
@@ -70,23 +72,7 @@ Contact: WhatsApp +2349060914286 | info@nextforgeacademy.online | Lagos, Nigeria
 Be warm, concise and specific. If someone seems unsure, ask one clarifying question. Always end with a clear next step.`,
         messages: [...(history || []), { role: 'user', content: message }]
       })
-
-      app.post('/api/ai/advisor', async (req, res) => {
-  const { message, history } = req.body;
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 800,
-        system: `You are the NextForge Academy AI Advisor. Help people in Nigeria choose the right tech training programme. Be warm, concise and specific. NextForge Academy offers: Project Management (12 weeks ₦250,000), Product Management (13 weeks ₦250,000), Data Analysis (12 weeks ₦300,000), Notion Mastery (6 weeks ₦160,000), Operations Systems Design (8 weeks ₦200,000), Business Communication (8 weeks ₦200,000). Contact: WhatsApp +2349060914286. Always end with a clear next step.`,
-        messages: [...(history || []), { role: 'user', content: message }]
-      })
+     
     });
     const data = await response.json();
     if (data.error) throw new Error(data.error.message);
