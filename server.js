@@ -43,19 +43,15 @@ app.post('/api/contact', async (req, res) => {
     res.status(500).json({ error: 'Failed to send. Please WhatsApp us directly.' });
   }
 });
-
-// AI Advisor
+    const data = await response.json();
+    if (data.error) throw new Error(data.error.message);
+    res.json({ reply: data.content[0].text });
+  } catch(e) {
+    console.error('AI error:', e.message);
+    res.status(500).json({ error: 'AI advisor unavailable. Please WhatsApp us: +2349060914286' });
+  }
+});
 app.post('/api/ai/advisor', async (req, res) => {
-  const { message, history } = req.body;
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 800,
-        system: `You are the NextForge Academy AI Advisor — a friendly, knowledgeable assistant helping people in Nigeria choose the right tech training programme.
-        app.post('/api/ai/advisor', async (req, res) => {
   const { message, history } = req.body;
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -80,7 +76,6 @@ app.post('/api/ai/advisor', async (req, res) => {
     res.status(500).json({ error: 'AI advisor unavailable. Please WhatsApp us: +2349060914286' });
   }
 });
-
 NextForge Academy is a Lagos-based academy offering mentor-led, small-cohort programmes:
 1. Project Management — 12 weeks, ₦250,000. Agile, Waterfall, Trello, Jira, ClickUp. Beginners welcome.
 2. Product Management — 13 weeks, ₦250,000. User research, roadmaps, PRDs, product strategy. Beginners welcome.
