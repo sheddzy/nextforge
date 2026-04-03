@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Payments — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+<div class="portal">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><a href="/" style="font-weight:800;font-size:1.1rem;color:var(--white)">Next<span style="color:var(--gold)">Forge</span></a><div style="font-size:0.68rem;color:var(--gold);margin-top:2px">Admin Panel</div></div>
+    <a href="/admin/dashboard.html" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="/admin/students.html" class="nav-item"><span class="nav-icon">👥</span> All Students</a>
+    <a href="/admin/payments.html" class="nav-item active"><span class="nav-icon">💳</span> Payments</a>
+    <a href="/instructor/course.html" class="nav-item"><span class="nav-icon">📚</span> Manage Courses</a>
+    <div class="nav-section">Account</div>
+    <a href="#" class="nav-item" onclick="logout()" style="margin-top:auto"><span class="nav-icon">🚪</span> Sign Out</a>
+  </aside>
+  <div class="portal-main">
+    <div class="topbar">
+      <div style="font-weight:700;color:var(--white)">Payment Records</div>
+      <div style="font-size:0.85rem;color:var(--text)">Total Revenue: <strong style="color:var(--gold)" id="totalRevenue">Loading...</strong></div>
+    </div>
+    <div class="portal-content">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Amount</th><th>Reference</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody id="paymentsTable"><tr><td colspan="7" style="text-align:center;color:var(--text);padding:24px">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const token=localStorage.getItem('nf_token');
+if(!token||localStorage.getItem('nf_role')!=='admin')window.location.href='/login.html';
+const authH={credentials:'include',headers:{'Authorization':'Bearer '+token}};
+function logout(){fetch('/api/auth/logout',{method:'POST',credentials:'include'});localStorage.clear();window.location.href='/login.html';}
+
+async function loadPayments(){
+  const res=await fetch('/api/admin/payments',authH);
+  const payments=await res.json();
+  const total=payments.filter(p=>p.status==='success').reduce((s,p)=>s+p.amount,0);
+  document.getElementById('totalRevenue').textContent='₦'+Number(total).toLocaleString();
+  const tb=document.getElementById('paymentsTable');
+  tb.innerHTML=payments.length?payments.map(p=>`
+    <tr>
+      <td style="color:var(--white);font-weight:600">${p.full_name}</td>
+      <td style="font-size:0.8rem">${p.email}</td>
+      <td style="font-size:0.82rem">${p.course_title}</td>
+      <td style="color:var(--gold);font-weight:600">₦${Number(p.amount).toLocaleString()}</td>
+      <td style="font-size:0.72rem;color:var(--text)">${p.reference}</td>
+      <td><span class="badge ${p.status==='success'?'badge-green':p.status==='pending'?'badge-blue':'badge-red'}">${p.status}</span></td>
+      <td style="font-size:0.8rem">${new Date(p.created_at).toLocaleDateString()}</td>
+    </tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--text);padding:24px">No payments yet.</td></tr>';
+}
+loadPayments();
+</script>
+</body>
+</html>
