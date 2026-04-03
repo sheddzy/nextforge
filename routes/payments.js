@@ -6,7 +6,7 @@ const { requireAuth } = require('../middleware/auth');
 
 // Ensure fetch works (Node 18+ OR install node-fetch)
 const fetch = global.fetch || require('node-fetch');
-
+const SECRET = () => process.env.PAYSTACK_SECRET_KEY.replace(/"/g, '').trim();
 const SECRET = () => process.env.PAYSTACK_SECRET_KEY;
 const PUBLIC = () => process.env.PAYSTACK_PUBLIC_KEY;
 const CALLBACK_URL = () => process.env.PAYMENT_CALLBACK_URL;
