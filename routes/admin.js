@@ -103,6 +103,14 @@ router.post('/courses/:id/assignments', requireStaff, (req, res) => {
   res.json({ success: true, id: r.lastInsertRowid });
 });
 
+// Update course price
+router.post('/courses/:id/price', requireAdmin, (req, res) => {
+  const { price } = req.body;
+  if (!price || isNaN(price)) return res.status(400).json({ error: 'Valid price required' });
+  db.prepare('UPDATE courses SET price = ? WHERE id = ?').run(parseInt(price), req.params.id);
+  res.json({ success: true });
+});
+
 // Post announcement
 router.post('/announcements', requireStaff, (req, res) => {
   const { title, body, course_id, is_global } = req.body;
