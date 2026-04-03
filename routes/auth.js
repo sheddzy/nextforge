@@ -132,7 +132,7 @@ router.post('/reset-password', (req, res) => {
   db.prepare('UPDATE users SET password = ? WHERE email = ?').run(bcrypt.hashSync(password, 10), record.email);
   db.prepare('DELETE FROM password_resets WHERE token = ?').run(token);
   res.json({ success: true });
-});
+
 // Add this route to routes/auth.js (before module.exports)
 
 const { requireAuth } = require('../middleware/auth');
@@ -144,5 +144,5 @@ router.post('/profile', requireAuth, (req, res) => {
   db.prepare('UPDATE users SET full_name=?, phone=?, bio=? WHERE id=?')
     .run(full_name, phone || null, bio || null, req.user.id);
   res.json({ success: true });
-  
+  });
 module.exports = router;
