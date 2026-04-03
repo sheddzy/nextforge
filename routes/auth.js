@@ -5,7 +5,9 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const db = require('../database');
 const { sendOTP, sendWelcome, sendAdminNewEnrollment, sendPasswordReset } = require('../emails');
+const { requireAuth } = require('../middleware/auth');
 
+// JWT helper
 function signToken(user) {
   return jwt.sign(
     { id: user.id, email: user.email, role: user.role, name: user.full_name },
@@ -14,35 +16,41 @@ function signToken(user) {
   );
 }
 
-// Send OTP
+// ===================== OTP =====================
 router.post('/send-otp', async (req, res) => {
   const { email, name } = req.body;
   if (!email || !name) return res.status(400).json({ error: 'Email and name required' });
+
   const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
   if (exists) return res.status(409).json({ error: 'This email is already registered. Please sign in.' });
+
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const expires = Date.now() + 10 * 60 * 1000;
+
+  // Clean old OTPs
+  db.prepare('DELETE FROM otp_store WHERE expires_at < ?').run(Date.now());
+
   db.prepare(`INSERT INTO otp_store (email,otp,expires_at) VALUES (?,?,?)
     ON CONFLICT(email) DO UPDATE SET otp=excluded.otp,expires_at=excluded.expires_at`)
     .run(email, otp, expires);
+
   const sent = await sendOTP(email, name, otp);
-  if (!sent) {
-    // Still return success in dev, show OTP in logs
-    console.log(`[DEV] OTP for ${email}: ${otp}`);
-  }
+  if (!sent) console.log(`[DEV] OTP for ${email}: ${otp}`);
+
   res.json({ success: true });
 });
 
-// Register
+// ===================== Register =====================
 router.post('/register', async (req, res) => {
   const { full_name, email, password, track, phone, role, otp } = req.body;
-  if (!full_name || !email || !password || !otp) {
+  if (!full_name || !email || !password || !otp)
     return res.status(400).json({ error: 'All fields required' });
-  }
+
   const record = db.prepare('SELECT * FROM otp_store WHERE email = ?').get(email);
   if (!record) return res.status(400).json({ error: 'Please request a verification code first' });
   if (record.otp !== otp) return res.status(400).json({ error: 'Incorrect verification code' });
   if (Date.now() > record.expires_at) return res.status(400).json({ error: 'Code expired. Please request a new one.' });
+
   const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
   if (exists) return res.status(409).json({ error: 'Email already registered' });
 
@@ -62,8 +70,8 @@ router.post('/register', async (req, res) => {
       try {
         db.prepare('INSERT OR IGNORE INTO enrollments (user_id,course_id) VALUES (?,?)').run(user.id, course.id);
         await sendWelcome(user, course);
-        const admin = db.prepare("SELECT email FROM users WHERE role = 'admin'").get();
-        if (admin) await sendAdminNewEnrollment(admin.email, user, course);
+        const admins = db.prepare("SELECT email FROM users WHERE role='admin'").all();
+        for (const admin of admins) await sendAdminNewEnrollment(admin.email, user, course);
       } catch(e) { console.error('Post-register error:', e.message); }
     }
   }
@@ -72,34 +80,50 @@ router.post('/register', async (req, res) => {
     .run(user.id, `Welcome to NextForge Academy, ${full_name}! 🎉`, 'success');
 
   const token = signToken(user);
-  res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000, sameSite: 'lax' });
+  const isProd = process.env.NODE_ENV === 'production';
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+
   res.json({ success: true, token, role: user.role, name: user.full_name });
 });
 
-// Login
+// ===================== Login =====================
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+
   const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
-  if (!user || !bcrypt.compareSync(password, user.password)) {
+  if (!user || !bcrypt.compareSync(password, user.password))
     return res.status(401).json({ error: 'Incorrect email or password' });
-  }
   if (!user.is_active) return res.status(403).json({ error: 'Account suspended. Contact support.' });
+
   const token = signToken(user);
-  res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000, sameSite: 'lax' });
+  const isProd = process.env.NODE_ENV === 'production';
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+
   res.json({ success: true, token, role: user.role, name: user.full_name, id: user.id });
 });
 
-// Logout
+// ===================== Logout =====================
 router.post('/logout', (req, res) => {
   res.clearCookie('token');
   res.json({ success: true });
 });
 
-// Me
+// ===================== Me =====================
 router.get('/me', (req, res) => {
   const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Not authenticated' });
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = db.prepare('SELECT id,full_name,email,role,track,phone,bio,avatar_url,created_at FROM users WHERE id = ?').get(decoded.id);
@@ -107,42 +131,72 @@ router.get('/me', (req, res) => {
   } catch { res.status(401).json({ error: 'Invalid token' }); }
 });
 
-// Forgot password
+// ===================== Forgot password =====================
 router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
   const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
-  if (!user) return res.status(404).json({ error: 'No account found with this email' });
-  const token = crypto.randomBytes(32).toString('hex');
-  const expires = Date.now() + 60 * 60 * 1000;
-  db.prepare(`INSERT INTO password_resets (email,token,expires_at) VALUES (?,?,?)
-    ON CONFLICT(email) DO UPDATE SET token=excluded.token,expires_at=excluded.expires_at`)
-    .run(email, token, expires);
-  const resetLink = `https://nextforgeacademy.online/login.html?reset_token=${token}`;
-  await sendPasswordReset(user, resetLink);
+
+  if (user) {
+    const token = crypto.randomBytes(32).toString('hex');
+    const expires = Date.now() + 60 * 60 * 1000;
+    db.prepare(`INSERT INTO password_resets (email,token,expires_at) VALUES (?,?,?)
+      ON CONFLICT(email) DO UPDATE SET token=excluded.token,expires_at=excluded.expires_at`)
+      .run(email, token, expires);
+
+    const resetLink = `https://nextforgeacademy.online/login.html?reset_token=${token}`;
+    await sendPasswordReset(user, resetLink);
+  }
+
+  res.json({ success: true }); // always success to avoid enumeration
+});
+
+// ===================== Reset password =====================
+router.post('/reset-password', (req, res) => {
+  const { token, password } = req.body;
+
+  if (!password || password.length < 6)
+    return res.status(400).json({ error: 'Password must be at least 6 characters' });
+
+  const record = db.prepare('SELECT * FROM password_resets WHERE token = ?').get(token);
+  if (!record || Date.now() > record.expires_at)
+    return res.status(400).json({ error: 'Invalid or expired reset link' });
+
+  db.prepare('UPDATE users SET password = ? WHERE email = ?').run(bcrypt.hashSync(password, 10), record.email);
+  db.prepare('DELETE FROM password_resets WHERE token = ?').run(token);
+
   res.json({ success: true });
 });
 
-// Reset password
-router.post('/reset-password', (req, res) => {
-  const { token, password } = req.body;
-  const record = db.prepare('SELECT * FROM password_resets WHERE token = ?').get(token);
-  if (!record || Date.now() > record.expires_at) {
-    return res.status(400).json({ error: 'Invalid or expired reset link' });
-  }
-  db.prepare('UPDATE users SET password = ? WHERE email = ?').run(bcrypt.hashSync(password, 10), record.email);
-  db.prepare('DELETE FROM password_resets WHERE token = ?').run(token);
-  res.json({ success: true });
+// ===================== Update profile =====================
+router.put('/profile', requireAuth, (req, res) => {
+  let { full_name, phone, bio } = req.body;
 
-// Add this route to routes/auth.js (before module.exports)
+  if (!full_name || full_name.trim().length < 2)
+    return res.status(400).json({ error: 'Valid full name required' });
 
-const { requireAuth } = require('../middleware/auth');
+  if (bio && bio.length > 500)
+    return res.status(400).json({ error: 'Bio too long (max 500 chars)' });
 
-// Update profile
-router.post('/profile', requireAuth, (req, res) => {
-  const { full_name, phone, bio } = req.body;
-  if (!full_name) return res.status(400).json({ error: 'Full name required' });
-  db.prepare('UPDATE users SET full_name=?, phone=?, bio=? WHERE id=?')
-    .run(full_name, phone || null, bio || null, req.user.id);
-  res.json({ success: true });
-  });
+  if (phone && phone.length > 20)
+    return res.status(400).json({ error: 'Invalid phone number' });
+
+  db.prepare(`
+    UPDATE users
+    SET full_name=?, phone=?, bio=?
+    WHERE id=?
+  `).run(
+    full_name.trim(),
+    phone?.trim() || null,
+    bio?.trim() || null,
+    req.user.id
+  );
+
+  const user = db.prepare(`
+    SELECT id,full_name,email,role,track,phone,bio,avatar_url,created_at
+    FROM users WHERE id=?
+  `).get(req.user.id);
+
+  res.json({ success: true, user });
+});
+
 module.exports = router;
