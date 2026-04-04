@@ -262,7 +262,7 @@ router.post('/register', async (req, res) => {
   res.json({ success: true, token, role: user.role, name: user.full_name });
 });
 
-Seed test accounts — remove after use
+//Seed test accounts — remove after use
 router.post('/seed-test-accounts', async (req, res) => {
   const bcrypt = require('bcryptjs');
   const accounts = [
