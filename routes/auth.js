@@ -198,5 +198,67 @@ router.put('/profile', requireAuth, (req, res) => {
 
   res.json({ success: true, user });
 });
+// Check if email exists
+router.post('/check-email', (req, res) => {
+  const { email } = req.body;
+  const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+  res.json({ exists: !!exists });
+});
 
+// Update register to handle instructor approval + payment verification
+router.post('/register', async (req, res) => {
+  const { full_name, email, password, phone, role, otp, course_id, payment_reference, avatar_base64, bio } = req.body;
+  if (!full_name || !email || !password || !otp) return res.status(400).json({ error: 'All fields required' });
+
+  const record = db.prepare('SELECT * FROM otp_store WHERE email = ?').get(email);
+  if (!record) return res.status(400).json({ error: 'Please request a verification code first' });
+  if (record.otp !== otp) return res.status(400).json({ error: 'Incorrect verification code' });
+  if (Date.now() > record.expires_at) return res.status(400).json({ error: 'Code expired. Please request a new one.' });
+
+  const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+  if (exists) return res.status(409).json({ error: 'Email already registered' });
+
+  const hash = bcrypt.hashSync(password, 10);
+  const userRole = role === 'instructor' ? 'instructor' : 'student';
+  // Instructors start as pending approval
+  const isActive = userRole === 'instructor' ? 0 : 1;
+  const isApproved = userRole === 'instructor' ? 0 : 1;
+
+  const result = db.prepare(`
+    INSERT INTO users (full_name, email, password, role, phone, bio, avatar_url, is_verified, is_active, is_approved)
+    VALUES (?,?,?,?,?,?,?,1,?,?)
+  `).run(full_name, email, hash, userRole, phone || null, bio || null, avatar_base64 || null, isActive, isApproved);
+
+  db.prepare('DELETE FROM otp_store WHERE email = ?').run(email);
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(result.lastInsertRowid);
+
+  // If student with payment — verify payment and enroll
+  if (userRole === 'student' && course_id && payment_reference) {
+    try {
+      const payRes = await fetch(`https://api.paystack.co/transaction/verify/${payment_reference}`, {
+        headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}` }
+      });
+      const payData = await payRes.json();
+      if (payData.status && payData.data.status === 'success') {
+        db.prepare('INSERT OR IGNORE INTO enrollments (user_id, course_id, payment_reference) VALUES (?,?,?)').run(user.id, course_id, payment_reference);
+        db.prepare('INSERT OR IGNORE INTO payments (user_id, course_id, reference, amount, status) VALUES (?,?,?,?,?)').run(user.id, course_id, payment_reference, payData.data.amount / 100, 'success');
+      }
+    } catch(e) { console.error('Payment verify error:', e.message); }
+  }
+
+  db.prepare('INSERT INTO notifications (user_id, message, type) VALUES (?,?,?)').run(user.id, `Welcome to NextForge Academy, ${full_name}! 🎉`, 'success');
+
+  // Notify admin of instructor application
+  if (userRole === 'instructor') {
+    const admin = db.prepare("SELECT * FROM users WHERE role = 'admin'").get();
+    if (admin) {
+      db.prepare('INSERT INTO notifications (user_id, message, type) VALUES (?,?,?)').run(admin.id, `New instructor application from ${full_name} — awaiting your approval.`, 'info');
+    }
+    return res.json({ success: true, pending: true, role: 'instructor' });
+  }
+
+  const token = signToken(user);
+  res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000, sameSite: 'lax' });
+  res.json({ success: true, token, role: user.role, name: user.full_name });
+});
 module.exports = router;
