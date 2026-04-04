@@ -185,4 +185,34 @@ router.get('/announcements', requireStaff, (req, res) => {
   res.json(announcements);
 });
 
+// Instructor approval routes
+router.get('/instructors/pending', requireAdmin, (req, res) => {
+  const instructors = db.prepare("SELECT * FROM users WHERE role='instructor' AND is_approved=0 ORDER BY created_at DESC").all();
+  res.json(instructors);
+});
+
+router.get('/instructors/active', requireAdmin, (req, res) => {
+  const instructors = db.prepare("SELECT * FROM users WHERE role='instructor' AND is_approved=1 ORDER BY created_at DESC").all();
+  res.json(instructors);
+});
+
+router.post('/instructors/:id/approve', requireAdmin, (req, res) => {
+  const { approve } = req.body;
+  db.prepare('UPDATE users SET is_approved=?, is_active=? WHERE id=?').run(approve?1:0, approve?1:0, req.params.id);
+  if (approve) {
+    db.prepare('INSERT INTO notifications (user_id,message,type) VALUES (?,?,?)').run(req.params.id, '🎉 Your instructor application has been approved! You can now log in.', 'success');
+  } else {
+    db.prepare('INSERT INTO notifications (user_id,message,type) VALUES (?,?,?)').run(req.params.id, 'Your instructor application was not approved. Please contact info@nextforgeacademy.online for more information.', 'info');
+  }
+  res.json({ success: true });
+});
+
+// Update course price
+router.post('/courses/:id/price', requireAdmin, (req, res) => {
+  const { price } = req.body;
+  if (!price || isNaN(price)) return res.status(400).json({ error: 'Valid price required' });
+  db.prepare('UPDATE courses SET price=? WHERE id=?').run(parseInt(price), req.params.id);
+  res.json({ success: true });
+});
+
 module.exports = router;
