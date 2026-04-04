@@ -25,6 +25,36 @@
   --radius-lg: 18px;
   --radius-xl: 24px;
   --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+
+  body {
+  background: var(--navy);
+  color: var(--text-2);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 17px; /* ← was 16px, increase to 17px */
+  line-height: 1.7; /* ← was 1.65 */
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  letter-spacing: -0.01em;
+}
+
+/* Update paragraph sizing */
+p { font-size: 1rem; line-height: 1.75; }
+
+/* Increase heading sizes */
+h1 { font-size: clamp(2rem, 5vw, 4rem); }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
+
+/* Increase container */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+
+/* Table text larger */
+td { font-size: 0.9rem; }
+th { font-size: 0.75rem; }
+
+/* Nav text larger */
+.nav-links a { font-size: 0.925rem; }
+.ni { font-size: 0.9rem; }
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
