@@ -261,4 +261,77 @@ router.post('/register', async (req, res) => {
   res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000, sameSite: 'lax' });
   res.json({ success: true, token, role: user.role, name: user.full_name });
 });
+
+Seed test accounts — remove after use
+router.post('/seed-test-accounts', async (req, res) => {
+  const bcrypt = require('bcryptjs');
+  const accounts = [
+    {
+      full_name: 'Amaka Obi (Test Student)',
+      email: 'student.test@nextforgeacademy.online',
+      password: 'TestStudent2026!',
+      role: 'student',
+      phone: '+2348012345678',
+      is_active: 1,
+      is_approved: 1,
+      is_verified: 1,
+      bio: JSON.stringify({
+        occupation: 'Admin Officer',
+        location: 'Lagos, Nigeria',
+        reason: 'I want to transition into tech and get a PM role within 6 months.',
+        goal: 'Land a Project Management role at a fintech company',
+        source: 'LinkedIn'
+      })
+    },
+    {
+      full_name: 'Chukwudi Eze (Test Instructor)',
+      email: 'instructor.test@nextforgeacademy.online',
+      password: 'TestInstructor2026!',
+      role: 'instructor',
+      phone: '+2348087654321',
+      is_active: 1,
+      is_approved: 1,
+      is_verified: 1,
+      bio: JSON.stringify({
+        title: 'Senior Product Manager',
+        exp: '5–10 years',
+        skills: 'Product Management, Agile, User Research, Roadmapping',
+        certs: 'PMP, Google PM Certificate',
+        bank: 'GTBank',
+        account: '0123456789',
+        acctname: 'Chukwudi Eze',
+        why: 'I want to share my 8 years of experience building products in Nigerian tech with the next generation.'
+      })
+    }
+  ];
+
+  const results = [];
+  for (const acc of accounts) {
+    const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(acc.email);
+    if (!exists) {
+      const hash = bcrypt.hashSync(acc.password, 10);
+      const r = db.prepare(`
+        INSERT INTO users (full_name, email, password, role, phone, bio, is_active, is_approved, is_verified)
+        VALUES (?,?,?,?,?,?,?,?,?)
+      `).run(acc.full_name, acc.email, hash, acc.role, acc.phone, acc.bio, acc.is_active, acc.is_approved, acc.is_verified);
+
+      // Enroll test student in first course
+      if (acc.role === 'student') {
+        db.prepare('INSERT OR IGNORE INTO enrollments (user_id, course_id) VALUES (?,?)').run(r.lastInsertRowid, 1);
+        db.prepare('INSERT OR IGNORE INTO enrollments (user_id, course_id) VALUES (?,?)').run(r.lastInsertRowid, 2);
+        // Add some progress
+        const lessons = db.prepare('SELECT id FROM lessons WHERE course_id = 1 LIMIT 3').all();
+        lessons.forEach(l => {
+          db.prepare('INSERT OR IGNORE INTO progress (user_id, lesson_id, completed, watch_percent) VALUES (?,?,1,100)').run(r.lastInsertRowid, l.id);
+        });
+      }
+
+      results.push({ email: acc.email, password: acc.password, created: true });
+    } else {
+      results.push({ email: acc.email, created: false, note: 'Already exists' });
+    }
+  }
+
+  res.json({ success: true, accounts: results });
+});
 module.exports = router;
