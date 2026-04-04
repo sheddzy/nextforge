@@ -76,9 +76,9 @@ router.post('/initialize', requireAuth, async (req, res) => {
     console.error(e);
     res.status(500).json({ error: 'Payment initialization failed' });
   }
-});
+//});
 // Initialize payment for registration (before account exists)
-router.post('/initialize-registration', async (req, res) => {
+//router.post('/initialize-registration', async (req, res) => {
   const { email, course_id, amount } = req.body;
   if (!email || !course_id || !amount) return res.status(400).json({ error: 'Missing fields' });
 
