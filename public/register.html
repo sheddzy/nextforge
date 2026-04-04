@@ -366,21 +366,23 @@ async function step3Pay() {
   if (!selectedCourseId) return err('e3', 'Please select a course to continue.');
 
   const btn = document.getElementById('payBtn');
-  btn.textContent = 'Opening payment...'; btn.disabled = true;
+  btn.textContent = 'Opening payment...';
+  btn.disabled = true;
 
   const email = document.getElementById('r_email').value.trim();
   const first = document.getElementById('r_first').value.trim();
   const last = document.getElementById('r_last').value.trim();
 
   try {
-    // Initialize Paystack payment
     const res = await fetch('/api/payments/initialize-registration', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, course_id: selectedCourseId, amount: selectedCoursePrice })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Payment initialization failed');
 
+    // ✅ CORRECT Paystack inline format
     const handler = PaystackPop.setup({
       key: paystackKey,
       email: email,
@@ -389,31 +391,41 @@ async function step3Pay() {
       ref: data.reference,
       firstname: first,
       lastname: last,
-      callback: async function(response) {
+      metadata: {
+        course_id: selectedCourseId,
+        type: 'registration'
+      },
+      callback: function(response) {
         paymentRef = response.reference;
         btn.textContent = 'Payment confirmed! Sending verification...';
-        // Send OTP after payment
-        const otpRes = await fetch('/api/auth/send-otp', {
-          method: 'POST', headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ email, name: first })
+        fetch('/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, name: first })
+        }).then(r => r.json()).then(d => {
+          if (!d.success) { err('e3', d.error || 'Failed to send code.'); btn.textContent = 'Pay & Create Account 🔒'; btn.disabled = false; return; }
+          document.getElementById('otpSubtext').textContent = 'Payment confirmed ✓ Enter the code sent to ' + email;
+          goStep(4);
+        }).catch(function() {
+          err('e3', 'Payment succeeded but failed to send verification. Contact support.');
+          btn.textContent = 'Pay & Create Account 🔒';
+          btn.disabled = false;
         });
-        const otpData = await otpRes.json();
-        if (!otpRes.ok) { err('e3', otpData.error || 'Failed to send verification code.'); return; }
-        document.getElementById('otpSubtext').textContent = `Payment confirmed! Enter the code sent to ${email}`;
-        goStep(4);
       },
       onClose: function() {
         btn.textContent = 'Pay & Create Account 🔒';
         btn.disabled = false;
       }
     });
+
     handler.openIframe();
+
   } catch(e) {
     err('e3', e.message || 'Payment failed. Please try again.');
     btn.textContent = 'Pay & Create Account 🔒';
     btn.disabled = false;
   }
-}
+    }  
 
 function om(inp, i) { if (inp.value.length === 1 && i < 5) document.getElementById('p' + (i+1)).focus(); }
 function ob(e, i) { if (e.key === 'Backspace' && !e.target.value && i > 0) document.getElementById('p' + (i-1)).focus(); }
