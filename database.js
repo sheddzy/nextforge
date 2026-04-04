@@ -19,6 +19,7 @@ db.exec(`
     avatar_url TEXT,
     is_verified INTEGER DEFAULT 0,
     is_active INTEGER DEFAULT 1,
+    is_approved INTEGER DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
   CREATE TABLE IF NOT EXISTS courses (
