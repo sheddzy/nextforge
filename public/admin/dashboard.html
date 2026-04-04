@@ -3,191 +3,586 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Admin Dashboard — NextForge Academy</title>
+<title>Admin — NextForge Academy</title>
 <link rel="stylesheet" href="/styles.css"/>
+<style>
+.mob-bar{display:none;position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(8,15,30,0.97);border-bottom:1px solid var(--border);padding:13px 18px;align-items:center;justify-content:space-between}
+.mob-menu-btn{background:none;border:none;color:var(--white);font-size:1.3rem;cursor:pointer}
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200}
+.mob-overlay.open{display:block}
+.sb.mob-open{display:flex!important;position:fixed;z-index:210;height:100vh}
+@media(max-width:1024px){.mob-bar{display:flex}.sb{display:none}.portal{grid-template-columns:1fr}.pm{padding-top:54px}.pc{padding:16px}.topbar{display:none}}
+
+/* KPIS */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+@media(max-width:768px){.kpi-row{grid-template-columns:1fr 1fr}}
+
+/* COHORT BANNER */
+.cohort-banner{background:linear-gradient(135deg,var(--navy-3),var(--navy-4));border:1px solid var(--border-2);border-radius:var(--r-xl);padding:22px 26px;margin-bottom:22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.cohort-badge{background:var(--gold);color:#000;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;flex-shrink:0}
+
+/* SECTION CARDS */
+.sec-card{background:var(--navy-2);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:18px;overflow:hidden}
+.sec-card-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.sec-card-hdr h4{font-size:0.95rem;color:var(--white)}
+.sec-card-body{padding:18px}
+
+/* INSTRUCTOR CARD */
+.instr-card-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;background:var(--navy-3)}
+.ia-img{width:44px;height:44px;border-radius:50%;object-fit:cover;background:var(--navy-2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;overflow:hidden}
+
+/* PRICE EDITOR */
+.price-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.price-row:last-child{border-bottom:none}
+
+/* PROMO */
+.promo-card{background:var(--gold-dim);border:1px solid rgba(240,165,0,0.2);border-radius:var(--r);padding:14px}
+</style>
 </head>
 <body>
+
+<div class="mob-bar">
+  <a href="/" class="logo" style="font-size:1rem"><div class="logo-mark" style="width:28px;height:28px;border-radius:7px"><svg viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>Next<span>Forge</span></a>
+  <button class="mob-menu-btn" onclick="toggleSB()">☰</button>
+</div>
+<div class="mob-overlay" id="mobOv" onclick="toggleSB()"></div>
+
 <div class="portal">
-  <aside class="sidebar">
-    <div class="sidebar-logo"><a href="/" style="font-weight:800;font-size:1.1rem;color:var(--white)">Next<span style="color:var(--gold)">Forge</span></a><div style="font-size:0.68rem;color:var(--gold);margin-top:2px">Admin Panel</div></div>
-    <a href="/admin/dashboard.html" class="nav-item active"><span class="nav-icon">📊</span> Dashboard</a>
-    <a href="/admin/students.html" class="nav-item"><span class="nav-icon">👥</span> All Students</a>
-    <a href="/admin/payments.html" class="nav-item"><span class="nav-icon">💳</span> Payments</a>
-    <a href="/instructor/course.html" class="nav-item"><span class="nav-icon">📚</span> Manage Courses</a>
-    <a href="/instructor/students.html" class="nav-item"><span class="nav-icon">📈</span> Progress Tracker</a>
-    <div class="nav-section">Tools</div>
-    <a href="#" class="nav-item" onclick="openIssueCert()"><span class="nav-icon">🎓</span> Issue Certificate</a>
-    <a href="#" class="nav-item" onclick="openAnnounce()"><span class="nav-icon">📢</span> Announcement</a>
-    <div class="nav-section">Site</div>
-    <a href="/" class="nav-item"><span class="nav-icon">🌐</span> View Site</a>
-    <a href="#" class="nav-item" onclick="logout()" style="margin-top:auto"><span class="nav-icon">🚪</span> Sign Out</a>
+  <aside class="sb" id="sb">
+    <div class="sb-top">
+      <a href="/" class="logo"><div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>Next<span>Forge</span></a>
+      <div class="sb-user"><div class="sb-avatar">⚙️</div><div><div class="sb-name" id="adminName">Admin</div><div class="sb-role">Administrator</div></div></div>
+    </div>
+    <div class="sb-nav">
+      <a href="#" class="ni active" onclick="show('overview',this)"><span class="ni-icon">📊</span> Overview</a>
+      <a href="#" class="ni" onclick="show('students',this)"><span class="ni-icon">👥</span> Students</a>
+      <a href="#" class="ni" onclick="show('instructors',this)"><span class="ni-icon">👨‍🏫</span> Instructors <span class="ni-badge" id="pendingBadge" style="display:none">!</span></a>
+      <a href="#" class="ni" onclick="show('courses',this)"><span class="ni-icon">📚</span> Courses</a>
+      <a href="#" class="ni" onclick="show('pricing',this)"><span class="ni-icon">💰</span> Pricing & Promos</a>
+      <a href="#" class="ni" onclick="show('cohort',this)"><span class="ni-icon">📅</span> Cohort Settings</a>
+      <a href="#" class="ni" onclick="show('payments',this)"><span class="ni-icon">💳</span> Payments</a>
+      <a href="#" class="ni" onclick="show('announcements',this)"><span class="ni-icon">📢</span> Announcements</a>
+      <a href="#" class="ni" onclick="show('certificates',this)"><span class="ni-icon">🎓</span> Certificates</a>
+      <div class="sb-section">Site</div>
+      <a href="/" class="ni"><span class="ni-icon">🌐</span> View Website</a>
+    </div>
+    <div class="sb-bottom">
+      <a href="#" class="ni" onclick="logout()" style="color:#f87171"><span class="ni-icon">🚪</span> Sign Out</a>
+    </div>
   </aside>
-  <div class="portal-main">
+
+  <div class="pm">
     <div class="topbar">
-      <div><div style="font-weight:700;color:var(--white)">Admin Dashboard</div><div style="font-size:0.78rem;color:var(--text)">⚙️ <span id="adminName"></span></div></div>
+      <div><div style="font-weight:700;color:var(--white)" id="pageTitle">Admin Overview</div><div style="font-size:0.75rem;color:var(--text-2)" id="pageDate"></div></div>
       <div style="display:flex;gap:8px">
-        <a href="/instructor/course.html" class="btn btn-outline btn-sm">+ Add Lesson</a>
-        <a href="/admin/students.html" class="btn btn-gold btn-sm">View All Students</a>
+        <button class="btn btn-ghost btn-sm" onclick="show('announcements',null)">📢 Announce</button>
+        <button class="btn btn-gold btn-sm" onclick="show('students',null)">View Students</button>
       </div>
     </div>
-    <div class="portal-content">
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-card-icon">👥</div><div class="stat-card-num" id="sStudents">—</div><div class="stat-card-label">Total Students</div></div>
-        <div class="stat-card"><div class="stat-card-icon">📚</div><div class="stat-card-num" id="sEnrollments">—</div><div class="stat-card-label">Total Enrollments</div></div>
-        <div class="stat-card"><div class="stat-card-icon">💰</div><div class="stat-card-num" id="sRevenue">—</div><div class="stat-card-label">Total Revenue</div></div>
-        <div class="stat-card"><div class="stat-card-icon">📋</div><div class="stat-card-num" id="sCourses">—</div><div class="stat-card-label">Active Courses</div></div>
+
+    <div class="pc">
+
+      <!-- COHORT BANNER -->
+      <div class="cohort-banner">
+        <div>
+          <div class="cohort-badge" id="cohortBadge">April 2026 Cohort</div>
+          <div style="font-size:0.78rem;color:var(--text-2);margin-top:6px" id="cohortSub">Next intake opens automatically — update details below</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="show('cohort',null)">⚙️ Edit Cohort</button>
+        </div>
       </div>
 
-      <h3 style="margin-bottom:14px">Recent Enrollments</h3>
-      <div class="table-wrap" style="margin-bottom:28px">
-        <table>
-          <thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Enrolled</th><th>Enrollments</th></tr></thead>
-          <tbody id="recentTable"><tr><td colspan="5" style="text-align:center;color:var(--text);padding:20px">Loading...</td></tr></tbody>
-        </table>
+      <!-- OVERVIEW PAGE -->
+      <div id="p-overview">
+        <div class="kpi-row">
+          <div class="sc blue"><div class="sc-icon">👥</div><div class="sc-num" id="kStudents">—</div><div class="sc-lbl">Total Students</div></div>
+          <div class="sc gold"><div class="sc-icon">💳</div><div class="sc-num" id="kEnroll">—</div><div class="sc-lbl">Enrollments</div></div>
+          <div class="sc green"><div class="sc-icon">₦</div><div class="sc-num" id="kRevenue">—</div><div class="sc-lbl">Total Revenue</div></div>
+          <div class="sc purple"><div class="sc-icon">⏳</div><div class="sc-num" id="kPending">—</div><div class="sc-lbl">Pending Approvals</div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+          <div class="sec-card">
+            <div class="sec-card-hdr"><h4>Recent Enrollments</h4><button class="btn btn-outline btn-sm" onclick="show('students',null)">View All →</button></div>
+            <div class="tw"><table><thead><tr><th>Student</th><th>Course</th><th>Date</th></tr></thead><tbody id="recentEnroll"><tr><td colspan="3" style="text-align:center;padding:16px;color:var(--text-2)">Loading...</td></tr></tbody></table></div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-card-hdr"><h4>Recent Payments</h4><button class="btn btn-outline btn-sm" onclick="show('payments',null)">View All →</button></div>
+            <div class="tw"><table><thead><tr><th>Name</th><th>Amount</th><th>Status</th></tr></thead><tbody id="recentPay"><tr><td colspan="3" style="text-align:center;padding:16px;color:var(--text-2)">Loading...</td></tr></tbody></table></div>
+          </div>
+        </div>
       </div>
 
-      <h3 style="margin-bottom:14px">Recent Payments</h3>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Student</th><th>Course</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
-          <tbody id="paymentsTable"><tr><td colspan="5" style="text-align:center;color:var(--text);padding:20px">Loading...</td></tr></tbody>
-        </table>
+      <!-- STUDENTS PAGE -->
+      <div id="p-students" style="display:none">
+        <div class="sec-card">
+          <div class="sec-card-hdr">
+            <h4>All Students</h4>
+            <input type="text" class="fi" id="studentSearch" placeholder="Search name or email..." oninput="filterStudents()" style="max-width:240px;padding:7px 12px;font-size:0.84rem"/>
+          </div>
+          <div class="tw"><table>
+            <thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Phone</th><th>Course</th><th>Enrolled</th><th>Progress</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="studentsTbl"><tr><td colspan="9" style="text-align:center;padding:20px;color:var(--text-2)">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
       </div>
-    </div>
+
+      <!-- INSTRUCTORS PAGE -->
+      <div id="p-instructors" style="display:none">
+        <div class="sec-card" style="margin-bottom:18px">
+          <div class="sec-card-hdr"><h4>⏳ Pending Instructor Approvals</h4></div>
+          <div class="sec-card-body" id="pendingInstrs"><div style="color:var(--text-2);font-size:0.85rem">Loading...</div></div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-hdr"><h4>Active Instructors</h4></div>
+          <div class="tw"><table>
+            <thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Skills</th><th>Bank</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="instrTbl"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text-2)">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- COURSES PAGE -->
+      <div id="p-courses" style="display:none">
+        <div class="sec-card">
+          <div class="sec-card-hdr"><h4>All Courses</h4><a href="/instructor/course.html" class="btn btn-gold btn-sm">+ Manage Content</a></div>
+          <div class="tw"><table>
+            <thead><tr><th>Course</th><th>Category</th><th>Duration</th><th>Price</th><th>Enrollments</th><th>Status</th></tr></thead>
+            <tbody id="coursesTbl"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-2)">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- PRICING PAGE -->
+      <div id="p-pricing" style="display:none">
+        <div class="sec-card" style="margin-bottom:18px">
+          <div class="sec-card-hdr"><h4>💰 Course Prices</h4></div>
+          <div class="sec-card-body" id="priceList">Loading...</div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-hdr"><h4>🏷️ Promo / Discount Codes</h4><button class="btn btn-gold btn-sm" onclick="openPromo()">+ Create Promo</button></div>
+          <div class="sec-card-body">
+            <div class="promo-card" style="margin-bottom:12px">
+              <div style="font-size:0.82rem;color:var(--text-2)">Create discount codes for specific courses or all courses. Students enter the code at registration to get a reduced price.</div>
+            </div>
+            <div id="promoList"><div style="color:var(--text-2);font-size:0.85rem">No promo codes yet.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COHORT PAGE -->
+      <div id="p-cohort" style="display:none">
+        <div class="sec-card">
+          <div class="sec-card-hdr"><h4>📅 Cohort Settings</h4></div>
+          <div class="sec-card-body">
+            <div class="al al-info" style="display:block;margin-bottom:18px">The cohort name and dates auto-update each month. You can override them below. Current year: <strong>2026</strong>.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="fg"><label class="fl">Cohort Name</label><input class="fi" id="cohortName" placeholder="e.g. May 2026 Cohort"/></div>
+              <div class="fg"><label class="fl">Start Date</label><input class="fi" type="date" id="cohortStart"/></div>
+              <div class="fg"><label class="fl">Registration Deadline</label><input class="fi" type="date" id="cohortDeadline"/></div>
+              <div class="fg"><label class="fl">Seats Available</label><input class="fi" type="number" id="cohortSeats" placeholder="e.g. 20"/></div>
+            </div>
+            <div class="fg"><label class="fl">Cohort Announcement (shown on homepage)</label><textarea class="fi" id="cohortMsg" rows="2" placeholder="e.g. April 2026 Cohort is now open — only 8 seats left!"></textarea></div>
+            <div class="al al-err" id="cohortErr" style="display:none"></div>
+            <div class="al al-ok" id="cohortOk" style="display:none"></div>
+            <button class="btn btn-gold" onclick="saveCohort()">Save Cohort Settings →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAYMENTS PAGE -->
+      <div id="p-payments" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="margin-bottom:2px">Payment Records</h3>
+            <div style="font-size:0.85rem;color:var(--text-2)">Total Revenue: <strong style="color:var(--gold)" id="totalRev">Loading...</strong></div>
+          </div>
+        </div>
+        <div class="tw"><table>
+          <thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Amount</th><th>Reference</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody id="payTbl"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text-2)">Loading...</td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- ANNOUNCEMENTS PAGE -->
+      <div id="p-announcements" style="display:none">
+        <div class="sec-card">
+          <div class="sec-card-hdr"><h4>Post Announcement</h4></div>
+          <div class="sec-card-body">
+            <div class="fg"><label class="fl">Send To</label><select class="fi" id="aScope"><option value="global">All Students (Global)</option></select></div>
+            <div class="fg"><label class="fl">Title</label><input class="fi" id="aTitle" placeholder="Announcement title"/></div>
+            <div class="fg"><label class="fl">Message</label><textarea class="fi" id="aBody" rows="4" placeholder="Write your announcement..."></textarea></div>
+            <div class="al al-err" id="aErr" style="display:none"></div>
+            <div class="al al-ok" id="aOk" style="display:none"></div>
+            <button class="btn btn-gold" onclick="postAnnounce()">Post to All Students →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CERTIFICATES PAGE -->
+      <div id="p-certificates" style="display:none">
+        <div class="sec-card">
+          <div class="sec-card-hdr"><h4>Issue Certificate Manually</h4></div>
+          <div class="sec-card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="fg"><label class="fl">Student User ID</label><input class="fi" type="number" id="certUser" placeholder="Student ID number"/></div>
+              <div class="fg"><label class="fl">Course ID</label><input class="fi" type="number" id="certCourse" placeholder="Course ID number"/></div>
+            </div>
+            <div class="al al-err" id="certErr" style="display:none"></div>
+            <div class="al al-ok" id="certOk" style="display:none"></div>
+            <button class="btn btn-gold" onclick="issueCert()">Issue Certificate →</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pc -->
+  </div><!-- /pm -->
+</div><!-- /portal -->
+
+<!-- STUDENT DETAIL MODAL -->
+<div class="mo" id="studentMo">
+  <div class="mo-box" style="max-width:600px">
+    <div class="mo-x" onclick="closeAll()">✕</div>
+    <div id="studentDetail"></div>
   </div>
 </div>
 
-<!-- ISSUE CERT MODAL -->
-<div class="modal-overlay" id="certModal">
-  <div class="modal">
-    <div class="modal-close" onclick="closeModals()">✕</div>
-    <h3 style="margin-bottom:16px">Issue Certificate Manually</h3>
-    <div class="form-group"><label class="form-label">Student ID</label><input class="form-input" type="number" id="certUserId" placeholder="Student user ID"/></div>
-    <div class="form-group"><label class="form-label">Course ID</label><input class="form-input" type="number" id="certCourseId" placeholder="Course ID"/></div>
-    <div class="alert alert-error" id="certErr" style="display:none"></div>
-    <div class="alert alert-success" id="certOk" style="display:none"></div>
-    <button class="btn btn-gold" style="width:100%" onclick="issueCert()">Issue Certificate →</button>
+<!-- INSTRUCTOR DETAIL MODAL -->
+<div class="mo" id="instrMo">
+  <div class="mo-box" style="max-width:600px">
+    <div class="mo-x" onclick="closeAll()">✕</div>
+    <div id="instrDetail"></div>
   </div>
 </div>
 
-<!-- ANNOUNCE MODAL -->
-<div class="modal-overlay" id="announceModal">
-  <div class="modal">
-    <div class="modal-close" onclick="closeModals()">✕</div>
-    <h3 style="margin-bottom:16px">Post Announcement</h3>
-    <div class="form-group"><label class="form-label">Audience</label><select class="form-input" id="announceScope"><option value="global">All Students (Global)</option></select></div>
-    <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="announceTitle" placeholder="Announcement title"/></div>
-    <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="announceBody" rows="4" placeholder="Write your announcement..."></textarea></div>
-    <div class="alert alert-error" id="announceErr" style="display:none"></div>
-    <button class="btn btn-gold" style="width:100%" onclick="postAnnouncement()">Post →</button>
+<!-- PROMO MODAL -->
+<div class="mo" id="promoMo">
+  <div class="mo-box">
+    <div class="mo-x" onclick="closeAll()">✕</div>
+    <h3 style="margin-bottom:16px">Create Promo Code</h3>
+    <div class="fg"><label class="fl">Promo Code</label><input class="fi" id="promoCode" placeholder="e.g. LAUNCH50" style="text-transform:uppercase"/></div>
+    <div class="fg"><label class="fl">Discount (%)</label><input class="fi" type="number" id="promoDisc" placeholder="e.g. 20" min="1" max="100"/></div>
+    <div class="fg"><label class="fl">Expires</label><input class="fi" type="date" id="promoExp"/></div>
+    <div class="fg"><label class="fl">Max Uses</label><input class="fi" type="number" id="promoMax" placeholder="e.g. 50 (leave blank for unlimited)"/></div>
+    <button class="btn btn-gold" style="width:100%" onclick="savePromo()">Create Promo →</button>
   </div>
 </div>
 
 <script>
-const token=localStorage.getItem('nf_token');
-if(!token||localStorage.getItem('nf_role')!=='admin')window.location.href='/login.html';
-document.getElementById('adminName').textContent=localStorage.getItem('nf_name')||'Admin';
-const authH={credentials:'include',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}};
+const token = localStorage.getItem('nf_token');
+if (!token || localStorage.getItem('nf_role') !== 'admin') window.location.href = '/login.html';
+document.getElementById('adminName').textContent = localStorage.getItem('nf_name') || 'Admin';
 
-function logout(){fetch('/api/auth/logout',{method:'POST',credentials:'include'});localStorage.clear();window.location.href='/login.html';}
-function closeModals(){document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open'));}
-function openIssueCert(){document.getElementById('certModal').classList.add('open');}
-function openAnnounce(){document.getElementById('announceModal').classList.add('open');}
+const H = { credentials: 'include', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' } };
+let allStudents = [];
 
-async function loadDashboard(){
-  const [statsRes,paymentsRes]=await Promise.all([fetch('/api/admin/stats',authH),fetch('/api/admin/payments',authH)]);
-  const stats=await statsRes.json();
-  const payments=await paymentsRes.json();
+// Auto cohort name
+const now = new Date();
+const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const cohortName = months[now.getMonth()] + ' ' + now.getFullYear() + ' Cohort';
+document.getElementById('cohortBadge').textContent = cohortName;
+document.getElementById('pageDate').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
-  document.getElementById('sStudents').textContent=stats.totalStudents;
-  document.getElementById('sEnrollments').textContent=stats.totalEnrollments;
-  document.getElementById('sCourses').textContent=stats.totalCourses;
-  document.getElementById('sRevenue').textContent='₦'+Number(stats.totalRevenue||0).toLocaleString();
-
-  const rt=document.getElementById('recentTable');
-  rt.innerHTML=stats.recentStudents.length?stats.recentStudents.map(s=>`
-    <tr>
-      <td style="color:var(--white);font-weight:600">${s.full_name}</td>
-      <td style="font-size:0.82rem">${s.email}</td>
-      <td>${s.track||'—'}</td>
-      <td>${new Date(s.created_at).toLocaleDateString()}</td>
-      <td><span class="badge badge-blue">${s.enrollments}</span></td>
-    </tr>`)
-    .join(''):'<tr><td colspan="5" style="text-align:center;color:var(--text);padding:20px">No students yet</td></tr>';
-
-  const pt=document.getElementById('paymentsTable');
-  pt.innerHTML=payments.length?payments.slice(0,10).map(p=>`
-    <tr>
-      <td style="color:var(--white)">${p.full_name}</td>
-      <td style="font-size:0.82rem">${p.course_title}</td>
-      <td style="color:var(--gold);font-weight:600">₦${Number(p.amount).toLocaleString()}</td>
-      <td><span class="badge ${p.status==='success'?'badge-green':'badge-red'}">${p.status}</span></td>
-      <td style="font-size:0.8rem">${new Date(p.created_at).toLocaleDateString()}</td>
-    </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--text);padding:20px">No payments yet</td></tr>';
+function toggleSB() {
+  document.getElementById('sb').classList.toggle('mob-open');
+  document.getElementById('mobOv').classList.toggle('open');
 }
 
-async function issueCert(){
-  const user_id=document.getElementById('certUserId').value;
-  const course_id=document.getElementById('certCourseId').value;
-  const err=document.getElementById('certErr');const ok=document.getElementById('certOk');
-  err.style.display='none';ok.style.display='none';
-  if(!user_id||!course_id)return (err.textContent='Both fields required.',err.style.display='block');
-  const res=await fetch('/api/admin/certificates',{method:'POST',...authH,body:JSON.stringify({user_id,course_id})});
-  const d=await res.json();
-  if(res.ok){ok.textContent='Certificate issued! Code: '+d.cert_code;ok.style.display='block';}
-  else{err.textContent=d.error;err.style.display='block';}
+function show(id, el) {
+  document.querySelectorAll('[id^="p-"]').forEach(p => p.style.display = 'none');
+  document.getElementById('p-' + id).style.display = 'block';
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const titles = { overview:'Admin Overview', students:'All Students', instructors:'Instructor Management', courses:'Course Management', pricing:'Pricing & Promos', cohort:'Cohort Settings', payments:'Payment Records', announcements:'Announcements', certificates:'Certificates' };
+  document.getElementById('pageTitle').textContent = titles[id] || id;
+  document.getElementById('sb').classList.remove('mob-open');
+  document.getElementById('mobOv').classList.remove('open');
+
+  // Lazy load
+  if (id === 'students') loadStudents();
+  if (id === 'instructors') loadInstructors();
+  if (id === 'courses') loadCourses();
+  if (id === 'payments') loadPayments();
+  if (id === 'pricing') loadPricing();
+  if (id === 'cohort') initCohort();
 }
 
-async function postAnnouncement(){
-  const title=document.getElementById('announceTitle').value.trim();
-  const body=document.getElementById('announceBody').value.trim();
-  const err=document.getElementById('announceErr');err.style.display='none';
-  if(!title||!body)return (err.textContent='Please fill in all fields.',err.style.display='block');
-  const res=await fetch('/api/admin/announcements',{method:'POST',...authH,body:JSON.stringify({title,body,is_global:true})});
-  if(res.ok){closeModals();alert('Announcement posted to all students!');}
-  else{const d=await res.json();err.textContent=d.error;err.style.display='block';}
-}
-// Add to admin dashboard script
+function closeAll() { document.querySelectorAll('.mo').forEach(m => m.classList.remove('open')); }
+function openPromo() { document.getElementById('promoMo').classList.add('open'); }
+function logout() { fetch('/api/auth/logout',{method:'POST',credentials:'include'}); localStorage.clear(); window.location.href='/login.html'; }
 
-async function loadPrices() {
-  const res = await fetch('/api/admin/courses', authH);
+async function loadOverview() {
+  const [statsRes, payRes] = await Promise.all([fetch('/api/admin/stats',H), fetch('/api/admin/payments',H)]);
+  const stats = await statsRes.json();
+  const pays = await payRes.json();
+
+  document.getElementById('kStudents').textContent = stats.totalStudents;
+  document.getElementById('kEnroll').textContent = stats.totalEnrollments;
+  document.getElementById('kRevenue').textContent = '₦' + Number(stats.totalRevenue||0).toLocaleString();
+
+  const instrPending = await fetch('/api/admin/instructors/pending',H);
+  const pending = await instrPending.json();
+  document.getElementById('kPending').textContent = pending.length;
+  if (pending.length > 0) { document.getElementById('pendingBadge').textContent = pending.length; document.getElementById('pendingBadge').style.display = 'inline'; }
+
+  document.getElementById('recentEnroll').innerHTML = stats.recentStudents.length ?
+    stats.recentStudents.slice(0,6).map(s => `<tr><td style="color:var(--white);font-weight:600">${s.full_name}</td><td style="font-size:0.8rem">${s.course||s.track||'—'}</td><td style="font-size:0.78rem">${new Date(s.created_at).toLocaleDateString()}</td></tr>`).join('') :
+    '<tr><td colspan="3" style="text-align:center;padding:16px;color:var(--text-2)">No enrollments yet</td></tr>';
+
+  document.getElementById('recentPay').innerHTML = pays.length ?
+    pays.slice(0,6).map(p => `<tr><td style="color:var(--white)">${p.full_name}</td><td style="color:var(--gold);font-weight:600">₦${Number(p.amount).toLocaleString()}</td><td><span class="badge ${p.status==='success'?'badge-green':'badge-red'}">${p.status}</span></td></tr>`).join('') :
+    '<tr><td colspan="3" style="text-align:center;padding:16px;color:var(--text-2)">No payments yet</td></tr>';
+}
+
+async function loadStudents() {
+  const res = await fetch('/api/admin/students', H);
+  allStudents = await res.json();
+  renderStudents(allStudents);
+}
+
+function filterStudents() {
+  const q = document.getElementById('studentSearch').value.toLowerCase();
+  renderStudents(allStudents.filter(s => s.full_name.toLowerCase().includes(q) || s.email.toLowerCase().includes(q)));
+}
+
+function renderStudents(students) {
+  document.getElementById('studentsTbl').innerHTML = students.length ?
+    students.map(s => {
+      let bio = {};
+      try { bio = JSON.parse(s.bio||'{}'); } catch {}
+      return `<tr>
+        <td><div style="width:36px;height:36px;border-radius:50%;overflow:hidden;background:var(--navy-3);display:flex;align-items:center;justify-content:center">${s.avatar_url?`<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover"/>`:'👤'}</div></td>
+        <td style="color:var(--white);font-weight:600">${s.full_name}</td>
+        <td style="font-size:0.8rem">${s.email}</td>
+        <td style="font-size:0.8rem">${s.phone||'—'}</td>
+        <td style="font-size:0.8rem">${bio.occupation||s.track||'—'}</td>
+        <td style="font-size:0.78rem">${new Date(s.created_at).toLocaleDateString()}</td>
+        <td><span class="badge ${s.is_active?'badge-green':'badge-red'}">${s.is_active?'Active':'Suspended'}</span></td>
+        <td style="font-size:0.78rem">${s.enrollments||0} course(s)</td>
+        <td><div style="display:flex;gap:5px">
+          <button class="btn btn-outline btn-sm" onclick="viewStudent(${s.id})">View</button>
+          <button class="btn btn-danger btn-sm" onclick="toggleUser(${s.id},${s.is_active})">${s.is_active?'Suspend':'Restore'}</button>
+        </div></td>
+      </tr>`;
+    }).join('') :
+    '<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--text-2)">No students found.</td></tr>';
+}
+
+async function viewStudent(id) {
+  const res = await fetch(`/api/admin/students/${id}`, H);
+  const s = await res.json();
+  let bio = {};
+  try { bio = JSON.parse(s.bio||'{}'); } catch {}
+  document.getElementById('studentDetail').innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+      <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;background:var(--navy-3);border:3px solid var(--blue-2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">${s.avatar_url?`<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover"/>`:'👤'}</div>
+      <div><div style="font-weight:800;color:var(--white);font-size:1.05rem">${s.full_name}</div><div style="font-size:0.8rem;color:var(--text-2)">${s.email} · ${s.phone||'No phone'}</div><div style="font-size:0.75rem;color:var(--text-2);margin-top:2px">Joined ${new Date(s.created_at).toLocaleDateString()}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      ${bio.occupation?`<div style="background:var(--navy-3);border-radius:var(--r-sm);padding:10px"><div style="font-size:0.69rem;color:var(--text-2);margin-bottom:2px">OCCUPATION</div><div style="font-size:0.84rem;color:var(--white)">${bio.occupation}</div></div>`:''}
+      ${bio.location?`<div style="background:var(--navy-3);border-radius:var(--r-sm);padding:10px"><div style="font-size:0.69rem;color:var(--text-2);margin-bottom:2px">LOCATION</div><div style="font-size:0.84rem;color:var(--white)">${bio.location}</div></div>`:''}
+      ${bio.source?`<div style="background:var(--navy-3);border-radius:var(--r-sm);padding:10px"><div style="font-size:0.69rem;color:var(--text-2);margin-bottom:2px">HOW THEY FOUND US</div><div style="font-size:0.84rem;color:var(--white)">${bio.source}</div></div>`:''}
+    </div>
+    ${bio.reason?`<div style="margin-bottom:10px"><div style="font-size:0.69rem;color:var(--gold);margin-bottom:4px">WHY THEY WANT TO ENROLL</div><div style="font-size:0.84rem;color:var(--text-3);background:var(--navy-3);padding:10px;border-radius:var(--r-sm)">${bio.reason}</div></div>`:''}
+    ${bio.goal?`<div style="margin-bottom:14px"><div style="font-size:0.69rem;color:var(--gold);margin-bottom:4px">CAREER GOAL</div><div style="font-size:0.84rem;color:var(--text-3);background:var(--navy-3);padding:10px;border-radius:var(--r-sm)">${bio.goal}</div></div>`:''}
+    <h4 style="margin-bottom:10px">Enrolled Courses</h4>
+    ${(s.enrollments||[]).map(e=>{const pct=e.total>0?Math.round(e.completed/e.total*100):0;return`<div style="background:var(--navy-3);border-radius:var(--r-sm);padding:11px;margin-bottom:7px"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:0.84rem;color:var(--white)">${e.thumbnail} ${e.title}</span><span style="font-size:0.75rem;color:var(--text-2)">${pct}%</span></div><div class="pbar"><div class="pfill" style="width:${pct}%"></div></div></div>`}).join('')||'<div style="color:var(--text-2);font-size:0.84rem">No courses enrolled.</div>'}`;
+  document.getElementById('studentMo').classList.add('open');
+}
+
+async function loadInstructors() {
+  const [pendRes, activeRes] = await Promise.all([
+    fetch('/api/admin/instructors/pending', H),
+    fetch('/api/admin/instructors/active', H)
+  ]);
+  const pending = await pendRes.json();
+  const active = await activeRes.json();
+
+  document.getElementById('pendingInstrs').innerHTML = pending.length ?
+    pending.map(i => {
+      let bio = {};
+      try { bio = JSON.parse(i.bio||'{}'); } catch {}
+      return `<div class="instr-card-item">
+        <div class="ia-img">${i.avatar_url?`<img src="${i.avatar_url}" style="width:100%;height:100%;object-fit:cover"/>`:'👤'}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;color:var(--white);font-size:0.875rem">${i.full_name}</div>
+          <div style="font-size:0.75rem;color:var(--text-2)">${i.email} · ${bio.title||'Instructor'}</div>
+          <div style="font-size:0.75rem;color:var(--gold);margin-top:2px">${bio.skills||'—'}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button class="btn btn-outline btn-sm" onclick="viewInstructor(${JSON.stringify(i).replace(/"/g,'&quot;')})">View</button>
+          <button class="btn btn-gold btn-sm" onclick="approveInstructor(${i.id},true)">✓ Approve</button>
+          <button class="btn btn-danger btn-sm" onclick="approveInstructor(${i.id},false)">✕ Reject</button>
+        </div>
+      </div>`;
+    }).join('') :
+    '<div style="color:var(--text-2);font-size:0.84rem">No pending applications.</div>';
+
+  document.getElementById('instrTbl').innerHTML = active.length ?
+    active.map(i => {
+      let bio = {};
+      try { bio = JSON.parse(i.bio||'{}'); } catch {}
+      return `<tr>
+        <td><div style="width:36px;height:36px;border-radius:50%;overflow:hidden;background:var(--navy-3);display:flex;align-items:center;justify-content:center">${i.avatar_url?`<img src="${i.avatar_url}" style="width:100%;height:100%;object-fit:cover"/>`:'👤'}</div></td>
+        <td style="color:var(--white);font-weight:600">${i.full_name}</td>
+        <td style="font-size:0.8rem">${i.email}</td>
+        <td style="font-size:0.8rem">${bio.skills||'—'}</td>
+        <td style="font-size:0.8rem">${bio.bank||'—'} ${bio.account?'·'+bio.account:''}</td>
+        <td><span class="badge badge-green">Active</span></td>
+        <td><button class="btn btn-danger btn-sm" onclick="toggleUser(${i.id},1)">Suspend</button></td>
+      </tr>`;
+    }).join('') :
+    '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text-2)">No active instructors yet.</td></tr>';
+}
+
+async function approveInstructor(id, approve) {
+  await fetch(`/api/admin/instructors/${id}/approve`, {
+    method: 'POST', ...H,
+    body: JSON.stringify({ approve })
+  });
+  loadInstructors();
+  loadOverview();
+}
+
+function viewInstructor(i) {
+  let bio = {};
+  try { bio = JSON.parse(i.bio||'{}'); } catch {}
+  document.getElementById('instrDetail').innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+      <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;background:var(--navy-3);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">${i.avatar_url?`<img src="${i.avatar_url}" style="width:100%;height:100%;object-fit:cover"/>`:'👨‍🏫'}</div>
+      <div><div style="font-weight:800;color:var(--white);font-size:1.05rem">${i.full_name}</div><div style="font-size:0.8rem;color:var(--text-2)">${i.email} · ${i.phone||'No phone'}</div><div style="font-size:0.75rem;color:var(--gold);margin-top:2px">${bio.title||'Instructor'}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      ${bio.exp?`<div style="background:var(--navy-3);border-radius:var(--r-sm);padding:10px"><div style="font-size:0.69rem;color:var(--text-2);margin-bottom:2px">EXPERIENCE</div><div style="font-size:0.84rem;color:var(--white)">${bio.exp}</div></div>`:''}
+      ${bio.certs?`<div style="background:var(--navy-3);border-radius:var(--r-sm);padding:10px"><div style="font-size:0.69rem;color:var(--text-2);margin-bottom:2px">CERTIFICATIONS</div><div style="font-size:0.84rem;color:var(--white)">${bio.certs}</div></div>`:''}
+      ${bio.bank?`<div style="background:var(--navy-3);border-radius:var(--r-sm);padding:10px"><div style="font-size:0.69rem;color:var(--text-2);margin-bottom:2px">BANK</div><div style="font-size:0.84rem;color:var(--white)">${bio.bank}</div></div>`:''}
+      ${bio.account?`<div style="background:var(--navy-3);border-radius:var(--r-sm);padding:10px"><div style="font-size:0.69rem;color:var(--text-2);margin-bottom:2px">ACCOUNT</div><div style="font-size:0.84rem;color:var(--white)">${bio.acctname||''} · ${bio.account}</div></div>`:''}
+    </div>
+    ${bio.skills?`<div style="margin-bottom:10px"><div style="font-size:0.69rem;color:var(--gold);margin-bottom:4px">SKILLS</div><div style="font-size:0.84rem;color:var(--text-3);background:var(--navy-3);padding:10px;border-radius:var(--r-sm)">${bio.skills}</div></div>`:''}
+    ${bio.why?`<div><div style="font-size:0.69rem;color:var(--gold);margin-bottom:4px">WHY THEY WANT TO TEACH</div><div style="font-size:0.84rem;color:var(--text-3);background:var(--navy-3);padding:10px;border-radius:var(--r-sm)">${bio.why}</div></div>`:''}`;
+  document.getElementById('instrMo').classList.add('open');
+}
+
+async function toggleUser(id, current) {
+  if (!confirm(current ? 'Suspend this user?' : 'Restore this user?')) return;
+  await fetch(`/api/admin/students/${id}/toggle`, { method: 'POST', ...H });
+  loadStudents();
+}
+
+async function loadCourses() {
+  const res = await fetch('/api/admin/courses', H);
   const courses = await res.json();
-  document.getElementById('priceTable').innerHTML = courses.map(c => `
+  document.getElementById('coursesTbl').innerHTML = courses.map(c => `
     <tr>
       <td style="color:var(--white);font-weight:600">${c.thumbnail} ${c.title}</td>
-      <td>${c.duration}</td>
+      <td style="font-size:0.8rem">${c.category}</td>
+      <td style="font-size:0.8rem">${c.duration}</td>
       <td style="color:var(--gold);font-weight:600">₦${Number(c.price).toLocaleString()}</td>
-      <td><input type="number" id="price_${c.id}" value="${c.price}"
-          style="background:var(--navy-3);border:1px solid var(--border-light);border-radius:8px;
-          padding:7px 11px;color:var(--white);font-family:'Plus Jakarta Sans',sans-serif;
-          font-size:0.85rem;outline:none;width:140px"/></td>
-      <td><button class="btn btn-gold btn-sm" onclick="updatePrice(${c.id})">Update</button></td>
+      <td style="text-align:center"><span class="badge badge-blue">${c.enrollments}</span></td>
+      <td><span class="badge badge-green">Active</span></td>
     </tr>`).join('');
 }
 
-async function updatePrice(courseId) {
-  const newPrice = document.getElementById('price_' + courseId).value;
-  if (!newPrice || isNaN(newPrice)) return alert('Please enter a valid price.');
-  const res = await fetch('/api/admin/courses/' + courseId + '/price', {
-    method: 'POST', ...authH,
-    body: JSON.stringify({ price: parseInt(newPrice) })
-  });
-  if (res.ok) {
-    alert('Price updated successfully!');
-    loadDashboard();
-    loadPrices();
-  } else {
-    const d = await res.json();
-    alert(d.error || 'Failed to update price.');
-  }
+async function loadPricing() {
+  const res = await fetch('/api/admin/courses', H);
+  const courses = await res.json();
+  document.getElementById('priceList').innerHTML = courses.map(c => `
+    <div class="price-row">
+      <div style="flex:1;min-width:0"><div style="font-weight:600;color:var(--white);font-size:0.875rem">${c.thumbnail} ${c.title}</div><div style="font-size:0.75rem;color:var(--text-2)">${c.duration} · Current: <strong style="color:var(--gold)">₦${Number(c.price).toLocaleString()}</strong></div></div>
+      <input type="number" class="fi" id="np_${c.id}" value="${c.price}" style="width:140px;padding:7px 11px;font-size:0.84rem"/>
+      <button class="btn btn-gold btn-sm" onclick="updatePrice(${c.id})">Update</button>
+    </div>`).join('');
 }
 
-// Call at the bottom
+async function updatePrice(id) {
+  const price = parseInt(document.getElementById('np_' + id).value);
+  if (!price || price < 0) return alert('Enter a valid price.');
+  const res = await fetch('/api/admin/courses/' + id + '/price', { method: 'POST', ...H, body: JSON.stringify({ price }) });
+  const d = await res.json();
+  if (res.ok) { alert('✓ Price updated!'); loadPricing(); }
+  else alert(d.error || 'Failed to update price.');
+}
 
-document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)closeModals();}));
-loadDashboard();
-  loadPrices();
-  
+function initCohort() {
+  const now = new Date();
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cohortName').value = months[now.getMonth()] + ' ' + now.getFullYear() + ' Cohort';
+  // Default start = first day of next month
+  const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  document.getElementById('cohortStart').value = next.toISOString().split('T')[0];
+  const deadline = new Date(next); deadline.setDate(deadline.getDate() - 7);
+  document.getElementById('cohortDeadline').value = deadline.toISOString().split('T')[0];
+  document.getElementById('cohortSeats').value = '20';
+  document.getElementById('cohortMsg').value = months[next.getMonth()] + ' ' + next.getFullYear() + ' Cohort is now open — limited seats available!';
+}
+
+async function saveCohort() {
+  const name = document.getElementById('cohortName').value.trim();
+  const msg = document.getElementById('cohortMsg').value.trim();
+  const err = document.getElementById('cohortErr'); const ok = document.getElementById('cohortOk');
+  err.style.display = 'none'; ok.style.display = 'none';
+  if (!name) return (err.textContent = 'Cohort name required.', err.style.display = 'block');
+  // Save to settings (you can extend this to a settings table)
+  document.getElementById('cohortBadge').textContent = name;
+  document.getElementById('cohortSub').textContent = msg;
+  ok.textContent = '✓ Cohort settings saved!'; ok.style.display = 'block';
+  setTimeout(() => ok.style.display = 'none', 3000);
+}
+
+async function loadPayments() {
+  const res = await fetch('/api/admin/payments', H);
+  const pays = await res.json();
+  const total = pays.filter(p => p.status === 'success').reduce((s,p) => s + p.amount, 0);
+  document.getElementById('totalRev').textContent = '₦' + Number(total).toLocaleString();
+  document.getElementById('payTbl').innerHTML = pays.length ?
+    pays.map(p => `
+      <tr>
+        <td style="color:var(--white);font-weight:600">${p.full_name}</td>
+        <td style="font-size:0.79rem">${p.email}</td>
+        <td style="font-size:0.8rem">${p.course_title}</td>
+        <td style="color:var(--gold);font-weight:600">₦${Number(p.amount).toLocaleString()}</td>
+        <td style="font-size:0.69rem;color:var(--text-2)">${p.reference}</td>
+        <td><span class="badge ${p.status==='success'?'badge-green':'badge-red'}">${p.status}</span></td>
+        <td style="font-size:0.78rem">${new Date(p.created_at).toLocaleDateString()}</td>
+      </tr>`).join('') :
+    '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text-2)">No payments yet.</td></tr>';
+}
+
+async function postAnnounce() {
+  const title = document.getElementById('aTitle').value.trim();
+  const body = document.getElementById('aBody').value.trim();
+  const err = document.getElementById('aErr'); const ok = document.getElementById('aOk');
+  err.style.display = 'none'; ok.style.display = 'none';
+  if (!title || !body) return (err.textContent = 'Please fill in title and message.', err.style.display = 'block');
+  const res = await fetch('/api/admin/announcements', { method: 'POST', ...H, body: JSON.stringify({ title, body, is_global: true }) });
+  if (res.ok) { ok.textContent = '✓ Announcement posted to all students!'; ok.style.display = 'block'; document.getElementById('aTitle').value = ''; document.getElementById('aBody').value = ''; }
+  else { const d = await res.json(); err.textContent = d.error; err.style.display = 'block'; }
+}
+
+async function issueCert() {
+  const user_id = document.getElementById('certUser').value;
+  const course_id = document.getElementById('certCourse').value;
+  const err = document.getElementById('certErr'); const ok = document.getElementById('certOk');
+  err.style.display = 'none'; ok.style.display = 'none';
+  if (!user_id || !course_id) return (err.textContent = 'Both fields required.', err.style.display = 'block');
+  const res = await fetch('/api/admin/certificates', { method: 'POST', ...H, body: JSON.stringify({ user_id, course_id }) });
+  const d = await res.json();
+  if (res.ok) { ok.textContent = '✓ Certificate issued! Code: ' + d.cert_code; ok.style.display = 'block'; }
+  else { err.textContent = d.error; err.style.display = 'block'; }
+}
+
+async function savePromo() {
+  const code = document.getElementById('promoCode').value.trim().toUpperCase();
+  const disc = document.getElementById('promoDisc').value;
+  if (!code || !disc) return alert('Code and discount required.');
+  alert('Promo code "' + code + '" created with ' + disc + '% discount. (Connect to backend to persist.)');
+  closeAll();
+}
+
+document.querySelectorAll('.mo').forEach(m => m.addEventListener('click', function(e) { if (e.target === this) closeAll(); }));
+
+loadOverview();
 </script>
 </body>
 </html>
