@@ -5,183 +5,510 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Create Account — NextForge Academy</title>
 <link rel="stylesheet" href="/styles.css"/>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
-body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
-body::before{content:'';position:fixed;inset:0;background:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=60') center/cover;filter:brightness(0.1);pointer-events:none}
-.auth-wrap{position:relative;z-index:1;width:100%;max-width:480px}
-.auth-card{background:rgba(15,31,61,0.96);backdrop-filter:blur(20px);border:1px solid var(--border-light);border-radius:var(--radius-xl);padding:40px;position:relative;overflow:hidden}
-.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--blue-light),transparent)}
-.step-dots{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:24px}
-.step-dot{width:30px;height:30px;border-radius:50%;border:2px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:var(--text);transition:all var(--transition)}
-.step-dot.active{background:var(--blue);border-color:var(--blue);color:var(--white)}
-.step-dot.done{background:var(--gold);border-color:var(--gold);color:var(--navy)}
-.step-line{flex:1;height:2px;background:var(--border);max-width:36px}
-.role-tabs{display:flex;background:var(--navy-3);border-radius:10px;padding:4px;margin-bottom:22px}
-.role-tab{flex:1;text-align:center;padding:9px;border-radius:8px;cursor:pointer;font-size:0.86rem;font-weight:600;color:var(--text);transition:all var(--transition)}
-.role-tab.active{background:var(--blue);color:var(--white)}
-.otp-row{display:flex;gap:8px;justify-content:center;margin:18px 0}
-.otp-input{width:48px;height:54px;text-align:center;font-size:1.4rem;font-weight:700;background:var(--navy-3);border:1.5px solid var(--border-light);border-radius:10px;color:var(--white);outline:none;transition:border-color var(--transition)}
-.otp-input:focus{border-color:var(--blue-light)}
-.step{display:none}.step.active{display:block}
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;background:var(--navy)}
+body::before{content:'';position:fixed;inset:0;background:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=60') center/cover;filter:brightness(0.08);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;width:100%;max-width:560px}
+.auth-card{background:rgba(13,24,41,0.97);backdrop-filter:blur(20px);border:1px solid var(--border-2);border-radius:var(--r-xl);padding:36px;position:relative;overflow:hidden}
+.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--blue-2),transparent)}
+.step-bar{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:24px}
+.sd{width:28px;height:28px;border-radius:50%;border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--text-2);transition:all var(--t)}
+.sd.active{background:var(--blue);border-color:var(--blue);color:var(--white)}
+.sd.done{background:var(--gold);border-color:var(--gold);color:#000}
+.sl{flex:1;height:2px;background:var(--border);max-width:32px}
+.step{display:none}.step.on{display:block}
+.role-tabs{display:flex;background:var(--navy-3);border-radius:10px;padding:4px;margin-bottom:20px;gap:3px}
+.rt{flex:1;text-align:center;padding:9px;border-radius:8px;cursor:pointer;font-size:0.84rem;font-weight:600;color:var(--text-2);transition:all var(--t)}
+.rt.on{background:var(--blue);color:var(--white)}
+.otp-row{display:flex;gap:8px;justify-content:center;margin:16px 0}
+.oi{width:46px;height:52px;text-align:center;font-size:1.3rem;font-weight:700;background:var(--navy-3);border:1.5px solid var(--border-2);border-radius:10px;color:var(--white);outline:none;transition:border-color var(--t)}
+.oi:focus{border-color:var(--blue-2)}
+.avatar-upload{width:88px;height:88px;border-radius:50%;border:3px dashed var(--border-2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all var(--t);background:var(--navy-3);overflow:hidden;margin:0 auto 16px;position:relative}
+.avatar-upload:hover{border-color:var(--blue-2)}
+.avatar-upload img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.avatar-upload input{display:none}
+.course-select-card{border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:all var(--t);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.course-select-card:hover{border-color:var(--gold);background:var(--navy-3)}
+.course-select-card.selected{border-color:var(--gold);background:var(--gold-dim)}
+.course-select-card input[type=radio]{accent-color:var(--gold)}
+.pending-banner{text-align:center;padding:20px 0}
 </style>
 </head>
 <body>
-<div class="auth-wrap">
-  <div class="auth-card">
-    <div style="text-align:center;margin-bottom:22px">
-      <a href="/" style="font-weight:800;font-size:1.25rem;color:var(--white)">Next<span style="color:var(--gold)">Forge</span> Academy</a>
+<div class="wrap">
+<div class="auth-card">
+  <div style="text-align:center;margin-bottom:20px">
+    <a href="/" class="logo" style="justify-content:center">
+      <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      Next<span>Forge</span>
+    </a>
+  </div>
+
+  <!-- STEP BAR -->
+  <div class="step-bar">
+    <div class="sd active" id="d1">1</div><div class="sl"></div>
+    <div class="sd" id="d2">2</div><div class="sl"></div>
+    <div class="sd" id="d3">3</div><div class="sl"></div>
+    <div class="sd" id="d4">4</div><div class="sl"></div>
+    <div class="sd" id="d5">✓</div>
+  </div>
+
+  <!-- STEP 1: ROLE + BASIC INFO -->
+  <div class="step on" id="s1">
+    <div style="font-size:1.2rem;font-weight:800;color:var(--white);text-align:center;margin-bottom:4px">Create Your Account</div>
+    <div style="color:var(--text-2);font-size:0.84rem;text-align:center;margin-bottom:18px">Join NextForge Academy — Nigeria's mentor-led tech academy</div>
+    <div class="role-tabs">
+      <div class="rt on" onclick="setRole('student',this)">👨‍🎓 Student</div>
+      <div class="rt" onclick="setRole('instructor',this)">👨‍🏫 Instructor</div>
     </div>
-    <div class="step-dots">
-      <div class="step-dot active" id="dot1">1</div>
-      <div class="step-line"></div>
-      <div class="step-dot" id="dot2">2</div>
-      <div class="step-line"></div>
-      <div class="step-dot" id="dot3">✓</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fg"><label class="fl">First Name</label><input class="fi" id="r_first" placeholder="First name"/></div>
+      <div class="fg"><label class="fl">Last Name</label><input class="fi" id="r_last" placeholder="Last name"/></div>
+    </div>
+    <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" id="r_email" placeholder="you@example.com"/></div>
+    <div class="fg"><label class="fl">Phone Number</label><input class="fi" type="tel" id="r_phone" placeholder="+234 900 000 0000"/></div>
+    <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="r_pass" placeholder="Min. 8 characters"/></div>
+    <div class="al al-err" id="e1" style="display:none"></div>
+    <button class="btn btn-gold" style="width:100%" onclick="step1()">Continue →</button>
+    <div style="text-align:center;margin-top:14px;font-size:0.83rem;color:var(--text-2)">Already have an account? <a href="/login.html" style="color:var(--gold)">Sign in</a></div>
+  </div>
+
+  <!-- STEP 2: PROFILE + BIO -->
+  <div class="step" id="s2">
+    <div style="font-size:1.1rem;font-weight:800;color:var(--white);text-align:center;margin-bottom:16px">Tell Us About Yourself</div>
+    <div class="avatar-upload" id="avatarWrap" onclick="document.getElementById('avatarInput').click()">
+      <img id="avatarPreview" src="" style="display:none"/>
+      <div id="avatarPlaceholder" style="text-align:center">
+        <div style="font-size:1.5rem">📷</div>
+        <div style="font-size:0.69rem;color:var(--text-2);margin-top:4px">Upload Photo</div>
+      </div>
+      <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar(this)"/>
+    </div>
+    <div style="text-align:center;font-size:0.75rem;color:var(--text-2);margin-bottom:16px">Profile photo required — helps your instructor know you</div>
+
+    <!-- STUDENT FIELDS -->
+    <div id="studentFields">
+      <div class="fg"><label class="fl">Current Occupation</label><input class="fi" id="r_occupation" placeholder="e.g. Admin Officer, Recent Graduate, NYSC Corps Member"/></div>
+      <div class="fg"><label class="fl">City / State</label><input class="fi" id="r_location" placeholder="e.g. Lagos, Nigeria"/></div>
+      <div class="fg"><label class="fl">Why do you want to enroll?</label><textarea class="fi" id="r_reason" rows="3" placeholder="Tell us your motivation for joining NextForge Academy and what you hope to achieve..."></textarea></div>
+      <div class="fg"><label class="fl">Career Goal</label><input class="fi" id="r_goal" placeholder="e.g. Get a PM role in a fintech company within 6 months"/></div>
+      <div class="fg"><label class="fl">How did you hear about us?</label><select class="fi" id="r_source"><option value="">Select...</option><option>WhatsApp / Friend referral</option><option>Instagram</option><option>Twitter / X</option><option>LinkedIn</option><option>Google Search</option><option>Other</option></select></div>
     </div>
 
-    <!-- STEP 1 -->
-    <div class="step active" id="step1">
-      <div style="font-size:1.3rem;font-weight:800;color:var(--white);text-align:center;margin-bottom:4px">Create Your Account</div>
-      <div style="color:var(--text);font-size:0.86rem;text-align:center;margin-bottom:22px">Join Nigeria's fastest-growing tech academy</div>
-      <div class="role-tabs">
-        <div class="role-tab active" onclick="setRole('student',this)">👨‍🎓 Student</div>
-        <div class="role-tab" onclick="setRole('instructor',this)">👨‍🏫 Instructor</div>
-      </div>
-      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" type="text" id="reg_name" placeholder="Your full name"/></div>
-      <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="reg_email" placeholder="you@example.com"/></div>
-      <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" type="tel" id="reg_phone" placeholder="+234 900 000 0000"/></div>
-      <div class="form-group" id="trackGroup">
-        <label class="form-label">Select Your Course</label>
-        <select class="form-input" id="reg_track">
-          <option value="">Choose a course...</option>
-          <option value="project-management">📋 Project Management — ₦250,000 (12 weeks)</option>
-          <option value="product-management">🧭 Product Management — ₦250,000 (13 weeks)</option>
-          <option value="data-analysis">📊 Data Analysis — ₦300,000 (12 weeks)</option>
-          <option value="notion-mastery">🗂 Notion Mastery — ₦160,000 (6 weeks)</option>
-          <option value="operations-systems">⚙️ Operations Systems — ₦200,000 (8 weeks)</option>
-          <option value="business-communication">💡 Business Communication — ₦200,000 (8 weeks)</option>
-        </select>
-      </div>
-      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="reg_password" placeholder="Min. 8 characters"/></div>
-      <div class="alert alert-error" id="step1Err" style="display:none"></div>
-      <button class="btn btn-gold" style="width:100%" id="step1Btn" onclick="submitStep1()">Continue → Get Verification Code</button>
-      <div style="text-align:center;margin-top:16px;font-size:0.84rem;color:var(--text)">Already have an account? <a href="/login.html" style="color:var(--gold)">Sign in</a></div>
+    <!-- INSTRUCTOR FIELDS -->
+    <div id="instructorFields" style="display:none">
+      <div class="fg"><label class="fl">Professional Title</label><input class="fi" id="r_title" placeholder="e.g. Senior Product Manager, Data Scientist"/></div>
+      <div class="fg"><label class="fl">Years of Experience</label><select class="fi" id="r_exp"><option value="">Select...</option><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
+      <div class="fg"><label class="fl">Skills / Expertise</label><input class="fi" id="r_skills" placeholder="e.g. Project Management, Agile, SQL, Power BI"/></div>
+      <div class="fg"><label class="fl">Certifications</label><input class="fi" id="r_certs" placeholder="e.g. PMP, Google Data Analytics, Scrum Master"/></div>
+      <div class="fg"><label class="fl">Bank Name</label><input class="fi" id="r_bank" placeholder="e.g. Access Bank"/></div>
+      <div class="fg"><label class="fl">Account Number</label><input class="fi" id="r_account" placeholder="10-digit account number"/></div>
+      <div class="fg"><label class="fl">Account Name</label><input class="fi" id="r_acctname" placeholder="Name on bank account"/></div>
+      <div class="fg"><label class="fl">Why do you want to teach at NextForge?</label><textarea class="fi" id="r_why" rows="3" placeholder="Tell us about your teaching experience and why you want to join NextForge Academy..."></textarea></div>
     </div>
 
-    <!-- STEP 2 -->
-    <div class="step" id="step2">
-      <div style="font-size:1.3rem;font-weight:800;color:var(--white);text-align:center;margin-bottom:4px">Verify Your Email</div>
-      <div style="color:var(--text);font-size:0.86rem;text-align:center;margin-bottom:6px" id="otpSubtext">Enter the 6-digit code sent to your email</div>
-      <div class="otp-row">
-        <input class="otp-input" maxlength="1" id="otp0" oninput="otpMove(this,0)" onkeydown="otpBack(event,0)"/>
-        <input class="otp-input" maxlength="1" id="otp1" oninput="otpMove(this,1)" onkeydown="otpBack(event,1)"/>
-        <input class="otp-input" maxlength="1" id="otp2" oninput="otpMove(this,2)" onkeydown="otpBack(event,2)"/>
-        <input class="otp-input" maxlength="1" id="otp3" oninput="otpMove(this,3)" onkeydown="otpBack(event,3)"/>
-        <input class="otp-input" maxlength="1" id="otp4" oninput="otpMove(this,4)" onkeydown="otpBack(event,4)"/>
-        <input class="otp-input" maxlength="1" id="otp5" oninput="otpMove(this,5)" onkeydown="otpBack(event,5)"/>
-      </div>
-      <div class="alert alert-error" id="step2Err" style="display:none"></div>
-      <button class="btn btn-gold" style="width:100%" id="step2Btn" onclick="verifyOTP()">Verify & Create Account →</button>
-      <div style="text-align:center;margin-top:14px;font-size:0.82rem;color:var(--text)">Didn't receive it? <a href="#" style="color:var(--gold)" onclick="resendOTP()">Resend code</a></div>
-    </div>
-
-    <!-- STEP 3 -->
-    <div class="step" id="step3">
-      <div style="text-align:center;padding:16px 0">
-        <div style="font-size:3.5rem;margin-bottom:14px">🎉</div>
-        <div style="font-size:1.3rem;font-weight:800;color:var(--white);margin-bottom:6px">Account Created!</div>
-        <div style="color:var(--text);font-size:0.86rem;margin-bottom:20px">Welcome to NextForge Academy. Redirecting to your dashboard...</div>
-        <div class="progress-bar"><div class="progress-fill" id="redirectBar" style="width:0%"></div></div>
-      </div>
+    <div class="al al-err" id="e2" style="display:none"></div>
+    <div style="display:flex;gap:9px">
+      <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
+      <button class="btn btn-gold" style="flex:1" onclick="step2()">Continue →</button>
     </div>
   </div>
+
+  <!-- STEP 3a: COURSE SELECTION + PAYMENT (student) -->
+  <div class="step" id="s3">
+    <div style="font-size:1.1rem;font-weight:800;color:var(--white);text-align:center;margin-bottom:4px">Choose Your Programme</div>
+    <div style="color:var(--text-2);font-size:0.83rem;text-align:center;margin-bottom:18px">Select a course — payment is required to complete registration</div>
+    <div id="courseList">
+      <div class="course-select-card">
+        <input type="radio" name="course" value="1"/><div class="hp-icon">📋</div>
+        <div style="flex:1"><div style="font-weight:700;color:var(--white);font-size:0.875rem">Project Management</div><div style="font-size:0.75rem;color:var(--text-2)">12 weeks · Beginner</div></div>
+        <div style="font-weight:700;color:var(--gold)">₦250,000</div>
+      </div>
+      <div class="course-select-card">
+        <input type="radio" name="course" value="2"/><div class="hp-icon">🧭</div>
+        <div style="flex:1"><div style="font-weight:700;color:var(--white);font-size:0.875rem">Product Management</div><div style="font-size:0.75rem;color:var(--text-2)">13 weeks · Beginner</div></div>
+        <div style="font-weight:700;color:var(--gold)">₦250,000</div>
+      </div>
+      <div class="course-select-card">
+        <input type="radio" name="course" value="3"/><div class="hp-icon">📊</div>
+        <div style="flex:1"><div style="font-weight:700;color:var(--white);font-size:0.875rem">Data Analysis</div><div style="font-size:0.75rem;color:var(--text-2)">12 weeks · Excel + SQL</div></div>
+        <div style="font-weight:700;color:var(--gold)">₦300,000</div>
+      </div>
+      <div class="course-select-card">
+        <input type="radio" name="course" value="4"/><div class="hp-icon">🗂</div>
+        <div style="flex:1"><div style="font-weight:700;color:var(--white);font-size:0.875rem">Notion Mastery</div><div style="font-size:0.75rem;color:var(--text-2)">6 weeks · Self-paced</div></div>
+        <div style="font-weight:700;color:var(--gold)">₦160,000</div>
+      </div>
+      <div class="course-select-card">
+        <input type="radio" name="course" value="5"/><div class="hp-icon">⚙️</div>
+        <div style="flex:1"><div style="font-weight:700;color:var(--white);font-size:0.875rem">Operations Systems</div><div style="font-size:0.75rem;color:var(--text-2)">8 weeks · Intermediate</div></div>
+        <div style="font-weight:700;color:var(--gold)">₦200,000</div>
+      </div>
+      <div class="course-select-card">
+        <input type="radio" name="course" value="6"/><div class="hp-icon">💡</div>
+        <div style="flex:1"><div style="font-weight:700;color:var(--white);font-size:0.875rem">Business Communication</div><div style="font-size:0.75rem;color:var(--text-2)">8 weeks · Beginner</div></div>
+        <div style="font-weight:700;color:var(--gold)">₦200,000</div>
+      </div>
+    </div>
+    <div style="background:var(--navy-3);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-top:14px;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:0.84rem;color:var(--text-2)">Selected course fee</span>
+      <span style="font-weight:800;color:var(--gold);font-size:1.1rem" id="selectedPrice">—</span>
+    </div>
+    <div class="al al-err" id="e3" style="display:none"></div>
+    <div style="display:flex;gap:9px;margin-top:14px">
+      <button class="btn btn-ghost" onclick="goStep(2)">← Back</button>
+      <button class="btn btn-gold" style="flex:1" id="payBtn" onclick="step3Pay()">Pay & Create Account 🔒</button>
+    </div>
+    <div style="text-align:center;margin-top:10px;font-size:0.73rem;color:var(--text-2)">🔒 Secured by Paystack · Cards, Bank Transfer, USSD</div>
+  </div>
+
+  <!-- STEP 3b: INSTRUCTOR PENDING -->
+  <div class="step" id="s3i">
+    <div style="font-size:1.1rem;font-weight:800;color:var(--white);text-align:center;margin-bottom:4px">Verify Your Email</div>
+    <div style="color:var(--text-2);font-size:0.83rem;text-align:center;margin-bottom:16px" id="otpSubtext2">Enter the 6-digit code sent to your email</div>
+    <div class="otp-row">
+      <input class="oi" maxlength="1" id="o0" oninput="om(this,0)" onkeydown="ob(event,0)"/>
+      <input class="oi" maxlength="1" id="o1" oninput="om(this,1)" onkeydown="ob(event,1)"/>
+      <input class="oi" maxlength="1" id="o2" oninput="om(this,2)" onkeydown="ob(event,2)"/>
+      <input class="oi" maxlength="1" id="o3" oninput="om(this,3)" onkeydown="ob(event,3)"/>
+      <input class="oi" maxlength="1" id="o4" oninput="om(this,4)" onkeydown="ob(event,4)"/>
+      <input class="oi" maxlength="1" id="o5" oninput="om(this,5)" onkeydown="ob(event,5)"/>
+    </div>
+    <div class="al al-err" id="e3i" style="display:none"></div>
+    <button class="btn btn-gold" style="width:100%" id="verifyBtn" onclick="verifyAndRegister()">Verify & Submit Application →</button>
+    <div style="text-align:center;margin-top:12px;font-size:0.8rem;color:var(--text-2)">Didn't receive it? <a href="#" style="color:var(--gold)" onclick="resendOTP()">Resend code</a></div>
+  </div>
+
+  <!-- STEP 4: EMAIL OTP (student - after payment) -->
+  <div class="step" id="s4">
+    <div style="font-size:1.1rem;font-weight:800;color:var(--white);text-align:center;margin-bottom:4px">Verify Your Email</div>
+    <div style="color:var(--text-2);font-size:0.83rem;text-align:center;margin-bottom:16px" id="otpSubtext">Enter the 6-digit code sent to your email</div>
+    <div class="otp-row">
+      <input class="oi" maxlength="1" id="p0" oninput="pm(this,0)" onkeydown="pb(event,0)"/>
+      <input class="oi" maxlength="1" id="p1" oninput="pm(this,1)" onkeydown="pb(event,1)"/>
+      <input class="oi" maxlength="1" id="p2" oninput="pm(this,2)" onkeydown="pb(event,2)"/>
+      <input class="oi" maxlength="1" id="p3" oninput="pm(this,3)" onkeydown="pb(event,3)"/>
+      <input class="oi" maxlength="1" id="p4" oninput="pm(this,4)" onkeydown="pb(event,4)"/>
+      <input class="oi" maxlength="1" id="p5" oninput="pm(this,5)" onkeydown="pb(event,5)"/>
+    </div>
+    <div class="al al-err" id="e4" style="display:none"></div>
+    <button class="btn btn-gold" style="width:100%" id="verifyBtn2" onclick="verifyStudent()">Verify & Access Dashboard →</button>
+    <div style="text-align:center;margin-top:12px;font-size:0.8rem;color:var(--text-2)">Didn't receive it? <a href="#" style="color:var(--gold)" onclick="resendOTP()">Resend code</a></div>
+  </div>
+
+  <!-- STEP 5: SUCCESS -->
+  <div class="step" id="s5">
+    <div style="text-align:center;padding:16px 0">
+      <div id="successIcon" style="font-size:3.5rem;margin-bottom:14px">🎉</div>
+      <div style="font-size:1.2rem;font-weight:800;color:var(--white);margin-bottom:6px" id="successTitle">Account Created!</div>
+      <div style="color:var(--text-2);font-size:0.84rem;margin-bottom:20px" id="successMsg">Welcome to NextForge Academy!</div>
+      <div class="pbar" style="margin-bottom:8px"><div class="pfill" id="sBar" style="width:0%"></div></div>
+      <div style="font-size:0.75rem;color:var(--text-2)" id="successSub">Redirecting...</div>
+    </div>
+  </div>
+
+</div>
 </div>
 
 <script>
-let selectedRole='student';
+let role = 'student';
+let avatarBase64 = '';
+let paymentRef = '';
+let paystackKey = '';
+let selectedCourseId = null;
+let selectedCoursePrice = 0;
 
-function setRole(r,el){
-  selectedRole=r;
-  document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('trackGroup').style.display=r==='student'?'block':'none';
+// Load Paystack key
+fetch('/api/payments/config').then(r=>r.json()).then(d=>paystackKey=d.publicKey);
+
+// Load courses from API
+async function loadCourses() {
+  try {
+    const res = await fetch('/api/courses');
+    const courses = await res.json();
+    const icons = ['📋','🧭','📊','🗂','⚙️','💡'];
+    document.getElementById('courseList').innerHTML = courses.map((c,i) => `
+      <div class="course-select-card" onclick="selectCourse(${c.id},${c.price},this)">
+        <input type="radio" name="course" value="${c.id}"/>
+        <div class="hp-icon">${c.thumbnail||icons[i]||'📋'}</div>
+        <div style="flex:1">
+          <div style="font-weight:700;color:var(--white);font-size:0.875rem">${c.title}</div>
+          <div style="font-size:0.75rem;color:var(--text-2)">${c.duration} · ${c.level}</div>
+        </div>
+        <div style="font-weight:700;color:var(--gold);flex-shrink:0">₦${Number(c.price).toLocaleString()}</div>
+      </div>`).join('');
+  } catch {}
+}
+loadCourses();
+
+function selectCourse(id, price, el) {
+  document.querySelectorAll('.course-select-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked = true;
+  selectedCourseId = id;
+  selectedCoursePrice = price;
+  document.getElementById('selectedPrice').textContent = '₦' + Number(price).toLocaleString();
 }
 
-function setStep(n){
-  document.querySelectorAll('.step').forEach((s,i)=>s.classList.toggle('active',i===n-1));
-  for(let i=1;i<=3;i++){
-    const d=document.getElementById(`dot${i}`);
-    if(i<n){d.classList.add('done');d.classList.remove('active');d.textContent='✓';}
-    else if(i===n){d.classList.add('active');d.classList.remove('done');}
-    else{d.classList.remove('active','done');}
+function setRole(r, el) {
+  role = r;
+  document.querySelectorAll('.rt').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('studentFields').style.display = r === 'student' ? 'block' : 'none';
+  document.getElementById('instructorFields').style.display = r === 'instructor' ? 'block' : 'none';
+}
+
+function goStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('on'));
+  if (role === 'instructor' && n === 3) {
+    document.getElementById('s3i').classList.add('on');
+  } else {
+    document.getElementById('s' + n).classList.add('on');
+  }
+  for (let i = 1; i <= 5; i++) {
+    const d = document.getElementById('d' + i);
+    if (!d) continue;
+    if (i < n) { d.classList.add('done'); d.classList.remove('active'); d.textContent = '✓'; }
+    else if (i === n) { d.classList.add('active'); d.classList.remove('done'); }
+    else { d.classList.remove('active', 'done'); }
   }
 }
 
-function showErr(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block';}
+function err(id, msg) { const e = document.getElementById(id); e.textContent = msg; e.style.display = 'block'; }
+function clearErr(id) { document.getElementById(id).style.display = 'none'; }
 
-async function submitStep1(){
-  const name=document.getElementById('reg_name').value.trim();
-  const email=document.getElementById('reg_email').value.trim();
-  const password=document.getElementById('reg_password').value;
-  document.getElementById('step1Err').style.display='none';
-  if(!name||!email||!password)return showErr('step1Err','Please fill in all required fields.');
-  if(password.length<8)return showErr('step1Err','Password must be at least 8 characters.');
-  const btn=document.getElementById('step1Btn');
-  btn.textContent='Sending code...';btn.disabled=true;
-  try{
-    const res=await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name})});
-    const data=await res.json();
-    if(!res.ok)return showErr('step1Err',data.error||'Failed to send code.');
-    document.getElementById('otpSubtext').textContent=`Enter the 6-digit code sent to ${email}`;
-    setStep(2);
-    setTimeout(()=>document.getElementById('otp0').focus(),100);
-  }catch{showErr('step1Err','Network error. Please try again.');}
-  finally{btn.textContent='Continue → Get Verification Code';btn.disabled=false;}
+function previewAvatar(input) {
+  if (!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    avatarBase64 = e.target.result;
+    const img = document.getElementById('avatarPreview');
+    img.src = avatarBase64; img.style.display = 'block';
+    document.getElementById('avatarPlaceholder').style.display = 'none';
+  };
+  reader.readAsDataURL(input.files[0]);
 }
 
-function otpMove(input,i){if(input.value.length===1&&i<5)document.getElementById(`otp${i+1}`).focus();}
-function otpBack(e,i){if(e.key==='Backspace'&&!e.target.value&&i>0)document.getElementById(`otp${i-1}`).focus();}
+async function step1() {
+  clearErr('e1');
+  const first = document.getElementById('r_first').value.trim();
+  const last = document.getElementById('r_last').value.trim();
+  const email = document.getElementById('r_email').value.trim();
+  const phone = document.getElementById('r_phone').value.trim();
+  const pass = document.getElementById('r_pass').value;
+  if (!first||!last||!email||!phone||!pass) return err('e1','Please fill in all fields.');
+  if (pass.length < 8) return err('e1','Password must be at least 8 characters.');
+  if (!email.includes('@')) return err('e1','Please enter a valid email address.');
 
-async function verifyOTP(){
-  const otp=Array.from({length:6},(_,i)=>document.getElementById(`otp${i}`).value).join('');
-  document.getElementById('step2Err').style.display='none';
-  if(otp.length<6)return showErr('step2Err','Please enter the complete 6-digit code.');
-  const btn=document.getElementById('step2Btn');
-  btn.textContent='Verifying...';btn.disabled=true;
-  try{
-    const res=await fetch('/api/auth/register',{
-      method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
-      body:JSON.stringify({
-        full_name:document.getElementById('reg_name').value.trim(),
-        email:document.getElementById('reg_email').value.trim(),
-        password:document.getElementById('reg_password').value,
-        phone:document.getElementById('reg_phone').value.trim(),
-        track:document.getElementById('reg_track')?.value||null,
-        role:selectedRole,otp
-      })
+  const btn = event.target; btn.textContent = 'Checking...'; btn.disabled = true;
+  try {
+    // Check email not already taken
+    const res = await fetch('/api/auth/check-email', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ email })
     });
-    const data=await res.json();
-    if(!res.ok)return showErr('step2Err',data.error||'Verification failed.');
-    localStorage.setItem('nf_token',data.token);
-    localStorage.setItem('nf_role',data.role);
-    localStorage.setItem('nf_name',data.name);
-    setStep(3);
-    let w=0;
-    const iv=setInterval(()=>{
-      w+=2;document.getElementById('redirectBar').style.width=w+'%';
-      if(w>=100){clearInterval(iv);window.location.href=data.role==='admin'?'/admin/dashboard.html':data.role==='instructor'?'/instructor/dashboard.html':'/student/dashboard.html';}
-    },30);
-  }catch{showErr('step2Err','Network error. Please try again.');}
-  finally{btn.textContent='Verify & Create Account →';btn.disabled=false;}
+    const d = await res.json();
+    if (d.exists) return err('e1', 'This email is already registered. Please sign in instead.');
+    goStep(2);
+  } catch { err('e1','Network error. Please try again.'); }
+  finally { btn.textContent = 'Continue →'; btn.disabled = false; }
 }
 
-async function resendOTP(){
-  const email=document.getElementById('reg_email').value.trim();
-  const name=document.getElementById('reg_name').value.trim();
-  await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name})});
-  document.getElementById('step2Err').textContent='New code sent! Check your inbox.';
-  document.getElementById('step2Err').className='alert alert-success';
-  document.getElementById('step2Err').style.display='block';
+async function step2() {
+  clearErr('e2');
+  if (!avatarBase64) return err('e2', 'Please upload a profile photo — this helps your instructor know you.');
+
+  if (role === 'student') {
+    const reason = document.getElementById('r_reason').value.trim();
+    const goal = document.getElementById('r_goal').value.trim();
+    if (!reason||!goal) return err('e2','Please fill in your motivation and career goal.');
+    // Go to course selection
+    goStep(3);
+  } else {
+    const title = document.getElementById('r_title').value.trim();
+    const skills = document.getElementById('r_skills').value.trim();
+    const bank = document.getElementById('r_bank').value.trim();
+    const account = document.getElementById('r_account').value.trim();
+    const why = document.getElementById('r_why').value.trim();
+    if (!title||!skills||!why) return err('e2','Please fill in your title, skills and motivation.');
+    if (bank && account.length > 0 && account.length !== 10) return err('e2','Account number must be 10 digits.');
+    // Send OTP for instructor
+    const email = document.getElementById('r_email').value.trim();
+    const name = document.getElementById('r_first').value.trim();
+    const btn = event.target; btn.textContent = 'Sending code...'; btn.disabled = true;
+    try {
+      const r = await fetch('/api/auth/send-otp', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ email, name })
+      });
+      const d = await r.json();
+      if (!r.ok) return err('e2', d.error || 'Failed to send code.');
+      document.getElementById('otpSubtext2').textContent = `We sent a code to ${email}`;
+      goStep(3);
+    } catch { err('e2','Network error.'); }
+    finally { btn.textContent = 'Continue →'; btn.disabled = false; }
+  }
+}
+
+async function step3Pay() {
+  clearErr('e3');
+  if (!selectedCourseId) return err('e3', 'Please select a course to continue.');
+
+  const btn = document.getElementById('payBtn');
+  btn.textContent = 'Opening payment...'; btn.disabled = true;
+
+  const email = document.getElementById('r_email').value.trim();
+  const first = document.getElementById('r_first').value.trim();
+  const last = document.getElementById('r_last').value.trim();
+
+  try {
+    // Initialize Paystack payment
+    const res = await fetch('/api/payments/initialize-registration', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ email, course_id: selectedCourseId, amount: selectedCoursePrice })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Payment initialization failed');
+
+    const handler = PaystackPop.setup({
+      key: paystackKey,
+      email: email,
+      amount: selectedCoursePrice * 100,
+      currency: 'NGN',
+      ref: data.reference,
+      firstname: first,
+      lastname: last,
+      callback: async function(response) {
+        paymentRef = response.reference;
+        btn.textContent = 'Payment confirmed! Sending verification...';
+        // Send OTP after payment
+        const otpRes = await fetch('/api/auth/send-otp', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ email, name: first })
+        });
+        const otpData = await otpRes.json();
+        if (!otpRes.ok) { err('e3', otpData.error || 'Failed to send verification code.'); return; }
+        document.getElementById('otpSubtext').textContent = `Payment confirmed! Enter the code sent to ${email}`;
+        goStep(4);
+      },
+      onClose: function() {
+        btn.textContent = 'Pay & Create Account 🔒';
+        btn.disabled = false;
+      }
+    });
+    handler.openIframe();
+  } catch(e) {
+    err('e3', e.message || 'Payment failed. Please try again.');
+    btn.textContent = 'Pay & Create Account 🔒';
+    btn.disabled = false;
+  }
+}
+
+function om(inp, i) { if (inp.value.length === 1 && i < 5) document.getElementById('p' + (i+1)).focus(); }
+function ob(e, i) { if (e.key === 'Backspace' && !e.target.value && i > 0) document.getElementById('p' + (i-1)).focus(); }
+function pm(inp, i) { if (inp.value.length === 1 && i < 5) document.getElementById('p' + (i+1)).focus(); }
+function pb(e, i) { if (e.key === 'Backspace' && !e.target.value && i > 0) document.getElementById('p' + (i-1)).focus(); }
+
+function getStudentOTP() { return Array.from({length:6},(_,i)=>document.getElementById('p'+i).value).join(''); }
+function getInstrOTP() { return Array.from({length:6},(_,i)=>document.getElementById('o'+i).value).join(''); }
+
+async function verifyStudent() {
+  clearErr('e4');
+  const otp = getStudentOTP();
+  if (otp.length < 6) return err('e4', 'Please enter the complete 6-digit code.');
+
+  const btn = document.getElementById('verifyBtn2'); btn.textContent = 'Creating account...'; btn.disabled = true;
+
+  try {
+    const payload = buildPayload('student', otp);
+    const res = await fetch('/api/auth/register', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      credentials: 'include', body: JSON.stringify(payload)
+    });
+    const d = await res.json();
+    if (!res.ok) return err('e4', d.error || 'Registration failed.');
+    localStorage.setItem('nf_token', d.token);
+    localStorage.setItem('nf_role', d.role);
+    localStorage.setItem('nf_name', d.name);
+    showSuccess('student');
+  } catch { err('e4', 'Network error. Please try again.'); }
+  finally { btn.textContent = 'Verify & Access Dashboard →'; btn.disabled = false; }
+}
+
+async function verifyAndRegister() {
+  clearErr('e3i');
+  const otp = getInstrOTP();
+  if (otp.length < 6) return err('e3i', 'Please enter the complete 6-digit code.');
+
+  const btn = document.getElementById('verifyBtn'); btn.textContent = 'Submitting...'; btn.disabled = true;
+  try {
+    const payload = buildPayload('instructor', otp);
+    const res = await fetch('/api/auth/register', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      credentials: 'include', body: JSON.stringify(payload)
+    });
+    const d = await res.json();
+    if (!res.ok) return err('e3i', d.error || 'Registration failed.');
+    showSuccess('instructor');
+  } catch { err('e3i', 'Network error. Please try again.'); }
+  finally { btn.textContent = 'Verify & Submit Application →'; btn.disabled = false; }
+}
+
+function buildPayload(r, otp) {
+  const bio = {
+    occupation: document.getElementById('r_occupation')?.value?.trim() || '',
+    location: document.getElementById('r_location')?.value?.trim() || '',
+    reason: document.getElementById('r_reason')?.value?.trim() || '',
+    goal: document.getElementById('r_goal')?.value?.trim() || '',
+    source: document.getElementById('r_source')?.value || '',
+    title: document.getElementById('r_title')?.value?.trim() || '',
+    exp: document.getElementById('r_exp')?.value || '',
+    skills: document.getElementById('r_skills')?.value?.trim() || '',
+    certs: document.getElementById('r_certs')?.value?.trim() || '',
+    bank: document.getElementById('r_bank')?.value?.trim() || '',
+    account: document.getElementById('r_account')?.value?.trim() || '',
+    acctname: document.getElementById('r_acctname')?.value?.trim() || '',
+    why: document.getElementById('r_why')?.value?.trim() || ''
+  };
+  return {
+    full_name: document.getElementById('r_first').value.trim() + ' ' + document.getElementById('r_last').value.trim(),
+    email: document.getElementById('r_email').value.trim(),
+    phone: document.getElementById('r_phone').value.trim(),
+    password: document.getElementById('r_pass').value,
+    role: r,
+    course_id: selectedCourseId,
+    payment_reference: paymentRef,
+    avatar_base64: avatarBase64,
+    bio: JSON.stringify(bio),
+    otp
+  };
+}
+
+function showSuccess(r) {
+  goStep(5);
+  if (r === 'instructor') {
+    document.getElementById('successIcon').textContent = '⏳';
+    document.getElementById('successTitle').textContent = 'Application Submitted!';
+    document.getElementById('successMsg').textContent = 'Thank you! Your instructor application is under review. You will receive an email once approved by the admin.';
+    document.getElementById('successSub').textContent = 'Redirecting to home...';
+    setTimeout(() => window.location.href = '/', 4000);
+  } else {
+    document.getElementById('successTitle').textContent = 'Account Created!';
+    document.getElementById('successMsg').textContent = 'Welcome to NextForge Academy! Redirecting to your dashboard...';
+    let w = 0;
+    const iv = setInterval(() => {
+      w += 2; document.getElementById('sBar').style.width = w + '%';
+      if (w >= 100) { clearInterval(iv); window.location.href = '/student/dashboard.html'; }
+    }, 30);
+  }
+}
+
+async function resendOTP() {
+  const email = document.getElementById('r_email').value.trim();
+  const name = document.getElementById('r_first').value.trim();
+  await fetch('/api/auth/send-otp', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({email,name}) });
+  alert('New code sent! Check your inbox.');
 }
 </script>
 </body>
