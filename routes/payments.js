@@ -4,11 +4,12 @@ const crypto = require('crypto');
 const db = require('../database');
 const { requireAuth } = require('../middleware/auth');
 
-// Ensure fetch works (Node 18+ OR install node-fetch)
+// Ensure fetch works
 const fetch = global.fetch || require('node-fetch');
-const SECRET = () => process.env.PAYSTACK_SECRET_KEY.replace(/"/g, '').trim();
-// const SECRET = () => process.env.PAYSTACK_SECRET_KEY;
-const PUBLIC = () => process.env.PAYSTACK_PUBLIC_KEY;
+
+// Clean env keys (removes quotes if Northflank adds them)
+const SECRET = () => process.env.PAYSTACK_SECRET_KEY?.replace(/"/g, '').trim();
+const PUBLIC = () => process.env.PAYSTACK_PUBLIC_KEY?.replace(/"/g, '').trim();
 const CALLBACK_URL = () => process.env.PAYMENT_CALLBACK_URL;
 
 // ================= CONFIG =================
@@ -76,29 +77,54 @@ router.post('/initialize', requireAuth, async (req, res) => {
     console.error(e);
     res.status(500).json({ error: 'Payment initialization failed' });
   }
-//});
-// Initialize payment for registration (before account exists)
-//router.post('/initialize-registration', async (req, res) => {
+});
+
+// ================= INITIALIZE REGISTRATION =================
+router.post('/initialize-registration', async (req, res) => {
   const { email, course_id, amount } = req.body;
-  if (!email || !course_id || !amount) return res.status(400).json({ error: 'Missing fields' });
+
+  if (!email || !course_id || !amount) {
+    return res.status(400).json({ error: 'Missing fields' });
+  }
 
   const reference = `NF-REG-${Date.now()}-${course_id}`;
+
   try {
     const response = await fetch('https://api.paystack.co/transaction/initialize', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`, 'Content-Type': 'application/json' },
+      headers: {
+        Authorization: `Bearer ${SECRET()}`,
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
-        email, amount: amount * 100, currency: 'NGN', reference,
-        metadata: { course_id, type: 'registration' }
+        email,
+        amount: amount * 100,
+        currency: 'NGN',
+        reference,
+        metadata: {
+          course_id,
+          type: 'registration'
+        }
       })
     });
+
     const data = await response.json();
-    if (!data.status) return res.status(400).json({ error: data.message });
-    res.json({ reference: data.data.reference });
-  } catch(e) {
+
+    if (!data.status) {
+      return res.status(400).json({ error: data.message });
+    }
+
+    res.json({
+      authorization_url: data.data.authorization_url,
+      reference: data.data.reference
+    });
+
+  } catch (e) {
+    console.error(e);
     res.status(500).json({ error: 'Payment initialization failed' });
   }
 });
+
 // ================= VERIFY PAYMENT =================
 router.post('/verify', requireAuth, async (req, res) => {
   const { reference } = req.body;
