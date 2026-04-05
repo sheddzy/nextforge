@@ -323,4 +323,14 @@ if (!adminExists) {
 try { db.exec('ALTER TABLE users ADD COLUMN is_approved INTEGER DEFAULT 1'); } catch {}
 try { db.exec('ALTER TABLE users ADD COLUMN avatar_url TEXT'); } catch {}
 try { db.exec('UPDATE users SET is_approved = 1 WHERE is_approved IS NULL'); } catch {}
+// Generate unique IDs for existing users who don't have one
+try { db.exec('ALTER TABLE users ADD COLUMN unique_id TEXT'); } catch {}
+
+// Auto-generate IDs on startup for users missing them
+const usersWithoutId = db.prepare("SELECT id, role FROM users WHERE unique_id IS NULL").all();
+usersWithoutId.forEach(u => {
+  const prefix = u.role === 'admin' ? 'NFA' : u.role === 'instructor' ? 'NFI' : 'NFS';
+  const uniqueId = `${prefix}-${String(u.id).padStart(4,'0')}-${Math.random().toString(36).substr(2,4).toUpperCase()}`;
+  db.prepare('UPDATE users SET unique_id = ? WHERE id = ?').run(uniqueId, u.id);
+});
 module.exports = db;
