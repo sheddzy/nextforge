@@ -242,5 +242,28 @@ router.post('/courses/:id/price', requireAdmin, (req, res) => {
   db.prepare('UPDATE courses SET price=? WHERE id=?').run(parseInt(price), req.params.id);
   res.json({ success: true });
 });
+// Deactivate / reactivate instructor
+router.post('/instructors/:id/toggle', requireAdmin, (req, res) => {
+  const user = db.prepare('SELECT * FROM users WHERE id = ? AND role = ?').get(req.params.id, 'instructor');
+  if (!user) return res.status(404).json({ error: 'Instructor not found' });
+  const newStatus = user.is_active ? 0 : 1;
+  db.prepare('UPDATE users SET is_active = ? WHERE id = ?').run(newStatus, req.params.id);
+  const msg = newStatus
+    ? 'Your instructor account has been reactivated. You can now log in to NextForge Academy.'
+    : 'Your instructor account has been deactivated. Please contact info@nextforgeacademy.online for more information.';
+  db.prepare('INSERT INTO notifications (user_id, message, type) VALUES (?,?,?)').run(req.params.id, msg, newStatus ? 'success' : 'warning');
+  res.json({ success: true, is_active: newStatus });
+});
 
+// Get single instructor detail
+router.get('/instructors/:id', requireAdmin, (req, res) => {
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
+  if (!user) return res.status(404).json({ error: 'Not found' });
+  const enrollments = db.prepare(`
+    SELECT c.title, c.thumbnail, COUNT(e.id) as students
+    FROM courses c LEFT JOIN enrollments e ON e.course_id = c.id
+    WHERE c.instructor_id = ? GROUP BY c.id
+  `).all(req.params.id);
+  res.json({ ...user, courses: enrollments });
+});
 module.exports = router;
