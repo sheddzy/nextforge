@@ -3,27 +3,6 @@ const router = express.Router();
 const db = require('../database');
 const { requireStaff, requireAdmin } = require('../middleware/auth');
 
-// Dashboard stats
-router.get('/stats', requireStaff, (req, res) => {
-  const isAdmin = req.user.role === 'admin';
-  const stats = {
-    totalStudents: db.prepare("SELECT COUNT(*) as c FROM users WHERE role='student'").get().c,
-    totalEnrollments: db.prepare('SELECT COUNT(*) as c FROM enrollments').get().c,
-    totalCourses: db.prepare('SELECT COUNT(*) as c FROM courses').get().c,
-    totalRevenue: db.prepare("SELECT COALESCE(SUM(amount),0) as c FROM payments WHERE status='success'").get().c,
-    recentStudents: db.prepare(`
-      SELECT u.id,u.full_name,u.email,u.track,u.created_at,
-        COUNT(e.id) as enrollments
-      FROM users u LEFT JOIN enrollments e ON e.user_id = u.id
-      WHERE u.role='student'
-      GROUP BY u.id ORDER BY u.created_at DESC LIMIT 10`).all(),
-    recentPayments: db.prepare(`
-      SELECT p.*,u.full_name,u.email,c.title as course_title
-      FROM payments p JOIN users u ON p.user_id=u.id JOIN courses c ON p.course_id=c.id
-      ORDER BY p.created_at DESC LIMIT 10`).all()
-  };
-  res.json(stats);
-});
 // Store scheduled classes
 router.post('/classes', requireAuth, (req, res) => {
   const { title, date, time, duration, course, notes, meetingUrl, instructor } = req.body;
@@ -51,6 +30,29 @@ router.get('/classes', requireAuth, (req, res) => {
     const classes = db.prepare("SELECT * FROM scheduled_classes WHERE date >= date('now') ORDER BY date, time").all();
     res.json(classes);
   } catch { res.json([]); }
+});
+
+
+// Dashboard stats
+router.get('/stats', requireStaff, (req, res) => {
+  const isAdmin = req.user.role === 'admin';
+  const stats = {
+    totalStudents: db.prepare("SELECT COUNT(*) as c FROM users WHERE role='student'").get().c,
+    totalEnrollments: db.prepare('SELECT COUNT(*) as c FROM enrollments').get().c,
+    totalCourses: db.prepare('SELECT COUNT(*) as c FROM courses').get().c,
+    totalRevenue: db.prepare("SELECT COALESCE(SUM(amount),0) as c FROM payments WHERE status='success'").get().c,
+    recentStudents: db.prepare(`
+      SELECT u.id,u.full_name,u.email,u.track,u.created_at,
+        COUNT(e.id) as enrollments
+      FROM users u LEFT JOIN enrollments e ON e.user_id = u.id
+      WHERE u.role='student'
+      GROUP BY u.id ORDER BY u.created_at DESC LIMIT 10`).all(),
+    recentPayments: db.prepare(`
+      SELECT p.*,u.full_name,u.email,c.title as course_title
+      FROM payments p JOIN users u ON p.user_id=u.id JOIN courses c ON p.course_id=c.id
+      ORDER BY p.created_at DESC LIMIT 10`).all()
+  };
+  res.json(stats);
 });
 
 // All students
