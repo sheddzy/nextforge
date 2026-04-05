@@ -24,6 +24,34 @@ router.get('/stats', requireStaff, (req, res) => {
   };
   res.json(stats);
 });
+// Store scheduled classes
+router.post('/classes', requireAuth, (req, res) => {
+  const { title, date, time, duration, course, notes, meetingUrl, instructor } = req.body;
+  try {
+    db.prepare(`CREATE TABLE IF NOT EXISTS scheduled_classes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT, date TEXT, time TEXT, duration INTEGER,
+      course_id INTEGER, notes TEXT, meeting_url TEXT,
+      instructor_id INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`).run();
+    db.prepare('INSERT INTO scheduled_classes (title,date,time,duration,course_id,notes,meeting_url,instructor_id) VALUES (?,?,?,?,?,?,?,?)')
+      .run(title, date, time, duration || 90, course || null, notes || null, meetingUrl, req.user.id);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+// Get all upcoming classes (for students)
+router.get('/classes', requireAuth, (req, res) => {
+  try {
+    db.prepare(`CREATE TABLE IF NOT EXISTS scheduled_classes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date TEXT, time TEXT,
+      duration INTEGER, course_id INTEGER, notes TEXT, meeting_url TEXT,
+      instructor_id INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`).run();
+    const classes = db.prepare("SELECT * FROM scheduled_classes WHERE date >= date('now') ORDER BY date, time").all();
+    res.json(classes);
+  } catch { res.json([]); }
+});
 
 // All students
 router.get('/students', requireStaff, (req, res) => {
