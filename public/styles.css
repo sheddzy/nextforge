@@ -78,25 +78,69 @@ ul { list-style: none; }
 
 /* ── LOGO ── */
 .logo {
-  display: flex; align-items: center; gap: 4px;
-  font-weight: 800; font-size: 1.3rem; color: var(--white);
-  white-space: nowrap; text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--white);
+  white-space: nowrap;
+  text-decoration: none;
   font-family: 'Syne', sans-serif;
+  line-height: 1;
 }
 .logo-mark {
-  width: auto; height: 40px; border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   background: transparent;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 0;
 }
 .logo-mark img {
-  width: auto; height: 40px; object-fit: contain;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
 }
-.logo-txt { display: flex; flex-direction: column; gap: 0; }
-.logo-txt .ln1 { color: var(--white); font-size: 1.2rem; line-height: 1; }
+.logo-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1;
+}
+.logo-txt .ln1 {
+  color: var(--white);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+  font-family: 'Syne', sans-serif;
+}
 .logo-txt .ln1 span { color: var(--gold); }
-.logo-txt .ln2 { font-size: 0.5rem; letter-spacing: 0.2em; color: var(--text-2); text-transform: uppercase; font-weight: 400; line-height: 1.2; }
+.logo-txt .ln2 {
+  font-size: 0.48rem;
+  letter-spacing: 0.22em;
+  color: var(--text-2);
+  text-transform: uppercase;
+  font-weight: 500;
+  line-height: 1.2;
+  font-family: 'Inter', sans-serif;
+}
 
+/* Navbar logo slightly smaller */
+.navbar .logo-mark { width: 32px; height: 32px; }
+.navbar .logo-mark img { width: 32px; height: 32px; }
+.navbar .logo-txt .ln1 { font-size: 1.05rem; }
+
+/* Footer logo matches navbar */
+.footer .logo-mark { width: 32px; height: 32px; }
+.footer .logo-mark img { width: 32px; height: 32px; }
+.footer .logo-txt .ln1 { font-size: 1rem; }
 /* ── NAVBAR ── */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
