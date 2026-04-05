@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Classroom — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+<script src='https://8x8.vc/vpaas-magic-cookie-c843f610ecf24f35bdcef78ae9306e00/external_api.js' async></script>
+<style>
+#jaas-container { width: 100%; height: 520px; border-radius: var(--r-lg); overflow: hidden; display: none; }
+.class-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.class-item:last-child { border-bottom: none; }
+.class-date { width: 44px; height: 44px; border-radius: var(--r-sm); background: var(--blue-dim); border: 1px solid rgba(37,99,235,0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+.class-day { font-size: 1.1rem; font-weight: 800; color: var(--blue-2); line-height: 1; }
+.class-month { font-size: 0.62rem; color: var(--text-2); text-transform: uppercase; }
+.live-badge { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #f87171; padding: 3px 9px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+.live-badge::before { content:''; width:5px; height:5px; border-radius:50%; background:#f87171; animation:blink 1.5s infinite; }
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+</style>
+</head>
+<body>
+
+<div class="mob-bar">
+  <a href="/" class="logo">
+    <div class="logo-mark"><img src="https://i.ibb.co/zhTNNR4m/svg.png" alt="NextForge"/></div>
+    <div class="logo-txt"><div class="ln1">Next<span>Forge</span></div><div class="ln2">Academy</div></div>
+  </a>
+  <button class="mob-menu-btn" onclick="toggleSB()">☰</button>
+</div>
+<div class="mob-overlay" id="mobOv" onclick="toggleSB()"></div>
+
+<div class="portal">
+  <aside class="sb" id="sb">
+    <div class="sb-top">
+      <a href="/" class="logo">
+        <div class="logo-mark"><img src="https://i.ibb.co/zhTNNR4m/svg.png" alt="NextForge"/></div>
+        <div class="logo-txt"><div class="ln1">Next<span>Forge</span></div><div class="ln2">Academy</div></div>
+      </a>
+      <div class="sb-user">
+        <div class="sb-avatar" id="sbAvatar">👤</div>
+        <div><div class="sb-name" id="sbName">Student</div><div class="sb-role">Student</div></div>
+      </div>
+    </div>
+    <div class="sb-nav">
+      <a href="/student/dashboard.html" class="ni"><span class="ni-icon">🏠</span> Dashboard</a>
+      <a href="/student/classroom.html" class="ni active"><span class="ni-icon">🎥</span> Live Classroom</a>
+      <a href="/student/assignments.html" class="ni"><span class="ni-icon">📝</span> Assignments</a>
+      <a href="/student/profile.html" class="ni"><span class="ni-icon">👤</span> My Profile</a>
+      <div class="sb-section">Courses</div>
+      <a href="/courses.html" class="ni"><span class="ni-icon">🔍</span> Browse Courses</a>
+    </div>
+    <div class="sb-bottom">
+      <a href="#" class="ni" onclick="logout()" style="color:#f87171"><span class="ni-icon">🚪</span> Sign Out</a>
+    </div>
+  </aside>
+
+  <div class="pm">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Live Classroom</div>
+        <div class="topbar-sub">Join your scheduled classes and attend live sessions</div>
+      </div>
+    </div>
+
+    <div class="pc">
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start">
+
+        <!-- VIDEO AREA -->
+        <div>
+          <div class="sec-card" style="margin-bottom:18px">
+            <div class="sec-card-hdr"><h4>🎥 Live Classroom</h4></div>
+            <div style="padding:0">
+              <div id="preMeet" style="padding:48px;text-align:center">
+                <div style="font-size:3.5rem;margin-bottom:16px">🎓</div>
+                <h3 style="margin-bottom:8px">Ready to Join?</h3>
+                <p style="color:var(--text-2);max-width:360px;margin:0 auto 22px;font-size:0.95rem">When your instructor starts a live class, click the button below to join. Make sure your camera and microphone are ready.</p>
+                <div id="noClassMsg" style="background:var(--navy-3);border:1px solid var(--border);border-radius:var(--r);padding:13px 16px;margin-bottom:20px;font-size:0.84rem;color:var(--text-2)">
+                  No live class is currently active. Check your schedule below.
+                </div>
+                <button class="btn btn-gold btn-lg" id="joinBtn" onclick="joinClass()" disabled>Join Live Class</button>
+              </div>
+              <div id="jaas-container"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCHEDULE + CALENDAR -->
+        <div>
+          <div class="card" style="margin-bottom:14px">
+            <h4 style="margin-bottom:14px">📅 Your Schedule</h4>
+            <div id="scheduleList"><div style="color:var(--text-2);font-size:0.85rem;text-align:center;padding:20px">Loading schedule...</div></div>
+          </div>
+          <div class="card">
+            <h4 style="margin-bottom:12px">Add to Calendar</h4>
+            <p style="font-size:0.84rem;color:var(--text-2);margin-bottom:14px">Export upcoming classes to your calendar so you never miss a session.</p>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <button class="btn btn-outline btn-sm" style="width:100%" onclick="addToGCal()">📅 Google Calendar</button>
+              <button class="btn btn-ghost btn-sm" style="width:100%" onclick="downloadICS()">⬇ Download .ics</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const token = localStorage.getItem('nf_token');
+if (!token) window.location.href = '/login.html';
+document.getElementById('sbName').textContent = localStorage.getItem('nf_name') || 'Student';
+
+let jitsiApi = null;
+let activeClass = null;
+const H = { credentials: 'include', headers: { Authorization: 'Bearer ' + token } };
+
+function toggleSB() {
+  document.getElementById('sb').classList.toggle('mob-open');
+  document.getElementById('mobOv').classList.toggle('open');
+}
+function logout() { fetch('/api/auth/logout',{method:'POST',credentials:'include'}); localStorage.clear(); window.location.href='/login.html'; }
+
+async function loadSchedule() {
+  try {
+    const res = await fetch('/api/classes', H);
+    const classes = await res.json();
+    const now = new Date();
+    const upcoming = classes
+      .filter(c => new Date(c.date + 'T' + c.time) >= now)
+      .sort((a,b) => new Date(a.date+'T'+a.time) - new Date(b.date+'T'+b.time));
+
+    const sl = document.getElementById('scheduleList');
+    if (!upcoming.length) { sl.innerHTML = '<div style="color:var(--text-2);font-size:0.85rem;text-align:center;padding:20px">No upcoming classes scheduled.</div>'; return; }
+
+    sl.innerHTML = upcoming.map(c => {
+      const d = new Date(c.date + 'T' + c.time);
+      const isLive = Math.abs(Date.now() - d) < 60 * 60 * 1000;
+      if (isLive) { activeClass = c; }
+      return `<div class="class-item">
+        <div class="class-date"><div class="class-day">${d.getDate()}</div><div class="class-month">${d.toLocaleDateString('en',{month:'short'})}</div></div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <span style="font-weight:600;color:var(--white);font-size:0.875rem">${c.title}</span>
+            ${isLive ? '<span class="live-badge">LIVE</span>' : ''}
+          </div>
+          <div style="font-size:0.77rem;color:var(--text-2);margin-top:2px">${d.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'})} · ${c.duration/60}hr</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    if (activeClass) {
+      document.getElementById('joinBtn').disabled = false;
+      document.getElementById('noClassMsg').style.background = 'rgba(5,150,105,0.1)';
+      document.getElementById('noClassMsg').style.borderColor = 'rgba(5,150,105,0.2)';
+      document.getElementById('noClassMsg').style.color = '#34d399';
+      document.getElementById('noClassMsg').textContent = '🟢 ' + activeClass.title + ' is LIVE now!';
+    }
+  } catch { document.getElementById('scheduleList').innerHTML = '<div style="color:var(--text-2);font-size:0.85rem;padding:20px">Unable to load schedule.</div>'; }
+}
+
+function joinClass() {
+  if (!activeClass && !confirm('No class is currently live. Join the room anyway?')) return;
+  document.getElementById('preMeet').style.display = 'none';
+  document.getElementById('jaas-container').style.display = 'block';
+
+  const roomName = activeClass
+    ? activeClass.meetingUrl.split('/').pop()
+    : 'vpaas-magic-cookie-c843f610ecf24f35bdcef78ae9306e00/NextForge-class';
+
+  jitsiApi = new JitsiMeetExternalAPI('8x8.vc', {
+    roomName: roomName,
+    parentNode: document.querySelector('#jaas-container'),
+    userInfo: { displayName: localStorage.getItem('nf_name') || 'Student' },
+    configOverwrite: { prejoinPageEnabled: false, disableDeepLinking: true },
+    interfaceConfigOverwrite: {
+      TOOLBAR_BUTTONS: ['microphone','camera','fullscreen','fodeviceselection','hangup','chat','raisehand','tileview'],
+      SHOW_JITSI_WATERMARK: false
+    }
+  });
+  jitsiApi.addEventListener('readyToClose', () => {
+    jitsiApi.dispose(); jitsiApi = null;
+    document.getElementById('jaas-container').style.display = 'none';
+    document.getElementById('preMeet').style.display = 'block';
+  });
+}
+
+function addToGCal() {
+  if (!activeClass) return alert('No classes available yet.');
+  const start = new Date(activeClass.date + 'T' + activeClass.time);
+  const end = new Date(start.getTime() + activeClass.duration * 60000);
+  const fmt = d => d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+  window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(activeClass.title)}&dates=${fmt(start)}/${fmt(end)}&details=${encodeURIComponent('Join: ' + activeClass.meetingUrl)}&location=${encodeURIComponent(activeClass.meetingUrl)}`, '_blank');
+}
+
+function downloadICS() {
+  if (!activeClass) return alert('No classes scheduled yet.');
+  const start = new Date(activeClass.date + 'T' + activeClass.time);
+  const end = new Date(start.getTime() + activeClass.duration * 60000);
+  const fmt = d => d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+  const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART:${fmt(start)}\nDTEND:${fmt(end)}\nSUMMARY:${activeClass.title}\nLOCATION:${activeClass.meetingUrl}\nEND:VEVENT\nEND:VCALENDAR`;
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));
+  a.download='class.ics'; a.click();
+}
+
+loadSchedule();
+</script>
+</body>
+</html>
