@@ -54,22 +54,58 @@
       <div class="sb-user"><div class="sb-avatar">⚙️</div><div><div class="sb-name" id="adminName">Admin</div><div class="sb-role">Administrator</div></div></div>
     </div>
     <div class="sb-nav">
-      <a href="#" class="ni active" onclick="show('overview',this)"><span class="ni-icon">📊</span> Overview</a>
-      <a href="#" class="ni" onclick="show('students',this)"><span class="ni-icon">👥</span> Students</a>
-      <a href="#" class="ni" onclick="show('instructors',this)"><span class="ni-icon">👨‍🏫</span> Instructors <span class="ni-badge" id="pendingBadge" style="display:none">!</span></a>
-      <a href="#" class="ni" onclick="show('courses',this)"><span class="ni-icon">📚</span> Courses</a>
-      <a href="#" class="ni" onclick="show('pricing',this)"><span class="ni-icon">💰</span> Pricing & Promos</a>
-      <a href="#" class="ni" onclick="show('cohort',this)"><span class="ni-icon">📅</span> Cohort Settings</a>
-      <a href="#" class="ni" onclick="show('payments',this)"><span class="ni-icon">💳</span> Payments</a>
-      <a href="#" class="ni" onclick="show('announcements',this)"><span class="ni-icon">📢</span> Announcements</a>
-      <a href="#" class="ni" onclick="show('certificates',this)"><span class="ni-icon">🎓</span> Certificates</a>
-      <div class="sb-section">Site</div>
-      <a href="/" class="ni"><span class="ni-icon">🌐</span> View Website</a>
-    </div>
-    <div class="sb-bottom">
-      <a href="#" class="ni" onclick="logout()" style="color:#f87171"><span class="ni-icon">🚪</span> Sign Out</a>
-    </div>
-  </aside>
+  <!-- MAIN -->
+  <div class="sb-section">Main</div>
+  <a href="#" class="ni active" onclick="show('overview',this)">
+    <span class="ni-icon">📊</span> Overview
+  </a>
+
+  <!-- PEOPLE -->
+  <div class="sb-section">People</div>
+  <a href="#" class="ni" onclick="show('students',this)">
+    <span class="ni-icon">👥</span> Students
+  </a>
+  <a href="#" class="ni" onclick="show('instructors',this)">
+    <span class="ni-icon">👨‍🏫</span> Instructors
+    <span class="ni-badge" id="pendingBadge" style="display:none">!</span>
+  </a>
+
+  <!-- CONTENT -->
+  <div class="sb-section">Content</div>
+  <a href="#" class="ni" onclick="show('courses',this)">
+    <span class="ni-icon">📚</span> Courses
+  </a>
+  <a href="/instructor/course.html" class="ni">
+    <span class="ni-icon">✏️</span> Manage Lessons
+  </a>
+  <a href="#" class="ni" onclick="show('certificates',this)">
+    <span class="ni-icon">🎓</span> Certificates
+  </a>
+
+  <!-- FINANCE -->
+  <div class="sb-section">Finance</div>
+  <a href="#" class="ni" onclick="show('payments',this)">
+    <span class="ni-icon">💳</span> Payments
+  </a>
+  <a href="#" class="ni" onclick="show('pricing',this)">
+    <span class="ni-icon">💰</span> Pricing & Promos
+  </a>
+
+  <!-- COMMS -->
+  <div class="sb-section">Communications</div>
+  <a href="#" class="ni" onclick="show('announcements',this)">
+    <span class="ni-icon">📢</span> Announcements
+  </a>
+
+  <!-- SETTINGS -->
+  <div class="sb-section">Settings</div>
+  <a href="#" class="ni" onclick="show('cohort',this)">
+    <span class="ni-icon">📅</span> Cohort Settings
+  </a>
+  <a href="/" class="ni">
+    <span class="ni-icon">🌐</span> View Website
+  </a>
+</div>  
 
   <div class="pm">
     <div class="topbar">
