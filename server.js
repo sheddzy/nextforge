@@ -5,7 +5,15 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
+const adminRoutes = require('./routes/admin');
+app.use('/api/classes', (req, res, next) => {
+  req.url = '/classes' + (req.url === '/' ? '' : req.url);
+  adminRoutes(req, res, next);
+});
 
+app.get('/api/classes', require('./middleware/auth').requireAuth, (req, res) => {
+  // proxy to admin route
+});
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
