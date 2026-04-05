@@ -1,585 +1,282 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<meta name="description" content="NextForge Academy — Launch your tech career from anywhere in the world. Expert-led cohorts in Project Management, Data Analysis, Product Management and more."/>
-<meta name="keywords" content="tech career training, project management course, data analysis course Nigeria, product management training Africa, online tech academy"/>
-<meta property="og:title" content="NextForge Academy — Launch Your Tech Career"/>
-<meta property="og:description" content="Join mentor-led cohorts from anywhere in the world. Real projects, live instruction, verified certificates."/>
-<meta property="og:image" content="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"/>
-<meta property="og:url" content="https://nextforgeacademy.online"/>
-<title>NextForge Academy — Launch Your Tech Career From Anywhere</title>
-<link rel="stylesheet" href="/styles.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NextForge Academy</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
 <style>
-body { padding-top: 72px; }
 
-/* HERO */
-.hero { min-height: calc(100vh - 72px); display: flex; align-items: center; position: relative; overflow: hidden; }
-.hero-bg { position: absolute; inset: 0; z-index: 0; }
-.hero-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0.14; }
-.hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(125deg, rgba(6,13,26,0.97) 38%, rgba(37,99,235,0.07) 100%); }
-.hero-content { position: relative; z-index: 1; padding: 80px 0; width: 100%; }
-.hero-grid { display: grid; grid-template-columns: 1fr 440px; gap: 64px; align-items: center; }
-.hero-tag { display: inline-flex; align-items: center; gap: 8px; padding: 6px 15px; border-radius: 20px; background: rgba(240,165,0,0.09); border: 1px solid rgba(240,165,0,0.24); font-size: 0.78rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 22px; }
-.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); animation: blink 1.8s infinite; flex-shrink: 0; }
-@keyframes blink { 0%,100%{opacity:1}50%{opacity:0.3} }
-.hero h1 { margin-bottom: 20px; color: var(--white); }
-.hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--gold), var(--gold-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.hero-sub { font-size: 1.12rem; color: var(--text-4); max-width: 520px; margin-bottom: 36px; line-height: 1.8; }
-.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 44px; }
-.hero-proof { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.proof-avatars { display: flex; }
-.proof-avatars img { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--navy); margin-left: -9px; object-fit: cover; }
-.proof-avatars img:first-child { margin-left: 0; }
-.proof-text { font-size: 0.84rem; color: var(--text-2); }
-.proof-text strong { color: var(--white); }
-.proof-countries { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--text-2); }
+/* ---------------- GLOBAL DESIGN SYSTEM ---------------- */
 
-/* HERO PANEL */
-.hero-panel { background: rgba(11,21,38,0.94); backdrop-filter: blur(24px); border: 1px solid var(--border-2); border-radius: var(--r-xl); overflow: hidden; }
-.hp-head { padding: 16px 18px; border-bottom: 1px solid var(--border); background: var(--navy-3); }
-.hp-head-title { font-size: 0.78rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
-.hp-courses { padding: 12px; }
-.hp-course { display: flex; align-items: center; gap: 11px; padding: 11px 12px; border-radius: var(--r); background: var(--navy-3); border: 1px solid var(--border); margin-bottom: 7px; text-decoration: none; transition: all var(--t); }
-.hp-course:last-of-type { margin-bottom: 0; }
-.hp-course:hover { border-color: var(--gold); transform: translateX(3px); }
-.hp-icon { width: 38px; height: 38px; border-radius: 9px; background: var(--blue-dim); display: flex; align-items: center; justify-content: center; font-size: 1.05rem; flex-shrink: 0; }
-.hp-name { font-size: 0.875rem; font-weight: 600; color: var(--white); line-height: 1.25; }
-.hp-meta { font-size: 0.72rem; color: var(--text-2); margin-top: 1px; }
-.hp-price { font-size: 0.875rem; font-weight: 700; color: var(--gold); margin-left: auto; flex-shrink: 0; }
-.hp-foot { padding: 12px; border-top: 1px solid var(--border); }
-.hp-live-row { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: rgba(5,150,105,0.07); border: 1px solid rgba(5,150,105,0.15); border-radius: var(--r-sm); margin-top: 10px; }
+:root{
+  --bg-main:#030712;
+  --bg-soft:#060f1f;
+  --glass:rgba(255,255,255,0.05);
+  --border:rgba(255,255,255,0.1);
 
-/* TRUST BAR */
-.trust { background: var(--navy-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 20px 0; }
-.trust-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.ti { display: flex; align-items: center; gap: 9px; font-size: 0.875rem; color: var(--text-2); }
-.ti strong { color: var(--white); }
-.tdiv { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; }
+  --blue:#2563eb;
+  --blue2:#60a5fa;
+  --green:#22c55e;
+  --gold:#ffd166;
 
-/* FLAGS */
-.flags { display: flex; gap: 4px; align-items: center; }
-.flag { font-size: 1.1rem; }
+  --text:#e5e7eb;
+  --text-dim:#94a3b8;
 
-/* WHY CARDS */
-.wc { background: var(--navy-2); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 26px 22px; transition: all var(--t); }
-.wc:hover { border-color: var(--blue-2); transform: translateY(-4px); box-shadow: var(--shadow); }
-.wc-icon-wrap { width: 48px; height: 48px; border-radius: var(--r); background: var(--blue-dim); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 16px; }
-.wc h4 { font-size: 1rem; margin-bottom: 8px; }
-.wc p { font-size: 0.9rem; color: var(--text-2); line-height: 1.7; }
+  --radius:20px;
+  --radius-lg:28px;
 
-/* PROCESS */
-.ps-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; position: relative; }
-.ps-grid::before { content: ''; position: absolute; top: 23px; left: calc(12.5% + 20px); right: calc(12.5% + 20px); height: 1.5px; background: linear-gradient(90deg, var(--blue-dim), var(--blue), var(--blue-dim)); }
-.ps { text-align: center; padding: 0 18px 0; position: relative; }
-.ps-num { width: 48px; height: 48px; border-radius: 50%; background: var(--navy-2); border: 2px solid var(--blue); color: var(--blue-2); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; margin: 0 auto 16px; position: relative; z-index: 1; font-family: 'Syne', sans-serif; }
-.ps h4 { font-size: 0.95rem; margin-bottom: 7px; }
-.ps p { font-size: 0.84rem; color: var(--text-2); line-height: 1.65; }
+  --shadow:0 20px 60px rgba(0,0,0,.5);
+}
 
-/* TESTIMONIALS */
-.tc { background: var(--navy-2); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 26px; position: relative; }
-.tc-q { font-size: 4rem; color: var(--blue-2); opacity: 0.12; position: absolute; top: 4px; left: 16px; line-height: 1; font-family: Georgia,serif; }
-.tc-text { font-size: 0.95rem; color: var(--text-4); line-height: 1.78; margin-bottom: 18px; position: relative; z-index: 1; }
-.tc-author { display: flex; align-items: center; gap: 11px; }
-.tc-img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-2); }
-.tc-name { font-weight: 700; font-size: 0.9rem; color: var(--white); }
-.tc-role { font-size: 0.77rem; color: var(--text-2); margin-top: 1px; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:Inter;
+  color:white;
+  background:
+    radial-gradient(circle at 20% 10%, #1a2c55 0%, transparent 35%),
+    radial-gradient(circle at 80% 0%, #2a1245 0%, transparent 35%),
+    radial-gradient(circle at 50% 100%, #093939 0%, transparent 35%),
+    var(--bg-main);
+}
 
-/* INSTRUCTOR */
-.instr-sec { background: var(--navy-3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.instr-grid { display: grid; grid-template-columns: 360px 1fr; gap: 64px; align-items: center; }
-.instr-img-w { position: relative; }
-.instr-img { width: 100%; aspect-ratio: 4/5; object-fit: cover; object-position: top; border-radius: var(--r-xl); box-shadow: var(--shadow-xl); }
-.instr-card-overlay { position: absolute; bottom: 18px; left: 18px; right: 18px; background: rgba(6,13,26,0.92); backdrop-filter: blur(14px); border: 1px solid var(--border-2); border-radius: var(--r); padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
-.instr-mini { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); flex-shrink: 0; }
-.cred-row { display: flex; gap: 24px; margin-top: 22px; flex-wrap: wrap; }
-.cred-num { font-size: 1.5rem; font-weight: 800; color: var(--gold); font-family: 'Syne', sans-serif; }
-.cred-lbl { font-size: 0.73rem; color: var(--text-2); margin-top: 1px; }
+/* ---------------- NAVBAR ---------------- */
 
-/* AI CHAT */
-.ai-sec { background: var(--navy-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.chat-box { background: var(--navy); border: 1px solid var(--border-2); border-radius: var(--r-xl); overflow: hidden; }
-.chat-hdr { padding: 15px 20px; border-bottom: 1px solid var(--border); background: var(--navy-3); display: flex; align-items: center; gap: 9px; }
-.chat-green-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; animation: blink 2s infinite; flex-shrink: 0; }
-.chat-msgs { min-height: 190px; max-height: 280px; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 11px; }
-.cm { padding: 11px 14px; border-radius: 12px; font-size: 0.9rem; line-height: 1.65; max-width: 87%; }
-.cm.ai { background: var(--navy-3); color: var(--text-4); align-self: flex-start; border: 1px solid var(--border); border-bottom-left-radius: 3px; }
-.cm.user { background: var(--blue); color: var(--white); align-self: flex-end; border-bottom-right-radius: 3px; }
-.chat-foot { padding: 13px 16px; border-top: 1px solid var(--border); display: flex; gap: 9px; }
-.chat-in { flex: 1; background: var(--navy-3); border: 1.5px solid var(--border-2); border-radius: 9px; padding: 10px 14px; color: var(--white); font-size: 0.9rem; outline: none; transition: border-color var(--t); }
-.chat-in:focus { border-color: var(--blue-2); }
-.chat-in::placeholder { color: rgba(148,163,184,0.4); }
+.navbar{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:92%;
+  max-width:1200px;
+  height:70px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(18px);
+  border:1px solid var(--border);
+  border-radius:40px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 30px;
+  z-index:1000;
+}
 
-/* CTA SECTION */
-.cta-sec { position: relative; overflow: hidden; }
-.cta-bg { position: absolute; inset: 0; }
-.cta-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0.12; }
-.cta-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(6,13,26,0.97), rgba(37,99,235,0.4)); }
-.cta-ct { position: relative; z-index: 1; text-align: center; padding: 96px 0; }
+.logo{
+  font-family:Syne;
+  font-size:1.6rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#60a5fa,#ffd166);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
 
-/* FAQ */
-.faq-item { border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 8px; overflow: hidden; transition: border-color var(--t); }
-.faq-item.open { border-color: var(--blue-2); }
-.faq-q { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; cursor: pointer; font-weight: 600; color: var(--white); font-size: 0.96rem; transition: background var(--t); gap: 12px; }
-.faq-q:hover { background: var(--navy-3); }
-.faq-icon { color: var(--gold); font-size: 1.2rem; flex-shrink: 0; transition: transform var(--t); }
-.faq-item.open .faq-icon { transform: rotate(45deg); }
-.faq-a { padding: 0 20px 18px; font-size: 0.92rem; color: var(--text-3); line-height: 1.75; display: none; }
-.faq-item.open .faq-a { display: block; }
+.nav-links a{
+  color:var(--text);
+  margin:0 15px;
+  text-decoration:none;
+}
 
-@media(max-width:1024px) { .hero-grid { grid-template-columns: 1fr; } .hero-panel { display: none; } .instr-grid { grid-template-columns: 1fr; } .instr-img-w { max-width: 310px; margin: 0 auto; } }
-@media(max-width:768px) { .ps-grid { grid-template-columns: 1fr 1fr; gap: 24px; } .ps-grid::before { display: none; } .trust-inner { gap: 10px; } .tdiv { display: none; } }
-@media(max-width:480px) { .ps-grid { grid-template-columns: 1fr; } }
+.btn{
+  padding:12px 22px;
+  border-radius:14px;
+  font-weight:700;
+  border:none;
+  cursor:pointer;
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,#2563eb,#60a5fa);
+  box-shadow:0 10px 30px rgba(37,99,235,.4);
+}
+
+/* ---------------- HERO ---------------- */
+
+.hero{
+  padding:180px 20px 120px;
+  text-align:center;
+}
+
+.hero h1{
+  font-family:Syne;
+  font-size:clamp(3rem,6vw,5rem);
+  line-height:1.1;
+  background:linear-gradient(90deg,#fff,#9ecbff,#ffd166);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+  max-width:700px;
+  margin:25px auto 40px;
+  color:var(--text-dim);
+  font-size:1.2rem;
+}
+
+.hero-buttons{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+}
+
+.btn-gold{
+  background:linear-gradient(135deg,#ffb020,#ffd166);
+  color:black;
+}
+
+/* ---------------- STATS ---------------- */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:25px;
+  padding:80px 8%;
+}
+
+.stat{
+  background:var(--glass);
+  backdrop-filter:blur(14px);
+  border:1px solid var(--border);
+  padding:30px;
+  border-radius:var(--radius);
+  text-align:center;
+}
+
+.stat h2{font-size:2.5rem}
+
+/* ---------------- COURSES ---------------- */
+
+.section-title{
+  text-align:center;
+  font-family:Syne;
+  font-size:2.6rem;
+  margin-bottom:50px;
+  background:linear-gradient(90deg,#fff,#9ecbff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.courses{
+  padding:60px 8%;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:30px;
+}
+
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:30px;
+  transition:.4s;
+}
+
+.card:hover{
+  transform:translateY(-10px) scale(1.02);
+  box-shadow:var(--shadow);
+}
+
+.card h3{margin-bottom:15px}
+
+/* ---------------- TESTIMONIAL ---------------- */
+
+.testimonial{
+  padding:100px 8%;
+  text-align:center;
+}
+
+.quote{
+  max-width:700px;
+  margin:auto;
+  font-size:1.3rem;
+  color:var(--text-dim);
+}
+
+/* ---------------- CTA ---------------- */
+
+.cta{
+  padding:120px 20px;
+  text-align:center;
+}
+
+footer{
+  text-align:center;
+  padding:30px;
+  color:#64748b;
+}
+
 </style>
 </head>
+
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar" id="navbar">
-  <div class="inner">
-    <a href="/" class="logo">
-      <div class="logo-mark">
-      <img src="https://i.ibb.co/DyPdLpF/satndalone-forge-20260404-153547-0001.png" alt="satndalone forge 20260404 153547 0001" border="0">
-             onerror="this.style.display='none';this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' style=\'width:20px;height:20px;stroke:white;fill:none;stroke-width:2\'><path d=\'M12 2L2 7l10 5 10-5-10-5z\'/><path d=\'M2 17l10 5 10-5\'/><path d=\'M2 12l10 5 10-5\'/></svg>'"
-             alt="NextForge"/>
-      </div>
-      <div class="logo-txt">
-        <div class="ln1">Next<span>Forge</span></div>
-        <div class="ln2">Academy</div>
-      </div>
-    </a>
-    <ul class="nav-links">
-      <li><a href="/courses.html">Courses</a></li>
-      <li><a href="/about.html">About</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-      <li><a href="#advisor">AI Advisor</a></li>
-      <li><a href="#faq">FAQ</a></li>
-    </ul>
-    <div class="nav-actions">
-      <a href="/login.html" class="btn btn-ghost btn-sm">Log In</a>
-      <a href="/register.html" class="btn btn-gold btn-sm">Enroll Now</a>
-    </div>
+<!-- NAV -->
+<div class="navbar">
+  <div class="logo">NextForge</div>
+  <div class="nav-links">
+    <a href="#">Courses</a>
+    <a href="#">About</a>
+    <a href="#">Pricing</a>
   </div>
-</nav>
+  <button class="btn btn-primary">Login</button>
+</div>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg">
-    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1800&q=80" alt=""/>
-  </div>
-  <div class="container hero-content">
-    <div class="hero-grid">
-      <div class="fu">
-        <div class="hero-tag"><div class="live-dot"></div> April 2026 Cohort — Enrolling Now</div>
-        <h1>Launch Your<br/><em>Tech Career</em><br/>From Anywhere.</h1>
-        <p class="hero-sub">NextForge Academy delivers expert-led, project-based training in the most in-demand tech skills — accessible to ambitious professionals worldwide. Small cohorts. Real mentorship. Certified outcomes.</p>
-        <div class="hero-cta">
-          <a href="/courses.html" class="btn btn-gold btn-2xl">Explore Programmes →</a>
-          <a href="https://wa.me/2349060914286?text=Hi%2C+I%27d+like+to+speak+with+an+advisor+about+NextForge+Academy" target="_blank" class="btn btn-ghost btn-lg">💬 Speak With Advisor</a>
-        </div>
-        <div class="hero-proof">
-          <div class="proof-avatars">
-            <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&q=80" alt=""/>
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt=""/>
-            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=100&q=80" alt=""/>
-            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&q=80" alt=""/>
-          </div>
-          <div>
-            <div class="proof-text">Trusted by <strong>1,200+ professionals</strong> worldwide</div>
-            <div class="proof-countries">
-              <span class="flags">🇳🇬🇬🇭🇰🇪🇿🇦🇬🇧🇨🇦</span>
-              <span style="font-size:0.78rem;color:var(--text-2)">Students from 12+ countries</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="hero-panel fu d2">
-        <div class="hp-head">
-          <div class="hp-head-title">Our Programmes — April 2026</div>
-        </div>
-        <div class="hp-courses">
-          <a href="/courses.html" class="hp-course"><div class="hp-icon">📋</div><div><div class="hp-name">Project Management</div><div class="hp-meta">12 weeks · Beginner welcome</div></div><div class="hp-price">₦250k</div></a>
-          <a href="/courses.html" class="hp-course"><div class="hp-icon">🧭</div><div><div class="hp-name">Product Management</div><div class="hp-meta">13 weeks · Build real products</div></div><div class="hp-price">₦250k</div></a>
-          <a href="/courses.html" class="hp-course"><div class="hp-icon">📊</div><div><div class="hp-name">Data Analysis</div><div class="hp-meta">12 weeks · Excel, SQL & Power BI</div></div><div class="hp-price">₦300k</div></a>
-          <a href="/courses.html" class="hp-course"><div class="hp-icon">🗂</div><div><div class="hp-name">Notion Mastery</div><div class="hp-meta">6 weeks · Self-paced option</div></div><div class="hp-price">₦160k</div></a>
-        </div>
-        <div class="hp-foot">
-          <a href="/register.html" class="btn btn-gold" style="width:100%;justify-content:center">Create Free Account →</a>
-          <div class="hp-live-row">
-            <div class="live-dot" style="background:#10b981"></div>
-            <span style="font-size:0.79rem;color:var(--text-4)">Next cohort starts <strong style="color:var(--white)">April 7, 2026</strong> — 12 seats left</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <h1>Become a Tech Professional</h1>
+  <p>Learn AI, Web Development and Digital Skills from industry experts and start earning globally.</p>
+  <div class="hero-buttons">
+    <button class="btn btn-primary">Start Learning</button>
+    <button class="btn btn-gold">View Courses</button>
   </div>
 </section>
 
-<!-- TRUST BAR -->
-<div class="trust">
-  <div class="container">
-    <div class="trust-inner">
-      <div class="ti">🌍 <span>Students from <strong>12+ countries</strong></span></div>
-      <div class="tdiv"></div>
-      <div class="ti">👨‍🏫 <span><strong>Expert</strong> instructors</span></div>
-      <div class="tdiv"></div>
-      <div class="ti">🏗️ <span><strong>Hands-on</strong> real projects</span></div>
-      <div class="tdiv"></div>
-      <div class="ti">🎯 <span><strong>Live</strong> mentorship included</span></div>
-      <div class="tdiv"></div>
-      <div class="ti">📜 <span><strong>Verified</strong> certificates</span></div>
-      <div class="tdiv"></div>
-      <div class="ti">👥 <span>Max <strong>20</strong> per cohort</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- WHY NEXTFORGE -->
-<section class="section">
-  <div class="container">
-    <div class="sh center fu">
-      <div class="sh-eye">Why NextForge</div>
-      <h2>Built Different.<br/>Built for Results.</h2>
-      <p>We don't just teach — we transform careers. Every programme is designed around one question: will this get someone hired, promoted, or earning more?</p>
-    </div>
-    <div class="g4">
-      <div class="wc fu d1"><div class="wc-icon-wrap">👥</div><h4>Small Cohorts Only</h4><p>Maximum 20 students per cohort. Every learner gets direct instructor attention and personalised project feedback.</p></div>
-      <div class="wc fu d2"><div class="wc-icon-wrap">🔧</div><h4>100% Practical</h4><p>No theory for theory's sake. Every lesson connects to a real deliverable you can put in your portfolio immediately.</p></div>
-      <div class="wc fu d3"><div class="wc-icon-wrap">🌍</div><h4>Global Accessibility</h4><p>Join from anywhere in the world. All live sessions are recorded. Flexible scheduling built for working professionals.</p></div>
-      <div class="wc fu d4"><div class="wc-icon-wrap">🎯</div><h4>Career Outcomes First</h4><p>We track career outcomes, not just completion rates. CV reviews, interview prep, and job search support included.</p></div>
-    </div>
-  </div>
+<!-- STATS -->
+<section class="stats">
+  <div class="stat"><h2>10k+</h2>Students</div>
+  <div class="stat"><h2>50+</h2>Courses</div>
+  <div class="stat"><h2>95%</h2>Success Rate</div>
+  <div class="stat"><h2>24/7</h2>Support</div>
 </section>
 
 <!-- COURSES -->
-<section class="section" style="padding-top:0">
-  <div class="container">
-    <div class="sh fu" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px">
-      <div>
-        <div class="sh-eye">Our Programmes</div>
-        <h2 style="margin-bottom:8px">Choose Your Career Path</h2>
-        <p style="max-width:480px">Six expert-designed programmes. Every one built to take you from zero to job-ready.</p>
-      </div>
-      <a href="/courses.html" class="btn btn-outline">View All Programmes →</a>
-    </div>
-    <div class="g3" id="homeCourses">
-      <div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--text-2)">Loading programmes...</div>
-    </div>
+<h2 class="section-title">Popular Courses</h2>
+
+<section class="courses">
+  <div class="card">
+    <h3>Fullstack Web Development</h3>
+    <p>Become a job-ready developer.</p>
+  </div>
+  <div class="card">
+    <h3>AI & Automation</h3>
+    <p>Build AI tools and automations.</p>
+  </div>
+  <div class="card">
+    <h3>UI/UX Design</h3>
+    <p>Design modern digital products.</p>
   </div>
 </section>
 
-<!-- PROCESS -->
-<section class="section" style="background:var(--navy-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
-  <div class="container">
-    <div class="sh center fu">
-      <div class="sh-eye">How It Works</div>
-      <h2>From Enrollment to Career</h2>
-<p>A structured, proven path designed for working professionals and career switchers alike.</p>
-    </div>
-    <div class="ps-grid">
-      <div class="ps fu d1"><div class="ps-num">1</div><h4>Enroll & Pay</h4><p>Choose your programme, complete secure payment, and get instant LMS access with welcome materials.</p></div>
-      <div class="ps fu d2"><div class="ps-num">2</div><h4>Attend Live Classes</h4><p>Weekly expert-led sessions via video. All sessions recorded and available 24/7 in your portal.</p></div>
-      <div class="ps fu d3"><div class="ps-num">3</div><h4>Build Real Projects</h4><p>Apply skills to real-world briefs. Get instructor feedback. Build a portfolio that impresses employers.</p></div>
-      <div class="ps fu d4"><div class="ps-num">4</div><h4>Graduate & Get Hired</h4><p>Receive a verified certificate, career coaching, CV review, and lifetime alumni community access.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- INSTRUCTOR -->
-<section class="section instr-sec">
-  <div class="container">
-    <div class="instr-grid">
-      <div class="instr-img-w fu">
-        <img src="https://i.ibb.co/fVWq6FNP/1759002518772.png"
-             onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80'"
-             alt="Shedrack Ebete" class="instr-img"/>
-        <div class="instr-card-overlay">
-          <img src="https://i.ibb.co/fVWq6FNP/1759002518772.png"
-               onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80'"
-               alt="Shedrack" class="instr-mini"/>
-          <div>
-            <div style="font-weight:700;color:var(--white);font-size:0.9rem">Shedrack Ebete</div>
-            <div style="font-size:0.73rem;color:var(--gold)">Founder & Lead Instructor</div>
-          </div>
-          <span class="badge badge-green" style="margin-left:auto">● Live</span>
-        </div>
-      </div>
-      <div class="fu d2">
-        <div class="sh-eye">Lead Instructor</div>
-        <h2 style="margin-bottom:14px">Real-World Experience.<br/>Not Just Theory.</h2>
-        <p style="margin-bottom:13px">Shedrack Ebete is an Operations Officer, Project Management Instructor, and systems designer based in Lagos, Nigeria. He actively works in the industries he teaches — every lesson is drawn from live, real-world experience.</p>
-        <p style="margin-bottom:26px">He has led live PM cohorts training hundreds of professionals, deployed operational systems across multiple organisations, and advised on real estate investment strategy. If he hasn't tested it in practice, it doesn't make the curriculum.</p>
-        <div class="cred-row">
-          <div><div class="cred-num">1,200+</div><div class="cred-lbl">Students Taught</div></div>
-          <div><div class="cred-num">12+</div><div class="cred-lbl">Countries Reached</div></div>
-          <div><div class="cred-num">5 yrs</div><div class="cred-lbl">Industry Exp.</div></div>
-          <div><div class="cred-num">4.9★</div><div class="cred-lbl">Student Rating</div></div>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:28px">
-          <a href="/courses.html" class="btn btn-gold">Browse Programmes →</a>
-          <a href="/about.html" class="btn btn-ghost">About NextForge</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="section">
-  <div class="container">
-    <div class="sh center fu">
-      <div class="sh-eye">Student Outcomes</div>
-      <h2>From Zero to Career-Ready</h2>
-      <p>Professionals from across Africa and beyond who transformed their careers with NextForge Academy.</p>
-    </div>
-    <div class="g3">
-      <div class="tc fu d1">
-        <div class="tc-q">"</div>
-        <p class="tc-text">"I had zero background in tech. The PM programme was structured, practical, and the small cohort meant I got real feedback every single week. I landed a project coordinator role 3 months after graduating."</p>
-        <div class="tc-author">
-          <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&q=80" alt="" class="tc-img"/>
-          <div><div class="tc-name">Adaeze Okonkwo</div><div class="tc-role">Project Coordinator · Lagos, Nigeria</div></div>
-        </div>
-      </div>
-      <div class="tc fu d2">
-        <div class="tc-q">"</div>
-        <p class="tc-text">"Data Analysis taught me Excel, SQL, and Power BI from absolute zero. I went from admin officer to junior data analyst in under 4 months. The career guidance sessions were incredibly valuable."</p>
-        <div class="tc-author">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="" class="tc-img"/>
-          <div><div class="tc-name">Emeka Nwosu</div><div class="tc-role">Data Analyst · Abuja, Nigeria</div></div>
-        </div>
-      </div>
-      <div class="tc fu d3">
-        <div class="tc-q">"</div>
-        <p class="tc-text">"The Notion Mastery course transformed how I run my freelance business. I now offer client system design at ₦80,000 per setup. The ROI paid for the course fee within the first month."</p>
-        <div class="tc-author">
-          <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=100&q=80" alt="" class="tc-img"/>
-          <div><div class="tc-name">Funke Adeyemi</div><div class="tc-role">Ops Consultant · Lagos, Nigeria</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- AI ADVISOR -->
-<section class="section ai-sec" id="advisor">
-  <div class="container">
-    <div class="g2" style="gap:60px;align-items:center">
-      <div class="fu">
-        <div class="sh-eye">AI-Powered Guidance</div>
-        <h2 style="margin-bottom:14px">Not Sure Where to Start?</h2>
-        <p style="margin-bottom:22px">Tell our AI Advisor your background, current role, and career goals. Get a personalised programme recommendation in seconds — or speak directly with our admissions team.</p>
-        <ul style="display:flex;flex-direction:column;gap:13px;margin-bottom:26px">
-          <li style="display:flex;align-items:flex-start;gap:12px;font-size:0.925rem;color:var(--text-4)"><span style="width:26px;height:26px;background:var(--blue-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.75rem;margin-top:1px">🎯</span>Analyses your background and recommends the right programme for your goals</li>
-          <li style="display:flex;align-items:flex-start;gap:12px;font-size:0.925rem;color:var(--text-4)"><span style="width:26px;height:26px;background:var(--blue-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.75rem;margin-top:1px">⚡</span>Instant response powered by Claude AI — available 24/7 from any timezone</li>
-          <li style="display:flex;align-items:flex-start;gap:12px;font-size:0.925rem;color:var(--text-4)"><span style="width:26px;height:26px;background:var(--blue-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.75rem;margin-top:1px">💬</span>Prefer talking to a human? Our admissions team responds within 24 hours</li>
-        </ul>
-        <a href="https://wa.me/2349060914286?text=Hi%2C+I%27d+like+to+speak+with+an+advisor+at+NextForge+Academy" target="_blank" class="btn btn-gold btn-lg">💬 Speak With Admissions</a>
-      </div>
-      <div class="chat-box fu d2">
-        <div class="chat-hdr">
-          <div class="chat-green-dot"></div>
-          <div style="font-weight:700;color:var(--white);font-size:0.9rem">NextForge AI Advisor</div>
-          <div style="margin-left:auto;font-size:0.72rem;color:var(--text-2)">Claude AI · Always On</div>
-        </div>
-        <div class="chat-msgs" id="chatMsgs">
-          <div class="cm ai">👋 Hello! I'm the NextForge AI Advisor. Tell me about your background and the career you want to build — I'll recommend the right programme for you and answer any questions about our courses.</div>
-        </div>
-        <div class="chat-foot">
-          <input class="chat-in" id="chatIn" type="text" placeholder="e.g. I'm a graduate looking to break into data analysis..."/>
-          <button class="btn btn-primary btn-sm" onclick="sendMsg()">Send</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- FAQ -->
-<section class="section" id="faq" style="background:var(--navy-2);border-top:1px solid var(--border)">
-  <div class="container">
-    <div class="sh center fu">
-      <div class="sh-eye">Common Questions</div>
-      <h2>Everything You Need to Know</h2>
-      <p>Can't find your answer here? WhatsApp us at +234 906 091 4286 or email info@nextforgeacademy.online</p>
-    </div>
-    <div style="max-width:760px;margin:0 auto" class="fu d1">
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>Do I need any prior experience to enroll?</span><span class="faq-icon">+</span></div>
-        <div class="faq-a">No prior experience is required for most of our programmes. Our Project Management, Data Analysis, Product Management, and Business Communication courses are all designed to take complete beginners to job-ready. The Operations Systems Design course is recommended for intermediate learners.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>How are classes delivered?</span><span class="faq-icon">+</span></div>
-        <div class="faq-a">All classes are delivered live via video conferencing. Every session is recorded and uploaded to your student portal within 24 hours, so you never miss a lesson. Classes are scheduled around working hours to accommodate professionals in different time zones.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>Can I join from outside Nigeria?</span><span class="faq-icon">+</span></div>
-        <div class="faq-a">Absolutely. We welcome students from anywhere in the world. We have students from Nigeria, Ghana, Kenya, South Africa, the UK, Canada, and more. Our pricing is in Naira but we accept international card payments through Paystack. Please contact us for international payment options if needed.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>What is your refund policy?</span><span class="faq-icon">+</span></div>
-        <div class="faq-a">We offer a 30-day money-back guarantee. If you complete less than 20% of the course content and are unsatisfied within the first 30 days, we will issue a full refund. Please contact us at info@nextforgeacademy.online to initiate a refund request.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>How long until I get a job after completing a course?</span><span class="faq-icon">+</span></div>
-        <div class="faq-a">Results vary based on your background and job search effort, but many of our graduates have secured roles within 1–4 months of completing their programme. We provide CV reviews, interview preparation, LinkedIn optimisation, and job application support as part of every course.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>Are certificates internationally recognised?</span><span class="faq-icon">+</span></div>
-        <div class="faq-a">Our certificates are issued with a unique verification code that employers can verify on our website. Certificates are accepted by organisations across Africa, the UK, and beyond. We are actively pursuing additional accreditation partnerships.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>What time commitment is required per week?</span><span class="faq-icon">+</span></div>
-        <div class="faq-a">Expect to commit 8–12 hours per week. This includes live class time (2–3 hours), self-study and recordings (3–4 hours), and assignments (2–4 hours). Our programmes are designed to be manageable alongside a full-time job.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)"><span>Is there payment in installments?</span><span class="faq-icon">+</span></div>
-        <div class="faq-a">We are exploring installment options for future cohorts. Currently, full payment is required at enrollment. However, we offer early-bird pricing for the first 5 students who enroll in each cohort. Contact our admissions team on WhatsApp to ask about any available discounts.</div>
-      </div>
-    </div>
-  </div>
+<!-- TESTIMONIAL -->
+<section class="testimonial">
+  <h2 class="section-title">Student Success</h2>
+  <p class="quote">
+    “I got my first remote tech job 3 months after graduating.”
+  </p>
 </section>
 
 <!-- CTA -->
-<section class="cta-sec">
-  <div class="cta-bg"><img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1600&q=80" alt=""/></div>
-  <div class="container cta-ct">
-    <span class="badge badge-gold" style="margin-bottom:18px">Join 1,200+ Learners Worldwide</span>
-    <h2 style="font-size:clamp(1.8rem,4.5vw,3.2rem);margin-bottom:14px;max-width:560px;margin-left:auto;margin-right:auto">Your Tech Career Starts Here.</h2>
-    <p style="color:var(--text-4);max-width:480px;margin:0 auto 34px;font-size:1.05rem;line-height:1.8">Enroll in the April 2026 cohort. Get a mentor. Build real projects. Graduate with a verified certificate and a career plan.</p>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a href="/courses.html" class="btn btn-gold btn-2xl">View All Courses</a>
-      <a href="https://wa.me/2349060914286" target="_blank" class="btn btn-white btn-2xl">Talk to Advisor</a>
-    </div>
-  </div>
+<section class="cta">
+  <h2 class="section-title">Start Your Tech Career Today</h2>
+  <button class="btn btn-primary">Join Now</button>
 </section>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="container">
-    <div class="fg-grid">
-      <div class="fg-brand">
-        <a href="/" class="logo">
-          <div class="logo-mark"><img src="https://i.ibb.co/DyPdLpF/satndalone-forge-20260404-153547-0001.png" alt="satndalone forge 20260404 153547 0001" border="0" onerror="this.style.display='none'" alt="NextForge"/></div>
-          <div class="logo-txt"><div class="ln1">Next<span>Forge</span></div><div class="ln2">Academy</div></div>
-        </a>
-        <p>Expert-led tech training for ambitious professionals worldwide. Small cohorts, real projects, verified certificates.</p>
-        <div class="sl" style="margin-top:18px">
-          <a href="https://wa.me/2349060914286" class="sb-btn" target="_blank" title="WhatsApp">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          </a>
-          <a href="mailto:info@nextforgeacademy.online" class="sb-btn" title="Email">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-          </a>
-          <a href="https://www.linkedin.com/company/nextforgeacademy/" class="sb-btn" target="_blank" title="LinkedIn">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-          </a>
-          <a href="#" class="sb-btn" title="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="fc">
-        <h4>Programmes</h4>
-        <ul><li><a href="/courses.html">Project Management</a></li><li><a href="/courses.html">Product Management</a></li><li><a href="/courses.html">Data Analysis</a></li><li><a href="/courses.html">Notion Mastery</a></li><li><a href="/courses.html">Operations Systems</a></li><li><a href="/courses.html">Business Communication</a></li></ul>
-      </div>
-      <div class="fc">
-        <h4>Company</h4>
-        <ul><li><a href="/about.html">About Us</a></li><li><a href="/contact.html">Contact</a></li><li><a href="#faq">FAQ</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li></ul>
-      </div>
-      <div class="fc">
-        <h4>Student</h4>
-        <ul><li><a href="/login.html">Log In</a></li><li><a href="/register.html">Enroll Now</a></li><li><a href="/student/dashboard.html">My Dashboard</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Use</a></li></ul>
-      </div>
-    </div>
-    <div class="fb">
-      <span>© 2026 NextForge Academy · nextforgeacademy.online · Lagos, Nigeria</span>
-      <span>Professional Skills for Africa's Next Generation of Leaders</span>
-    </div>
-  </div>
+<footer>
+  © 2026 NextForge Academy
 </footer>
 
-<a href="https://wa.me/2349060914286" class="wa" target="_blank" title="Chat on WhatsApp">
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-</a>
-
-<!-- Text.com Live Chat -->
-<script>
-    window.__lc = window.__lc || {};
-    window.__lc.organizationId = "c87e343c-6096-4b49-a57e-d41deec20b1f";
-    window.__lc.integration_name = "manual_onboarding";
-    window.__lc.product_name = "text";
-    ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[LiveChatWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice))
-</script>
-<noscript><a href="https://www.text.com/chat-with/c87e343c-6096-4b49-a57e-d41deec20b1f/" rel="nofollow">Chat with us</a></noscript>
-
-<script>
-// Navbar scroll
-window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>20));
-
-// Animations
-const obs=new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('vis')}),{threshold:0.08});
-document.querySelectorAll('.fu').forEach(el=>obs.observe(el));
-
-// FAQ
-function toggleFaq(el){
-  const item=el.parentElement;
-  const wasOpen=item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
-  if(!wasOpen)item.classList.add('open');
-}
-
-// Load courses
-async function loadCourses(){
-  try{
-    const res=await fetch('/api/courses');
-    const courses=await res.json();
-    document.getElementById('homeCourses').innerHTML=courses.slice(0,6).map(c=>`
-      <a href="/course-detail.html?slug=${c.slug}" class="c-card fu">
-        <div class="c-card-thumb">
-          <img src="${c.image_url||'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80'}" alt="${c.title}" loading="lazy"/>
-          <div class="c-card-overlay"></div>
-        </div>
-        <div class="c-card-body">
-          <div class="c-card-cat">${c.category}</div>
-          <div class="c-card-title">${c.title}</div>
-          <div class="c-card-instr">👤 Shedrack Ebete</div>
-          <div class="c-card-meta"><span class="stars">★★★★★</span><span>4.9</span><span>·</span><span>${c.duration}</span><span>·</span><span>${c.level}</span></div>
-          <div style="display:flex;gap:5px;margin-bottom:13px"><span class="badge badge-blue">Certificate</span><span class="badge badge-gold">${c.weeks<=6?'Self-Paced':'Live Cohort'}</span></div>
-          <div class="c-card-foot"><div class="price">₦${Number(c.price).toLocaleString()}</div><span class="btn btn-primary btn-sm">Enroll Now</span></div>
-        </div>
-      </a>`).join('');
-    document.querySelectorAll('#homeCourses .fu').forEach(el=>obs.observe(el));
-  }catch{
-    document.getElementById('homeCourses').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--text-2)">Unable to load. <a href="/courses.html" style="color:var(--gold)">View all →</a></div>';
-  }
-}
-
-// AI Advisor
-const history=[];
-async function sendMsg(){
-  const inp=document.getElementById('chatIn');
-  const msgs=document.getElementById('chatMsgs');
-  const txt=inp.value.trim();
-  if(!txt)return;
-  msgs.innerHTML+=`<div class="cm user">${txt}</div>`;
-  inp.value='';msgs.scrollTop=msgs.scrollHeight;
-  msgs.innerHTML+=`<div class="cm ai" id="thinking">✦ Thinking...</div>`;
-  history.push({role:'user',content:txt});
-  try{
-    const r=await fetch('/api/ai/advisor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:txt,history})});
-    const d=await r.json();
-    document.getElementById('thinking')?.remove();
-    const reply=d.reply||'Sorry, try again or WhatsApp us.';
-    history.push({role:'assistant',content:d.reply||''});
-    msgs.innerHTML+=`<div class="cm ai">${reply}</div>`;
-  }catch{
-    document.getElementById('thinking')?.remove();
-    msgs.innerHTML+=`<div class="cm ai">Advisor unavailable. <a href="https://wa.me/2349060914286" style="color:var(--gold)">WhatsApp us →</a></div>`;
-  }
-  msgs.scrollTop=msgs.scrollHeight;
-}
-document.getElementById('chatIn').addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg();});
-loadCourses();
-</script>
 </body>
-                                                                                                       </html>
+                      </html>
