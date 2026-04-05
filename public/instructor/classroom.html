@@ -1,1 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Classroom & Schedule — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+<script src='https://8x8.vc/vpaas-magic-cookie-c843f610ecf24f35bdcef78ae9306e00/external_api.js' async></script>
+<style>
+.cls-grid { display: grid; grid-template-columns: 1fr 340px; gap: 22px; align-items: start; }
+.meeting-box { background: var(--navy); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+#jaas-container { width: 100%; height: 520px; border-radius: var(--r-lg); overflow: hidden; display: none; }
+.pre-meet { padding: 48px; text-align: center; }
+.schedule-card { background: var(--navy-2); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 14px; }
+.class-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); transition: background var(--t); }
+.class-item:last-child { border-bottom: none; }
+.class-item:hover { background: var(--navy-3); }
+.class-date { width: 44px; height: 44px; border-radius: var(--r-sm); background: var(--blue-dim); border: 1px solid rgba(37,99,235,0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+.class-day { font-size: 1.1rem; font-weight: 800; color: var(--blue-2); line-height: 1; }
+.class-month { font-size: 0.62rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.05em; }
+.live-badge { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #f87171; padding: 3px 9px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+.live-badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #f87171; animation: blink 1.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:0.3} }
+@media(max-width:1024px) { .cls-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
 
+<div class="mob-bar">
+  <a href="/" class="logo">
+    <div class="logo-mark"><img src="https://i.ibb.co/zhTNNR4m/svg.png" alt="NextForge"/></div>
+    <div class="logo-txt"><div class="ln1">Next<span>Forge</span></div><div class="ln2">Academy</div></div>
+  </a>
+  <button class="mob-menu-btn" onclick="toggleSB()">☰</button>
+</div>
+<div class="mob-overlay" id="mobOv" onclick="toggleSB()"></div>
+
+<div class="portal">
+  <aside class="sb" id="sb">
+    <div class="sb-top">
+      <a href="/" class="logo">
+        <div class="logo-mark"><img src="https://i.ibb.co/zhTNNR4m/svg.png" alt="NextForge"/></div>
+        <div class="logo-txt"><div class="ln1">Next<span>Forge</span></div><div class="ln2">Academy</div></div>
+      </a>
+      <div class="sb-user">
+        <div class="sb-avatar" id="sbAvatar">👨‍🏫</div>
+        <div><div class="sb-name" id="sbName">Instructor</div><div class="sb-role">Instructor</div></div>
+      </div>
+    </div>
+    <div class="sb-nav">
+      <a href="/instructor/dashboard.html" class="ni"><span class="ni-icon">📊</span> Dashboard</a>
+      <a href="/instructor/course.html" class="ni"><span class="ni-icon">📚</span> Manage Courses</a>
+      <a href="/instructor/students.html" class="ni"><span class="ni-icon">👥</span> My Students</a>
+      <a href="/instructor/classroom.html" class="ni active"><span class="ni-icon">🎥</span> Classroom & Schedule</a>
+      <a href="/instructor/profile.html" class="ni"><span class="ni-icon">👤</span> My Profile</a>
+      <div class="sb-section">Site</div>
+      <a href="/" class="ni"><span class="ni-icon">🌐</span> View Website</a>
+    </div>
+    <div class="sb-bottom">
+      <a href="#" class="ni" onclick="logout()" style="color:#f87171"><span class="ni-icon">🚪</span> Sign Out</a>
+    </div>
+  </aside>
+
+  <div class="pm">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Classroom & Schedule</div>
+        <div class="topbar-sub">Host live classes · Manage your schedule · Share meeting links</div>
+      </div>
+      <button class="btn btn-gold btn-sm" onclick="openSchedule()">+ Schedule Class</button>
+    </div>
+
+    <div class="pc">
+      <div class="cls-grid">
+
+        <!-- VIDEO ROOM -->
+        <div>
+          <div class="sec-card" style="margin-bottom:18px">
+            <div class="sec-card-hdr">
+              <h4>🎥 Live Classroom</h4>
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-ghost btn-sm" onclick="copyLink()">📋 Copy Link</button>
+                <button class="btn btn-gold btn-sm" id="startBtn" onclick="startMeeting()">▶ Start Class</button>
+              </div>
+            </div>
+            <div class="sec-card-body" style="padding:0">
+              <div class="meeting-box">
+                <div class="pre-meet" id="preMeet">
+                  <div style="font-size:3.5rem;margin-bottom:16px">🎥</div>
+                  <h3 style="margin-bottom:8px">Start Your Live Class</h3>
+                  <p style="color:var(--text-2);max-width:380px;margin:0 auto 22px;font-size:0.95rem">Click "Start Class" to launch your video room. Your students will join using the same meeting link.</p>
+                  <div style="background:var(--navy-3);border:1px solid var(--border);border-radius:var(--r);padding:13px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+                    <span style="font-size:0.8rem;color:var(--text-2)">Your room link:</span>
+                    <span style="font-size:0.8rem;color:var(--blue-3);font-family:monospace" id="roomDisplay">Loading...</span>
+                  </div>
+                  <button class="btn btn-gold btn-lg" onclick="startMeeting()">▶ Start Class Now</button>
+                </div>
+                <div id="jaas-container"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- UPCOMING CLASSES -->
+          <div class="sec-card">
+            <div class="sec-card-hdr">
+              <h4>📅 Upcoming Classes</h4>
+              <button class="btn btn-outline btn-sm" onclick="openSchedule()">+ Add Class</button>
+            </div>
+            <div class="sec-card-body" style="padding:0">
+              <div id="upcomingList">
+                <div style="padding:28px;text-align:center;color:var(--text-2);font-size:0.9rem">No upcoming classes scheduled. Add one above.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR -->
+        <div>
+          <!-- QUICK STATS -->
+          <div class="card" style="margin-bottom:14px">
+            <h4 style="margin-bottom:14px">This Week</h4>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--navy-3);border-radius:var(--r-sm)">
+                <span style="font-size:0.875rem;color:var(--text-2)">Classes Scheduled</span>
+                <span style="font-weight:700;color:var(--white)" id="weekClasses">0</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--navy-3);border-radius:var(--r-sm)">
+                <span style="font-size:0.875rem;color:var(--text-2)">Students Enrolled</span>
+                <span style="font-weight:700;color:var(--white)" id="totalStudents">0</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--navy-3);border-radius:var(--r-sm)">
+                <span style="font-size:0.875rem;color:var(--text-2)">Courses Active</span>
+                <span style="font-weight:700;color:var(--white)" id="activeCourses">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- HOW TO SHARE -->
+          <div class="card" style="margin-bottom:14px">
+            <h4 style="margin-bottom:12px">Share Meeting Link</h4>
+            <p style="font-size:0.84rem;color:var(--text-2);margin-bottom:14px">Share this link with your students before class. They click it to join directly from their browser — no app download needed.</p>
+            <div style="background:var(--navy-3);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px;font-size:0.77rem;color:var(--blue-3);word-break:break-all;font-family:monospace;margin-bottom:12px" id="linkDisplay">Loading...</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <button class="btn btn-primary btn-sm" style="width:100%" onclick="copyLink()">📋 Copy Link</button>
+              <a id="waShareBtn" href="#" target="_blank" class="btn btn-ghost btn-sm" style="width:100%;justify-content:center">💬 Share on WhatsApp</a>
+            </div>
+          </div>
+
+          <!-- CALENDAR EXPORT -->
+          <div class="card">
+            <h4 style="margin-bottom:12px">📅 Add to Calendar</h4>
+            <p style="font-size:0.84rem;color:var(--text-2);margin-bottom:14px">Export your class schedule to Google Calendar or download an ICS file for any calendar app.</p>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <button class="btn btn-outline btn-sm" style="width:100%" onclick="addToGoogleCalendar()">📅 Add to Google Calendar</button>
+              <button class="btn btn-ghost btn-sm" style="width:100%" onclick="downloadICS()">⬇ Download .ics File</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE CLASS MODAL -->
+<div class="mo" id="scheduleMo">
+  <div class="mo-box">
+    <div class="mo-x" onclick="closeAll()">✕</div>
+    <h3 style="margin-bottom:6px">Schedule a Class</h3>
+    <p style="color:var(--text-2);font-size:0.875rem;margin-bottom:20px">Set the date, time, and details. Students will see this in their portal.</p>
+    <div class="fg"><label class="fl">Class Title</label><input class="fi" id="schTitle" placeholder="e.g. Week 3 — Project Charter Deep Dive"/></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fg"><label class="fl">Date</label><input class="fi" type="date" id="schDate"/></div>
+      <div class="fg"><label class="fl">Time</label><input class="fi" type="time" id="schTime" value="18:00"/></div>
+    </div>
+    <div class="fg"><label class="fl">Duration</label>
+      <select class="fi" id="schDuration">
+        <option value="60">1 hour</option>
+        <option value="90" selected>1.5 hours</option>
+        <option value="120">2 hours</option>
+        <option value="180">3 hours</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Course</label><select class="fi" id="schCourse"><option value="">Select course...</option></select></div>
+    <div class="fg"><label class="fl">Notes for Students (optional)</label><textarea class="fi" id="schNotes" rows="2" placeholder="What will be covered, what students should prepare..."></textarea></div>
+    <div class="al al-err" id="schErr" style="display:none"></div>
+    <button class="btn btn-gold" style="width:100%" onclick="saveSchedule()">Schedule Class →</button>
+  </div>
+</div>
+
+<script>
+const token = localStorage.getItem('nf_token');
+if (!token || !['instructor','admin'].includes(localStorage.getItem('nf_role'))) window.location.href = '/login.html';
+document.getElementById('sbName').textContent = localStorage.getItem('nf_name') || 'Instructor';
+
+const H = { credentials: 'include', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' } };
+let jitsiApi = null;
+let scheduledClasses = JSON.parse(localStorage.getItem('nf_scheduled_classes') || '[]');
+const userId = 'instructor-' + (localStorage.getItem('nf_name') || 'user').replace(/\s/g,'').toLowerCase();
+
+// Generate a unique room name per instructor
+const roomName = 'vpaas-magic-cookie-c843f610ecf24f35bdcef78ae9306e00/NextForge-' + userId;
+const meetingUrl = 'https://8x8.vc/' + roomName;
+
+document.getElementById('roomDisplay').textContent = meetingUrl;
+document.getElementById('linkDisplay').textContent = meetingUrl;
+document.getElementById('waShareBtn').href = 'https://wa.me/?text=' + encodeURIComponent('Join my NextForge Academy live class here: ' + meetingUrl);
+
+function toggleSB() {
+  document.getElementById('sb').classList.toggle('mob-open');
+  document.getElementById('mobOv').classList.toggle('open');
+}
+
+function logout() {
+  fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+  localStorage.clear(); window.location.href = '/login.html';
+}
+
+function openSchedule() { document.getElementById('scheduleMo').classList.add('open'); }
+function closeAll() { document.querySelectorAll('.mo').forEach(m => m.classList.remove('open')); }
+
+function copyLink() {
+  navigator.clipboard.writeText(meetingUrl).then(() => {
+    alert('Meeting link copied to clipboard!');
+  }).catch(() => {
+    prompt('Copy this link:', meetingUrl);
+  });
+}
+
+function startMeeting() {
+  document.getElementById('preMeet').style.display = 'none';
+  document.getElementById('jaas-container').style.display = 'block';
+  document.getElementById('startBtn').textContent = '⏹ End Class';
+  document.getElementById('startBtn').onclick = endMeeting;
+
+  const instrName = localStorage.getItem('nf_name') || 'Instructor';
+  jitsiApi = new JitsiMeetExternalAPI('8x8.vc', {
+    roomName: roomName,
+    parentNode: document.querySelector('#jaas-container'),
+    userInfo: { displayName: instrName, email: '' },
+    configOverwrite: {
+      startWithAudioMuted: false,
+      startWithVideoMuted: false,
+      prejoinPageEnabled: false,
+      disableDeepLinking: true
+    },
+    interfaceConfigOverwrite: {
+      TOOLBAR_BUTTONS: ['microphone','camera','desktop','fullscreen','fodeviceselection','hangup','chat','recording','raisehand','videoquality','filmstrip','tileview','whiteboard','select-background'],
+      SHOW_JITSI_WATERMARK: false,
+      SHOW_WATERMARK_FOR_GUESTS: false,
+      DEFAULT_BACKGROUND: '#060d1a',
+      BRAND_WATERMARK_LINK: 'https://nextforgeacademy.online'
+    }
+  });
+
+  jitsiApi.addEventListener('readyToClose', endMeeting);
+}
+
+function endMeeting() {
+  if (jitsiApi) { jitsiApi.dispose(); jitsiApi = null; }
+  document.getElementById('jaas-container').style.display = 'none';
+  document.getElementById('preMeet').style.display = 'block';
+  document.getElementById('startBtn').textContent = '▶ Start Class';
+  document.getElementById('startBtn').onclick = startMeeting;
+}
+
+function saveSchedule() {
+  const title = document.getElementById('schTitle').value.trim();
+  const date = document.getElementById('schDate').value;
+  const time = document.getElementById('schTime').value;
+  const duration = document.getElementById('schDuration').value;
+  const course = document.getElementById('schCourse').value;
+  const notes = document.getElementById('schNotes').value.trim();
+  const err = document.getElementById('schErr');
+  err.style.display = 'none';
+  if (!title || !date || !time) return (err.textContent = 'Please fill in title, date and time.', err.style.display = 'block');
+
+  const cls = {
+    id: Date.now(),
+    title, date, time, duration: parseInt(duration),
+    course, notes, meetingUrl, instructor: localStorage.getItem('nf_name')
+  };
+  scheduledClasses.push(cls);
+  localStorage.setItem('nf_scheduled_classes', JSON.stringify(scheduledClasses));
+
+  // Also save to backend
+  fetch('/api/admin/classes', {
+    method: 'POST', ...H,
+    body: JSON.stringify(cls)
+  }).catch(() => {});
+
+  closeAll();
+  renderSchedule();
+}
+
+function renderSchedule() {
+  const now = new Date();
+  const upcoming = scheduledClasses
+    .filter(c => new Date(c.date + 'T' + c.time) >= now)
+    .sort((a,b) => new Date(a.date+'T'+a.time) - new Date(b.date+'T'+b.time));
+
+  document.getElementById('weekClasses').textContent = upcoming.filter(c => {
+    const d = new Date(c.date);
+    const startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - now.getDay());
+    const endOfWeek = new Date(startOfWeek); endOfWeek.setDate(startOfWeek.getDate() + 7);
+    return d >= startOfWeek && d <= endOfWeek;
+  }).length;
+
+  const ul = document.getElementById('upcomingList');
+  if (!upcoming.length) {
+    ul.innerHTML = '<div style="padding:28px;text-align:center;color:var(--text-2);font-size:0.9rem">No upcoming classes. Schedule one above.</div>';
+    return;
+  }
+  ul.innerHTML = upcoming.map(c => {
+    const d = new Date(c.date + 'T' + c.time);
+    const isNow = Math.abs(Date.now() - d) < 30 * 60 * 1000;
+    const day = d.getDate();
+    const month = d.toLocaleDateString('en', {month:'short'});
+    const timeStr = d.toLocaleTimeString('en', {hour:'2-digit', minute:'2-digit'});
+    const durStr = c.duration >= 60 ? (c.duration/60) + 'hr' : c.duration + 'min';
+    return `<div class="class-item">
+      <div class="class-date"><div class="class-day">${day}</div><div class="class-month">${month}</div></div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;flex-wrap:wrap">
+          <span style="font-weight:600;color:var(--white);font-size:0.875rem">${c.title}</span>
+          ${isNow ? '<span class="live-badge">LIVE NOW</span>' : ''}
+        </div>
+        <div style="font-size:0.78rem;color:var(--text-2)">${timeStr} · ${durStr}</div>
+        ${c.notes ? `<div style="font-size:0.77rem;color:var(--text-2);margin-top:3px">${c.notes}</div>` : ''}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0">
+        ${isNow ? `<button class="btn btn-gold btn-sm" onclick="startMeeting()">Join</button>` : ''}
+        <button class="btn btn-ghost btn-sm" onclick="removeClass(${c.id})" style="font-size:0.72rem">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function removeClass(id) {
+  scheduledClasses = scheduledClasses.filter(c => c.id !== id);
+  localStorage.setItem('nf_scheduled_classes', JSON.stringify(scheduledClasses));
+  renderSchedule();
+}
+
+function addToGoogleCalendar() {
+  const upcoming = scheduledClasses.sort((a,b) => new Date(a.date+'T'+a.time) - new Date(b.date+'T'+b.time))[0];
+  if (!upcoming) return alert('No classes scheduled yet. Add a class first.');
+  const start = new Date(upcoming.date + 'T' + upcoming.time);
+  const end = new Date(start.getTime() + upcoming.duration * 60000);
+  const fmt = d => d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+  const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(upcoming.title + ' — NextForge Academy')}&dates=${fmt(start)}/${fmt(end)}&details=${encodeURIComponent('Join class: ' + meetingUrl + '\n\n' + (upcoming.notes||''))}&location=${encodeURIComponent(meetingUrl)}`;
+  window.open(url, '_blank');
+}
+
+function downloadICS() {
+  const cls = scheduledClasses[0];
+  if (!cls) return alert('No classes scheduled. Add a class first.');
+  const start = new Date(cls.date + 'T' + cls.time);
+  const end = new Date(start.getTime() + cls.duration * 60000);
+  const fmt = d => d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+  const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//NextForge Academy//EN\nBEGIN:VEVENT\nDTSTART:${fmt(start)}\nDTEND:${fmt(end)}\nSUMMARY:${cls.title} — NextForge Academy\nDESCRIPTION:Join class: ${meetingUrl}\nLOCATION:${meetingUrl}\nEND:VEVENT\nEND:VCALENDAR`;
+  const blob = new Blob([ics], { type: 'text/calendar' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'nextforge-class.ics'; a.click();
+}
+
+// Load courses for schedule form
+async function loadCourses() {
+  try {
+    const res = await fetch('/api/admin/courses', H);
+    const courses = await res.json();
+    document.getElementById('schCourse').innerHTML = '<option value="">Select course...</option>' +
+      courses.map(c => `<option value="${c.id}">${c.title}</option>`).join('');
+    document.getElementById('totalStudents').textContent = courses.reduce((s,c) => s + (c.enrollments||0), 0);
+    document.getElementById('activeCourses').textContent = courses.length;
+  } catch {}
+}
+
+// Set default date to today
+document.getElementById('schDate').value = new Date().toISOString().split('T')[0];
+
+document.querySelectorAll('.mo').forEach(m => m.addEventListener('click', function(e) { if (e.target === this) closeAll(); }));
+loadCourses();
+renderSchedule();
+</script>
+</body>
+</html>
