@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Profile — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+<style>
+.profile-hero { background: linear-gradient(135deg,var(--navy-3),var(--navy-4)); border: 1px solid var(--border-2); border-radius: var(--r-xl); padding: 28px 32px; margin-bottom: 24px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; position: relative; overflow: hidden; }
+.profile-hero::after { content:''; position:absolute; right:-40px; top:-40px; width:200px; height:200px; background:radial-gradient(circle,rgba(240,165,0,0.07),transparent 70%); pointer-events:none; }
+.av-wrap { position: relative; flex-shrink: 0; }
+.av-img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 3px solid var(--gold); background: var(--navy-3); display: flex; align-items: center; justify-content: center; font-size: 2rem; overflow: hidden; }
+.av-edit { position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--gold); color: #000; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; cursor: pointer; border: 2px solid var(--navy); transition: all var(--t); }
+.av-edit:hover { transform: scale(1.1); }
+.pf-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.upload-box { border: 2px dashed var(--border-2); border-radius: var(--r); padding: 20px; text-align: center; cursor: pointer; transition: all var(--t); background: var(--navy-3); }
+.upload-box:hover { border-color: var(--blue-2); background: var(--blue-dim); }
+.upload-box input { display: none; }
+.uploaded-file { display: flex; align-items: center; gap: 10px; padding: 10px 13px; background: rgba(5,150,105,0.1); border: 1px solid rgba(5,150,105,0.2); border-radius: var(--r-sm); font-size: 0.84rem; margin-top: 8px; }
+.id-badge-wrap { background: linear-gradient(135deg,var(--navy-3),var(--navy-4)); border: 1.5px solid var(--border-2); border-radius: var(--r-lg); padding: 18px 20px; text-align: center; }
+.id-badge-wrap::before { display: block; content: ''; height: 4px; background: linear-gradient(90deg,var(--gold),var(--blue-2)); border-radius: 2px; margin-bottom: 14px; }
+.id-number { font-family: 'Syne',sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--gold); letter-spacing: 0.1em; margin: 8px 0; }
+@media(max-width:768px) { .pf-2col { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="mob-bar">
+  <a href="/" class="logo"><div class="logo-mark"><img src="https://i.ibb.co/zhTNNR4m/svg.png" alt="NextForge"/></div><div class="logo-txt"><div class="ln1">Next<span>Forge</span></div><div class="ln2">Academy</div></div></a>
+  <button class="mob-menu-btn" onclick="toggleSB()">☰</button>
+</div>
+<div class="mob-overlay" id="mobOv" onclick="toggleSB()"></div>
+
+<div class="portal">
+  <aside class="sb" id="sb">
+    <div class="sb-top">
+      <a href="/" class="logo"><div class="logo-mark"><img src="https://i.ibb.co/zhTNNR4m/svg.png" alt="NextForge"/></div><div class="logo-txt"><div class="ln1">Next<span>Forge</span></div><div class="ln2">Academy</div></div></a>
+      <div class="sb-user"><div class="sb-avatar" id="sbAv">👨‍🏫</div><div><div class="sb-name" id="sbName">Instructor</div><div class="sb-role">Instructor</div></div></div>
+    </div>
+    <div class="sb-nav">
+      <a href="/instructor/dashboard.html" class="ni"><span class="ni-icon">📊</span> Dashboard</a>
+      <a href="/instructor/course.html" class="ni"><span class="ni-icon">📚</span> Manage Courses</a>
+      <a href="/instructor/students.html" class="ni"><span class="ni-icon">👥</span> My Students</a>
+      <a href="/instructor/classroom.html" class="ni"><span class="ni-icon">🎥</span> Classroom</a>
+      <a href="/instructor/profile.html" class="ni active"><span class="ni-icon">👤</span> My Profile</a>
+      <div class="sb-section">Site</div>
+      <a href="/" class="ni"><span class="ni-icon">🌐</span> View Website</a>
+    </div>
+    <div class="sb-bottom"><a href="#" class="ni" onclick="logout()" style="color:#f87171"><span class="ni-icon">🚪</span> Sign Out</a></div>
+  </aside>
+
+  <div class="pm">
+    <div class="topbar">
+      <div><div class="topbar-title">My Profile</div><div class="topbar-sub">Keep your profile complete — it's shown to students and reviewed by admin</div></div>
+    </div>
+    <div class="pc">
+
+      <!-- PROFILE HERO -->
+      <div class="profile-hero">
+        <div class="av-wrap">
+          <div class="av-img" id="avImg">👨‍🏫</div>
+          <div class="av-edit" onclick="document.getElementById('avInput').click()" title="Change photo">✏️</div>
+          <input type="file" id="avInput" accept="image/*" onchange="changeAvatar(this)" style="display:none"/>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:1.3rem;font-weight:800;color:var(--white)" id="heroName">Your Name</div>
+          <div style="font-size:0.84rem;color:var(--gold);margin:3px 0" id="heroTitle">Instructor</div>
+          <div style="font-size:0.8rem;color:var(--text-2)" id="heroEmail"></div>
+        </div>
+        <div class="id-badge-wrap" style="flex-shrink:0;min-width:200px">
+          <div style="font-size:0.69rem;color:var(--text-2);text-transform:uppercase;letter-spacing:0.09em">Instructor ID</div>
+          <div class="id-number" id="heroId">Loading...</div>
+          <div style="font-size:0.72rem;color:var(--text-2)">NextForge Academy</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start">
+        <div>
+          <!-- PERSONAL INFO -->
+          <div class="sec-card" style="margin-bottom:18px">
+            <div class="sec-card-hdr"><h4>Personal Information</h4></div>
+            <div class="sec-card-body">
+              <div class="pf-2col">
+                <div class="fg"><label class="fl">Full Name</label><input class="fi" id="pf_name" placeholder="Full name"/></div>
+                <div class="fg"><label class="fl">Email (read-only)</label><input class="fi" id="pf_email" readonly style="opacity:0.6"/></div>
+                <div class="fg"><label class="fl">Phone</label><input class="fi" id="pf_phone" placeholder="+234 or international"/></div>
+                <div class="fg"><label class="fl">Country</label><select class="fi" id="pf_country"><option value="">Select country...</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option><option>South Africa</option><option>United Kingdom</option><option>Canada</option><option>United States</option><option>Other</option></select></div>
+                <div class="fg"><label class="fl">City / State</label><input class="fi" id="pf_city" placeholder="e.g. Lagos, Nigeria"/></div>
+                <div class="fg"><label class="fl">Professional Title</label><input class="fi" id="pf_title" placeholder="e.g. Senior Product Manager"/></div>
+              </div>
+              <div class="fg"><label class="fl">Address</label><input class="fi" id="pf_address" placeholder="Street address, city, state, country"/></div>
+            </div>
+          </div>
+
+          <!-- PROFESSIONAL INFO -->
+          <div class="sec-card" style="margin-bottom:18px">
+            <div class="sec-card-hdr"><h4>Professional Background</h4></div>
+            <div class="sec-card-body">
+              <div class="pf-2col">
+                <div class="fg"><label class="fl">Years of Experience</label><select class="fi" id="pf_exp"><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
+                <div class="fg"><label class="fl">LinkedIn Profile</label><input class="fi" id="pf_linkedin" placeholder="https://linkedin.com/in/..."/></div>
+              </div>
+              <div class="fg"><label class="fl">Skills / Areas of Expertise</label><input class="fi" id="pf_skills" placeholder="e.g. Project Management, Data Analysis, Agile, SQL"/></div>
+              <div class="fg"><label class="fl">Certifications</label><input class="fi" id="pf_certs" placeholder="e.g. PMP, Google Data Analytics, Scrum Master"/></div>
+              <div class="fg"><label class="fl">Bio / Teaching Philosophy</label><textarea class="fi" id="pf_bio" rows="3" placeholder="Tell students about yourself, your experience, and what makes your teaching style unique..."></textarea></div>
+              <div class="fg"><label class="fl">Why I Teach at NextForge</label><textarea class="fi" id="pf_why" rows="2" placeholder="Your motivation for teaching on this platform..."></textarea></div>
+            </div>
+          </div>
+
+          <!-- BANK / PAYMENT -->
+          <div class="sec-card" style="margin-bottom:18px">
+            <div class="sec-card-hdr"><h4>Payment Details</h4></div>
+            <div class="sec-card-body">
+              <div class="al al-info" style="display:block;margin-bottom:16px;font-size:0.875rem">Your payment details are used to process your instructor earnings. This information is kept strictly confidential.</div>
+              <div class="pf-2col">
+                <div class="fg"><label class="fl">Bank Name</label><input class="fi" id="pf_bank" placeholder="e.g. Access Bank, GTBank"/></div>
+                <div class="fg"><label class="fl">Account Number</label><input class="fi" id="pf_account" placeholder="10-digit account number" maxlength="10"/></div>
+              </div>
+              <div class="fg"><label class="fl">Account Name</label><input class="fi" id="pf_acctname" placeholder="Name exactly as it appears on account"/></div>
+            </div>
+          </div>
+
+          <!-- VERIFICATION DOCUMENTS -->
+          <div class="sec-card" style="margin-bottom:18px">
+            <div class="sec-card-hdr"><h4>Verification Documents</h4><span class="badge badge-gold">Required for full approval</span></div>
+            <div class="sec-card-body">
+              <div class="al al-warn" style="display:block;margin-bottom:16px;font-size:0.875rem">Upload a valid government-issued ID and any relevant certificates. Documents are reviewed by admin and kept confidential.</div>
+
+              <div class="fg">
+                <label class="fl">Government-Issued ID (Passport, NIN, Driver's License)</label>
+                <div class="upload-box" onclick="document.getElementById('idUpload').click()">
+                  <div style="font-size:2rem;margin-bottom:8px">🪪</div>
+                  <div style="font-size:0.875rem;color:var(--white);margin-bottom:4px">Click to upload ID document</div>
+                  <div style="font-size:0.75rem;color:var(--text-2)">JPG, PNG or PDF — max 5MB</div>
+                  <input type="file" id="idUpload" accept="image/*,.pdf" onchange="handleDocUpload(this,'idPreview','idName')"/>
+                </div>
+                <div id="idPreview" class="uploaded-file" style="display:none"><span style="font-size:1.1rem">✅</span><span id="idName" style="color:var(--green-2)">Document uploaded</span></div>
+              </div>
+
+              <div class="fg">
+                <label class="fl">Professional Certificates (optional but recommended)</label>
+                <div class="upload-box" onclick="document.getElementById('certUpload').click()">
+                  <div style="font-size:2rem;margin-bottom:8px">📜</div>
+                  <div style="font-size:0.875rem;color:var(--white);margin-bottom:4px">Upload certificates or credentials</div>
+                  <div style="font-size:0.75rem;color:var(--text-2)">JPG, PNG or PDF — max 5MB each</div>
+                  <input type="file" id="certUpload" accept="image/*,.pdf" multiple onchange="handleDocUpload(this,'certPreview','certName')"/>
+                </div>
+                <div id="certPreview" class="uploaded-file" style="display:none"><span style="font-size:1.1rem">✅</span><span id="certName" style="color:var(--green-2)">Certificate uploaded</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SAVE -->
+          <div class="al al-err" id="pfErr" style="display:none"></div>
+          <div class="al al-ok" id="pfOk" style="display:none"></div>
+          <button class="btn btn-gold btn-lg" onclick="saveProfile()" id="saveBtn">Save Profile →</button>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div>
+          <div class="card" style="margin-bottom:14px">
+            <h4 style="margin-bottom:6px">Profile Completeness</h4>
+            <div class="pbar" style="margin:12px 0"><div class="pfill gold" id="completionBar" style="width:0%"></div></div>
+            <div style="font-size:0.84rem;color:var(--white);font-weight:700" id="completionPct">0% Complete</div>
+            <div id="completionTips" style="margin-top:12px;font-size:0.8rem;color:var(--text-2);display:flex;flex-direction:column;gap:6px"></div>
+          </div>
+
+          <div class="id-badge-wrap card" style="margin-bottom:14px">
+            <div style="font-size:0.69rem;color:var(--text-2);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:4px">Your Instructor ID</div>
+            <div class="id-number" id="sideId">—</div>
+            <div style="font-size:0.75rem;color:var(--text-2)">Keep this for reference</div>
+          </div>
+
+          <div class="card">
+            <h4 style="margin-bottom:12px">Account Status</h4>
+            <div id="statusInfo" style="font-size:0.84rem;color:var(--text-2)">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const token = localStorage.getItem('nf_token');
+if (!token) window.location.href = '/login.html';
+document.getElementById('sbName').textContent = localStorage.getItem('nf_name') || 'Instructor';
+
+const H = { credentials: 'include', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' } };
+let avatarBase64 = '', idBase64 = '', certBase64 = '';
+
+function toggleSB() { document.getElementById('sb').classList.toggle('mob-open'); document.getElementById('mobOv').classList.toggle('open'); }
+function logout() { fetch('/api/auth/logout',{method:'POST',credentials:'include'}); localStorage.clear(); window.location.href='/login.html'; }
+
+function handleDocUpload(input, previewId, nameId) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    if (input.id === 'idUpload') idBase64 = e.target.result;
+    else certBase64 = e.target.result;
+    document.getElementById(previewId).style.display = 'flex';
+    document.getElementById(nameId).textContent = file.name;
+  };
+  reader.readAsDataURL(file);
+  updateCompletion();
+}
+
+function changeAvatar(input) {
+  if (!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    avatarBase64 = e.target.result;
+    const av = document.getElementById('avImg');
+    av.innerHTML = `<img src="${e.target.result}" style="width:88px;height:88px;object-fit:cover;border-radius:50%"/>`;
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function updateCompletion() {
+  const fields = [
+    !!document.getElementById('pf_name')?.value,
+    !!document.getElementById('pf_phone')?.value,
+    !!document.getElementById('pf_country')?.value,
+    !!document.getElementById('pf_title')?.value,
+    !!document.getElementById('pf_skills')?.value,
+    !!document.getElementById('pf_bio')?.value,
+    !!document.getElementById('pf_bank')?.value,
+    !!document.getElementById('pf_account')?.value,
+    !!idBase64 || !!document.getElementById('idPreview')?.style.display !== 'none',
+    !!avatarBase64
+  ];
+  const done = fields.filter(Boolean).length;
+  const pct = Math.round(done / fields.length * 100);
+  document.getElementById('completionBar').style.width = pct + '%';
+  document.getElementById('completionPct').textContent = pct + '% Complete';
+
+  const tips = [];
+  if (!document.getElementById('pf_phone')?.value) tips.push('❌ Add phone number');
+  if (!document.getElementById('pf_skills')?.value) tips.push('❌ Add skills');
+  if (!document.getElementById('pf_bank')?.value) tips.push('❌ Add bank details');
+  if (!idBase64) tips.push('❌ Upload ID document');
+  if (pct === 100) tips.push('✅ Profile complete!');
+  document.getElementById('completionTips').innerHTML = tips.map(t => `<div>${t}</div>`).join('');
+}
+
+async function loadProfile() {
+  try {
+    const res = await fetch('/api/auth/me', H);
+    const user = await res.json();
+    let bio = {};
+    try { bio = JSON.parse(user.bio || '{}'); } catch {}
+
+    document.getElementById('heroName').textContent = user.full_name || 'Your Name';
+    document.getElementById('heroTitle').textContent = bio.title || 'Instructor';
+    document.getElementById('heroEmail').textContent = user.email;
+    document.getElementById('heroId').textContent = user.unique_id || '—';
+    document.getElementById('sideId').textContent = user.unique_id || '—';
+    document.getElementById('statusInfo').innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between"><span>Account Status</span><span class="badge ${user.is_active?'badge-green':'badge-red'}">${user.is_active?'Active':'Inactive'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Approval</span><span class="badge ${user.is_approved?'badge-gold':'badge-blue'}">${user.is_approved?'Approved':'Pending'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Role</span><span class="badge badge-purple">Instructor</span></div>
+      </div>`;
+
+    if (user.avatar_url) {
+      document.getElementById('avImg').innerHTML = `<img src="${user.avatar_url}" style="width:88px;height:88px;object-fit:cover;border-radius:50%"/>`;
+    }
+
+    document.getElementById('pf_name').value = user.full_name || '';
+    document.getElementById('pf_email').value = user.email || '';
+    document.getElementById('pf_phone').value = user.phone || '';
+    document.getElementById('pf_title').value = bio.title || '';
+    document.getElementById('pf_exp').value = bio.exp || '3–5 years';
+    document.getElementById('pf_skills').value = bio.skills || '';
+    document.getElementById('pf_certs').value = bio.certs || '';
+    document.getElementById('pf_bio').value = bio.background || '';
+    document.getElementById('pf_why').value = bio.why || '';
+    document.getElementById('pf_bank').value = bio.bank || '';
+    document.getElementById('pf_account').value = bio.account || '';
+    document.getElementById('pf_acctname').value = bio.acctname || '';
+    document.getElementById('pf_country').value = bio.country || '';
+    document.getElementById('pf_city').value = bio.city || '';
+    document.getElementById('pf_address').value = bio.address || '';
+    document.getElementById('pf_linkedin').value = bio.linkedin || '';
+
+    setTimeout(updateCompletion, 100);
+  } catch(e) { console.error(e); }
+}
+
+async function saveProfile() {
+  const btn = document.getElementById('saveBtn');
+  const err = document.getElementById('pfErr'); const ok = document.getElementById('pfOk');
+  err.style.display = 'none'; ok.style.display = 'none';
+  btn.textContent = 'Saving...'; btn.disabled = true;
+
+  const bio = JSON.stringify({
+    title: document.getElementById('pf_title').value.trim(),
+    exp: document.getElementById('pf_exp').value,
+    skills: document.getElementById('pf_skills').value.trim(),
+    certs: document.getElementById('pf_certs').value.trim(),
+    background: document.getElementById('pf_bio').value.trim(),
+    why: document.getElementById('pf_why').value.trim(),
+    bank: document.getElementById('pf_bank').value.trim(),
+    account: document.getElementById('pf_account').value.trim(),
+    acctname: document.getElementById('pf_acctname').value.trim(),
+    country: document.getElementById('pf_country').value,
+    city: document.getElementById('pf_city').value.trim(),
+    address: document.getElementById('pf_address').value.trim(),
+    linkedin: document.getElementById('pf_linkedin').value.trim()
+  });
+
+  const payload = {
+    full_name: document.getElementById('pf_name').value.trim(),
+    phone: document.getElementById('pf_phone').value.trim(),
+    bio,
+    avatar_base64: avatarBase64 || null,
+    id_document_base64: idBase64 || null,
+    cert_document_base64: certBase64 || null
+  };
+
+  try {
+    const res = await fetch('/api/auth/profile', { method: 'POST', ...H, body: JSON.stringify(payload) });
+    const d = await res.json();
+    if (!res.ok) { err.textContent = d.error; err.style.display = 'block'; return; }
+    ok.textContent = '✓ Profile saved successfully!'; ok.style.display = 'block';
+    localStorage.setItem('nf_name', payload.full_name);
+    document.getElementById('heroName').textContent = payload.full_name;
+    document.getElementById('sbName').textContent = payload.full_name;
+    updateCompletion();
+    setTimeout(() => ok.style.display = 'none', 3000);
+  } catch { err.textContent = 'Save failed. Please try again.'; err.style.display = 'block'; }
+  finally { btn.textContent = 'Save Profile →'; btn.disabled = false; }
+}
+
+document.querySelectorAll('.fi').forEach(f => f.addEventListener('input', updateCompletion));
+loadProfile();
+</script>
+</body>
+</html>
