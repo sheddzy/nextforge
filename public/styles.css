@@ -78,7 +78,7 @@ ul { list-style: none; }
 
 /* ── LOGO ── */
 .logo {
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; gap: 4px;
   font-weight: 800; font-size: 1.3rem; color: var(--white);
   white-space: nowrap; text-decoration: none;
   font-family: 'Syne', sans-serif;
