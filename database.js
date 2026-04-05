@@ -319,5 +319,8 @@ if (!adminExists) {
   db.prepare(`INSERT INTO users (full_name,email,password,role,is_verified,is_active) VALUES (?,?,?,?,1,1)`)
     .run('Shedrack Ebete', 'admin@nextforgeacademy.online', hash, 'admin');
 }
-
+// Safe migrations — run on every startup
+try { db.exec('ALTER TABLE users ADD COLUMN is_approved INTEGER DEFAULT 1'); } catch {}
+try { db.exec('ALTER TABLE users ADD COLUMN avatar_url TEXT'); } catch {}
+try { db.exec('UPDATE users SET is_approved = 1 WHERE is_approved IS NULL'); } catch {}
 module.exports = db;
