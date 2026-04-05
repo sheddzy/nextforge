@@ -75,7 +75,11 @@ router.post('/register', async (req, res) => {
       } catch(e) { console.error('Post-register error:', e.message); }
     }
   }
-
+// After inserting new user, generate unique_id
+const prefix = userRole === 'admin' ? 'NFA' : userRole === 'instructor' ? 'NFI' : 'NFS';
+const uniqueId = `${prefix}-${String(result.lastInsertRowid).padStart(4,'0')}-${Math.random().toString(36).substr(2,4).toUpperCase()}`;
+db.prepare('UPDATE users SET unique_id = ? WHERE id = ?').run(uniqueId, result.lastInsertRowid);
+  
   db.prepare('INSERT INTO notifications (user_id,message,type) VALUES (?,?,?)')
     .run(user.id, `Welcome to NextForge Academy, ${full_name}! 🎉`, 'success');
 
