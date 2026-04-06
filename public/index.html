@@ -615,6 +615,23 @@ async function sendMsg(){
 }
 document.getElementById('chatIn').addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg();});
 loadCourses();
+  // Mobile nav
+function toggleMobNav() {
+  const drawer = document.getElementById('mobDrawer');
+  const overlay = document.getElementById('mobOverlay');
+  const isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+  } else {
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+  }
+}
+function closeMobNav() {
+  document.getElementById('mobDrawer').classList.remove('open');
+  document.getElementById('mobOverlay').classList.remove('open');
+}
 </script>
 </body>
 </html>
