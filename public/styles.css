@@ -57,6 +57,26 @@
   --ease: cubic-bezier(0.4,0,0.2,1);
   --t: 0.2s var(--ease);
 }
+/* AUTH PAGE LAYOUT */
+.auth-page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: radial-gradient(circle at 20% 0%, #0b1a33 0%, #050b18 60%);
+  padding:20px;
+}
+
+.auth-card{
+  width:100%;
+  max-width:480px;
+  background:rgba(8,15,30,.85);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:32px 26px;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+  backdrop-filter: blur(10px);
+}
 
 /* ── RESET ── */
 *,*::before,*::after { box-sizing: border-box; margin:0; padding:0; }
@@ -198,6 +218,12 @@ ul { list-style: none; }
 }
 .card-hover { transition: all var(--t); }
 .card-hover:hover { box-shadow: var(--shadow); transform: translateY(-3px); border-color: var(--border-2); }
+
+<div class="auth-head">
+  <img src="/logo.png" class="auth-logo">
+  <h1>Create account</h1>
+  <p>Start your learning journey today.</p>
+</div>
 
 /* ── COURSE CARD ── */
 .c-card {
