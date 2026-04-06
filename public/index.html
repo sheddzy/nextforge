@@ -160,7 +160,38 @@ body { padding-top: 72px; }
     </div>
   </div>
 </nav>
+</nav>
 
+<!-- MOBILE NAV BAR (shows on mobile instead of navbar) -->
+<div class="mob-bar" id="mobBar">
+  <a href="/" class="logo">
+    <div class="logo-mark">
+      <img src="https://i.ibb.co/zhTNNR4m/svg.png" alt="NextForge Academy"/>
+    </div>
+    <div class="logo-txt">
+      <div class="ln1">Next<span>Forge</span></div>
+      <div class="ln2">Academy</div>
+    </div>
+  </a>
+  <button class="mob-menu-btn" onclick="toggleMobNav()" id="mobMenuBtn" aria-label="Menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="menuIcon"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</div>
+
+<!-- MOBILE DRAWER -->
+<div class="mob-drawer" id="mobDrawer">
+  <a href="/courses.html" onclick="closeMobNav()">📚 Courses</a>
+  <a href="/about.html" onclick="closeMobNav()">ℹ️ About</a>
+  <a href="/contact.html" onclick="closeMobNav()">✉️ Contact</a>
+  <a href="#advisor" onclick="closeMobNav()">🤖 AI Advisor</a>
+  <a href="#faq" onclick="closeMobNav()">❓ FAQ</a>
+  <div class="mob-divider"></div>
+  <div class="mob-btn-row">
+    <a href="/login.html" class="btn btn-ghost btn-sm" onclick="closeMobNav()">Log In</a>
+    <a href="/register.html" class="btn btn-gold btn-sm" onclick="closeMobNav()">Enroll Now</a>
+  </div>
+</div>
+<div class="mob-overlay" id="mobOverlay" onclick="closeMobNav()"></div>
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg">
