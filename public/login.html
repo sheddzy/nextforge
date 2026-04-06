@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Sign In — NextForge Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #060d1a;
+    --navy-2: #0b1526;
+    --navy-3: #101e34;
+    --blue: #2563eb;
+    --blue-2: #3b82f6;
+    --gold: #f0a500;
+    --gold-2: #fbbf24;
+    --white: #ffffff;
+    --text: #94a3b8;
+    --text-2: #cbd5e1;
+    --border: rgba(255,255,255,0.08);
+    --border-2: rgba(255,255,255,0.13);
+    --ease: cubic-bezier(0.4,0,0.2,1);
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    display: flex;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── LEFT PANEL — FORM ── */
+  .left {
+    flex: 0 0 480px;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 48px;
+    background: var(--navy);
+    position: relative;
+    z-index: 1;
+    overflow-y: auto;
+  }
+
+  .left-logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 52px;
+    text-decoration: none;
+  }
+  .left-logo-mark {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .left-logo-mark img {
+    width: 36px; height: 36px; object-fit: contain;
+  }
+  .left-logo-txt { display: flex; flex-direction: column; gap: 0; line-height: 1; }
+  .left-logo-txt .n1 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--white); }
+  .left-logo-txt .n1 span { color: var(--gold); }
+  .left-logo-txt .n2 { font-size: 0.44rem; letter-spacing: 0.2em; color: var(--text); text-transform: uppercase; font-weight: 500; margin-top: 1px; }
+
+  .form-area { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+  .form-heading { font-family: 'Syne', sans-serif; font-size: 1.85rem; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+  .form-sub { font-size: 0.9rem; color: var(--text); margin-bottom: 36px; line-height: 1.6; }
+
+  /* ROLE SELECTOR */
+  .role-row {
+    display: flex;
+    background: var(--navy-3);
+    border: 1px solid var(--border-2);
+    border-radius: 10px;
+    padding: 4px;
+    gap: 3px;
+    margin-bottom: 28px;
+  }
+  .role-btn {
+    flex: 1; text-align: center; padding: 9px 8px;
+    border-radius: 7px; cursor: pointer;
+    font-size: 0.84rem; font-weight: 600;
+    color: var(--text); transition: all 0.2s var(--ease);
+    border: none; background: transparent;
+    font-family: 'Inter', sans-serif;
+  }
+  .role-btn.active { background: var(--blue); color: var(--white); box-shadow: 0 2px 10px rgba(37,99,235,0.35); }
+
+  /* FORM FIELDS */
+  .fg { margin-bottom: 18px; }
+  .fl {
+    display: block; font-size: 0.8rem; color: var(--text-2);
+    margin-bottom: 6px; font-weight: 600; letter-spacing: 0.01em;
+  }
+  .fi {
+    width: 100%; background: var(--navy-3);
+    border: 1.5px solid var(--border-2);
+    border-radius: 10px; padding: 13px 16px;
+    color: var(--white); font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .fi:focus {
+    border-color: var(--blue-2);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+  }
+  .fi::placeholder { color: rgba(148,163,184,0.4); }
+
+  .fi-row { position: relative; }
+  .fi-row .fi { padding-right: 44px; }
+  .eye-btn {
+    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; color: var(--text); padding: 4px;
+    display: flex; align-items: center;
+  }
+  .eye-btn:hover { color: var(--white); }
+
+  .row-between {
+    display: flex; align-items: center;
+    justify-content: space-between; margin-bottom: 24px;
+  }
+  .check-row { display: flex; align-items: center; gap: 8px; font-size: 0.84rem; color: var(--text); cursor: pointer; }
+  .check-row input { accent-color: var(--blue); width: 15px; height: 15px; cursor: pointer; }
+  .forgot-link { font-size: 0.84rem; color: var(--blue-2); text-decoration: none; font-weight: 500; }
+  .forgot-link:hover { color: var(--gold); }
+
+  .btn-login {
+    width: 100%; padding: 14px;
+    background: var(--gold); color: #000;
+    font-size: 0.97rem; font-weight: 700;
+    border: none; border-radius: 10px;
+    cursor: pointer; font-family: 'Syne', sans-serif;
+    letter-spacing: 0.02em;
+    transition: all 0.2s var(--ease);
+    margin-bottom: 20px;
+  }
+  .btn-login:hover { background: var(--gold-2); transform: translateY(-1px); box-shadow: 0 8px 22px rgba(240,165,0,0.3); }
+  .btn-login:disabled { opacity: 0.55; transform: none; box-shadow: none; cursor: not-allowed; }
+
+  .divider { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-text { font-size: 0.78rem; color: var(--text); white-space: nowrap; }
+
+  .btn-wa {
+    width: 100%; padding: 13px;
+    background: rgba(37,211,102,0.1);
+    border: 1.5px solid rgba(37,211,102,0.25);
+    color: #25d366; font-size: 0.9rem; font-weight: 600;
+    border-radius: 10px; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s; margin-bottom: 24px;
+    text-decoration: none;
+  }
+  .btn-wa:hover { background: rgba(37,211,102,0.18); }
+
+  .signup-row { text-align: center; font-size: 0.875rem; color: var(--text); }
+  .signup-row a { color: var(--gold); font-weight: 600; text-decoration: none; }
+  .signup-row a:hover { text-decoration: underline; }
+
+  .al-err {
+    background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.22);
+    color: #fca5a5; padding: 11px 14px; border-radius: 8px;
+    font-size: 0.87rem; margin-bottom: 16px; display: none; line-height: 1.5;
+  }
+
+  /* ── RIGHT PANEL — BRAND ── */
+  .right {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(145deg, #0b1526 0%, #060d1a 50%, #0d1e38 100%);
+  }
+
+  /* Animated grid background */
+  .right::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(37,99,235,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37,99,235,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    animation: gridShift 20s linear infinite;
+  }
+  @keyframes gridShift { 0%{background-position:0 0} 100%{background-position:48px 48px} }
+
+  /* Glow blob */
+  .right::after {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,165,0,0.07) 0%, rgba(37,99,235,0.05) 50%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    animation: pulse 6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.08)} }
+
+  .right-inner {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    padding: 40px;
+    max-width: 480px;
+  }
+
+  .brand-logo-big {
+    width: 120px; height: 120px;
+    border-radius: 28px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 28px;
+    box-shadow: 0 0 60px rgba(240,165,0,0.12), 0 0 120px rgba(37,99,235,0.08);
+    animation: logoFloat 4s ease-in-out infinite;
+  }
+  @keyframes logoFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .brand-logo-big img { width: 90px; height: 90px; object-fit: contain; }
+
+  .brand-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.2rem; font-weight: 800;
+    color: var(--white); margin-bottom: 6px; line-height: 1;
+  }
+  .brand-name span { color: var(--gold); }
+  .brand-sub {
+    font-size: 0.72rem; letter-spacing: 0.22em;
+    color: var(--text); text-transform: uppercase;
+    font-weight: 500; margin-bottom: 24px;
+  }
+  .brand-tagline {
+    font-size: 1rem; color: var(--text-2);
+    line-height: 1.72; max-width: 320px;
+    margin-bottom: 36px;
+  }
+
+  .brand-stats {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    justify-content: center; margin-bottom: 32px;
+  }
+  .bs { text-align: center; }
+  .bs-num { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--gold); }
+  .bs-lbl { font-size: 0.72rem; color: var(--text); margin-top: 2px; white-space: nowrap; }
+
+  .brand-badges { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .bb {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 0.72rem; font-weight: 600;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.09);
+    color: var(--text-2);
+  }
+
+  /* Vertical separator */
+  .separator {
+    position: absolute; left: 0; top: 10%; bottom: 10%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.07) 30%, rgba(255,255,255,0.07) 70%, transparent);
+  }
+
+  /* ── FORGOT / RESET VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── MOBILE ── */
+  @media(max-width:768px) {
+    body { flex-direction: column; overflow: auto; }
+    .right { display: none; }
+    .left {
+      flex: none; width: 100%;
+      padding: 28px 22px 40px;
+      min-height: 100vh;
+    }
+    .left-logo { margin-bottom: 36px; }
+    .form-heading { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LEFT: FORM -->
+<div class="left">
+
+  <!-- LOGO -->
+  <a href="/" class="left-logo">
+    <div class="left-logo-mark">
+      <img src="https://i.ibb.co/zhTNNR4m/svg.png" alt="NextForge"/>
+    </div>
+    <div class="left-logo-txt">
+      <div class="n1">Next<span>Forge</span></div>
+      <div class="n2">Academy</div>
+    </div>
+  </a>
+
+  <!-- LOGIN VIEW -->
+  <div class="form-area">
+    <div class="view active" id="v-login">
+      <div class="form-heading">Welcome back.</div>
+      <div class="form-sub">Sign in to continue your learning journey.</div>
+
+      <!-- ROLE TABS -->
+      <div class="role-row">
+        <button class="role-btn active" onclick="setRole('student',this)">👨‍🎓 Student</button>
+        <button class="role-btn" onclick="setRole('instructor',this)">👨‍🏫 Instructor</button>
+        <button class="role-btn" onclick="setRole('admin',this)">⚙️ Admin</button>
+      </div>
+
+      <!-- ERROR -->
+      <div class="al-err" id="loginErr"></div>
+
+      <!-- EMAIL -->
+      <div class="fg">
+        <label class="fl">Email address</label>
+        <input class="fi" type="email" id="l_email" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="fg">
+        <label class="fl">Password</label>
+        <div class="fi-row">
+          <input class="fi" type="password" id="l_pass" placeholder="Your password" autocomplete="current-password"/>
+          <button class="eye-btn" type="button" onclick="togglePass('l_pass',this)" tabindex="-1">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- REMEMBER + FORGOT -->
+      <div class="row-between">
+        <label class="check-row">
+          <input type="checkbox" id="remember" checked/>
+          Keep me signed in
+        </label>
+        <a href="#" class="forgot-link" onclick="showView('v-forgot')">Forgot password?</a>
+      </div>
+
+      <!-- LOGIN BTN -->
+      <button class="btn-login" id="loginBtn" onclick="handleLogin()">LOG IN</button>
+
+      <div class="divider"><div class="divider-line"></div><div class="divider-text">or get help</div><div class="divider-line"></div></div>
+
+      <!-- WHATSAPP -->
+      <a href="https://wa.me/2349060914286?text=Hi%2C+I+need+help+logging+in+to+NextForge+Academy" target="_blank" class="btn-wa">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chat with Support on WhatsApp
+      </a>
+
+      <div class="signup-row">Don't have an account? <a href="/register.html">Enroll now →</a></div>
+    </div>
+
+    <!-- FORGOT PASSWORD VIEW -->
+    <div class="view" id="v-forgot">
+      <div class="form-heading">Reset password.</div>
+      <div class="form-sub">Enter your email and we'll send a reset link.</div>
+      <div class="al-err" id="forgotErr"></div>
+      <div id="forgotOk" style="display:none;background:rgba(5,150,105,0.1);border:1px solid rgba(5,150,105,0.22);color:#6ee7b7;padding:11px 14px;border-radius:8px;font-size:0.87rem;margin-bottom:16px"></div>
+      <div class="fg">
+        <label class="fl">Email address</label>
+        <input class="fi" type="email" id="f_email" placeholder="you@example.com"/>
+      </div>
+      <button class="btn-login" id="forgotBtn" onclick="handleForgot()">SEND RESET LINK</button>
+      <div class="signup-row"><a href="#" onclick="showView('v-login')">← Back to sign in</a></div>
+    </div>
+
+    <!-- RESET PASSWORD VIEW -->
+    <div class="view" id="v-reset">
+      <div class="form-heading">New password.</div>
+      <div class="form-sub">Enter your new password below.</div>
+      <div class="al-err" id="resetErr"></div>
+      <div class="fg">
+        <label class="fl">New password</label>
+        <input class="fi" type="password" id="r_pass" placeholder="Min. 8 characters"/>
+      </div>
+      <div class="fg">
+        <label class="fl">Confirm password</label>
+        <input class="fi" type="password" id="r_confirm" placeholder="Repeat password"/>
+      </div>
+      <button class="btn-login" id="resetBtn" onclick="handleReset()">UPDATE PASSWORD</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- SEPARATOR -->
+<div class="separator"></div>
+
+<!-- RIGHT: BRAND PANEL -->
+<div class="right">
+  <div class="right-inner">
+
+    <div class="brand-logo-big">
+      <img src="https://i.ibb.co/zhTNNR4m/svg.png" alt="NextForge Academy"/>
+    </div>
+
+    <div class="brand-name">Next<span>Forge</span></div>
+    <div class="brand-sub">Academy</div>
+
+    <div class="brand-tagline">
+      Expert-led tech training for ambitious professionals worldwide. Small cohorts, real mentorship, verified outcomes.
+    </div>
+
+    <div class="brand-stats">
+      <div class="bs"><div class="bs-num">1,200+</div><div class="bs-lbl">Students</div></div>
+      <div class="bs"><div class="bs-num">12+</div><div class="bs-lbl">Countries</div></div>
+      <div class="bs"><div class="bs-num">6</div><div class="bs-lbl">Programmes</div></div>
+      <div class="bs"><div class="bs-num">4.9★</div><div class="bs-lbl">Rating</div></div>
+    </div>
+
+    <div class="brand-badges">
+      <span class="bb">📋 Project Management</span>
+      <span class="bb">📊 Data Analysis</span>
+      <span class="bb">🧭 Product Management</span>
+      <span class="bb">🗂 Notion Mastery</span>
+      <span class="bb">⚙️ Operations Systems</span>
+      <span class="bb">💡 Business Communication</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let selectedRole = 'student';
+const params = new URLSearchParams(location.search);
+if (params.get('reset_token')) showView('v-reset');
+
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function setRole(r, el) {
+  selectedRole = r;
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg; el.style.display = 'block';
+}
+function clearErr(id) { document.getElementById(id).style.display = 'none'; }
+
+function togglePass(inputId) {
+  const inp = document.getElementById(inputId);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+async function handleLogin() {
+  const email = document.getElementById('l_email').value.trim();
+  const password = document.getElementById('l_pass').value;
+  clearErr('loginErr');
+  if (!email || !password) return showErr('loginErr', 'Please enter your email and password.');
+
+  const btn = document.getElementById('loginBtn');
+  btn.textContent = 'Signing in...'; btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) return showErr('loginErr', data.error || 'Login failed. Please check your credentials.');
+
+    localStorage.setItem('nf_token', data.token);
+    localStorage.setItem('nf_role', data.role);
+    localStorage.setItem('nf_name', data.name);
+
+    const redirectMap = {
+      admin: '/admin/dashboard.html',
+      instructor: '/instructor/dashboard.html',
+      student: '/student/dashboard.html'
+    };
+    window.location.href = redirectMap[data.role] || '/student/dashboard.html';
+
+  } catch {
+    showErr('loginErr', 'Network error. Please check your connection and try again.');
+  } finally {
+    btn.textContent = 'LOG IN'; btn.disabled = false;
+  }
+}
+
+async function handleForgot() {
+  const email = document.getElementById('f_email').value.trim();
+  clearErr('forgotErr');
+  document.getElementById('forgotOk').style.display = 'none';
+  if (!email) return showErr('forgotErr', 'Please enter your email address.');
+
+  const btn = document.getElementById('forgotBtn');
+  btn.textContent = 'Sending...'; btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/auth/forgot-password', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (!res.ok) return showErr('forgotErr', data.error || 'Failed to send reset link.');
+    const ok = document.getElementById('forgotOk');
+    ok.textContent = '✓ Reset link sent! Check your inbox and spam folder.';
+    ok.style.display = 'block';
+  } catch {
+    showErr('forgotErr', 'Network error. Please try again.');
+  } finally {
+    btn.textContent = 'SEND RESET LINK'; btn.disabled = false;
+  }
+}
+
+async function handleReset() {
+  const np = document.getElementById('r_pass').value;
+  const cp = document.getElementById('r_confirm').value;
+  clearErr('resetErr');
+  if (np !== cp) return showErr('resetErr', 'Passwords do not match.');
+  if (np.length < 8) return showErr('resetErr', 'Password must be at least 8 characters.');
+
+  const btn = document.getElementById('resetBtn');
+  btn.textContent = 'Updating...'; btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/auth/reset-password', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: params.get('reset_token'), password: np })
+    });
+    const data = await res.json();
+    if (!res.ok) return showErr('resetErr', data.error || 'Reset failed.');
+    alert('Password updated successfully! Please sign in.');
+    showView('v-login');
+  } catch {
+    showErr('resetErr', 'Network error. Please try again.');
+  } finally {
+    btn.textContent = 'UPDATE PASSWORD'; btn.disabled = false;
+  }
+}
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const active = document.querySelector('.view.active')?.id;
+  if (active === 'v-login') handleLogin();
+  else if (active === 'v-forgot') handleForgot();
+  else if (active === 'v-reset') handleReset();
+});
+</script>
+
+<!-- Text.com Live Chat -->
+<script>
+    window.__lc = window.__lc || {};
+    window.__lc.organizationId = "c87e343c-6096-4b49-a57e-d41deec20b1f";
+    window.__lc.integration_name = "manual_onboarding";
+    window.__lc.product_name = "text";
+    ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[LiveChatWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice))
+</script>
+<noscript><a href="https://www.text.com/chat-with/c87e343c-6096-4b49-a57e-d41deec20b1f/" rel="nofollow">Chat with us</a></noscript>
+
+</body>
+</html>
