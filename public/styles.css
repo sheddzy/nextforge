@@ -225,6 +225,11 @@ ul { list-style: none; }
   <p>Start your learning journey today.</p>
 </div>
 
+.auth-head{margin-bottom:25px}
+.auth-head h1{font-size:30px;margin:10px 0 5px}
+.auth-head p{color:var(--text-2)}
+.auth-logo{height:32px}
+
 /* ── COURSE CARD ── */
 .c-card {
   background: var(--bg-2); border: 1px solid var(--border);
