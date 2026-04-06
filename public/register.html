@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Create Account — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<style>
+body { background:var(--bg-3); min-height:100vh; }
+
+.reg-page { min-height:100vh; display:flex; flex-direction:column; }
+
+/* TOP HEADER with logo */
+.reg-header {
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  padding:16px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:var(--shadow-sm);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+.reg-header-right { font-size:0.875rem; color:var(--text-2); }
+.reg-header-right a { color:var(--navy); font-weight:600; }
+
+/* PROGRESS STEPS */
+.reg-steps {
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+}
+.steps-inner { max-width:640px; margin:0 auto; display:flex; align-items:center; gap:0; }
+.step-item { flex:1; display:flex; align-items:center; gap:0; position:relative; }
+.step-bubble {
+  width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.8rem; font-weight:700; flex-shrink:0;
+  border:2px solid var(--border-2); background:#fff;
+  color:var(--text-2); transition:all 0.3s; z-index:1;
+}
+.step-bubble.active { background:var(--navy); border-color:var(--navy); color:#fff; }
+.step-bubble.done { background:var(--green); border-color:var(--green); color:#fff; }
+.step-label { font-size:0.7rem; color:var(--text-2); margin-left:8px; font-weight:500; white-space:nowrap; }
+.step-label.active { color:var(--navy); font-weight:600; }
+.step-connector { flex:1; height:2px; background:var(--border); margin:0 8px; }
+.step-connector.done { background:var(--green); }
+
+/* MAIN CONTENT AREA */
+.reg-body { flex:1; padding:32px 24px; display:flex; align-items:flex-start; justify-content:center; }
+.reg-card { background:#fff; border:1px solid var(--border); border-radius:var(--r-xl); padding:36px 40px; width:100%; max-width:560px; box-shadow:var(--shadow); }
+.reg-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--text-dark); margin-bottom:5px; }
+.reg-sub { font-size:0.875rem; color:var(--text-2); margin-bottom:24px; }
+
+/* ROLE TABS */
+.role-row { display:flex; background:var(--bg-3); border:1px solid var(--border); border-radius:10px; padding:4px; gap:3px; margin-bottom:22px; }
+.role-btn { flex:1; text-align:center; padding:9px 8px; border-radius:8px; cursor:pointer; font-size:0.84rem; font-weight:600; color:var(--text); transition:all 0.2s; border:none; background:transparent; font-family:'Inter',sans-serif; }
+.role-btn.active { background:var(--navy); color:#fff; box-shadow:var(--shadow-sm); }
+
+/* OTP */
+.otp-row { display:flex; gap:8px; justify-content:center; margin:16px 0; }
+.oi { width:48px; height:54px; text-align:center; font-size:1.4rem; font-weight:700; background:var(--bg-3); border:1.5px solid var(--border-2); border-radius:10px; color:var(--text-dark); outline:none; transition:border-color 0.2s; }
+.oi:focus { border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-light); }
+
+/* COURSE SELECT CARDS */
+.course-sel { border:1.5px solid var(--border); border-radius:var(--r); padding:12px 14px; cursor:pointer; transition:all 0.2s; margin-bottom:8px; display:flex; align-items:center; gap:12px; background:#fff; }
+.course-sel:hover { border-color:var(--gold); background:var(--gold-light); }
+.course-sel.selected { border-color:var(--gold); background:var(--gold-light); }
+.course-sel input[type=radio] { accent-color:var(--gold); flex-shrink:0; }
+.course-icon { width:36px; height:36px; border-radius:8px; background:var(--navy-light); display:flex; align-items:center; justify-content:center; font-size:0.95rem; flex-shrink:0; }
+.price-tag { font-size:0.875rem; font-weight:700; color:var(--gold); margin-left:auto; flex-shrink:0; }
+
+/* STEP PANELS */
+.sp { display:none; }
+.sp.on { display:block; }
+
+/* AVATAR UPLOAD */
+.av-upload { width:84px; height:84px; border-radius:50%; border:2px dashed var(--border-2); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; background:var(--bg-3); overflow:hidden; margin:0 auto 14px; position:relative; }
+.av-upload:hover { border-color:var(--blue); background:var(--blue-light); }
+.av-upload input { display:none; }
+.av-upload img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:50%; }
+
+/* PAYMENT SUMMARY */
+.pay-summary { background:var(--bg-3); border:1px solid var(--border); border-radius:var(--r); padding:14px 16px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; }
+.pay-amount { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--text-dark); }
+
+@media(max-width:600px){
+  .reg-card { padding:24px 18px; }
+  .reg-header { padding:12px 16px; }
+  .step-label { display:none; }
+}
+</style>
+</head>
+<body>
+<div class="reg-page">
+
+  <!-- HEADER WITH LOGO -->
+  <div class="reg-header">
+    <a href="/" class="logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
+    <div class="reg-header-right">Already enrolled? <a href="/login.html">Sign in →</a></div>
+  </div>
+
+  <!-- STEP INDICATOR -->
+  <div class="reg-steps">
+    <div class="steps-inner" style="padding:14px 0">
+      <div class="step-item">
+        <div class="step-bubble active" id="b1">1</div>
+        <div class="step-label active" id="l1">Your Details</div>
+      </div>
+      <div class="step-connector" id="c1"></div>
+      <div class="step-item">
+        <div class="step-bubble" id="b2">2</div>
+        <div class="step-label" id="l2">Profile</div>
+      </div>
+      <div class="step-connector" id="c2"></div>
+      <div class="step-item">
+        <div class="step-bubble" id="b3">3</div>
+        <div class="step-label" id="l3">Course & Pay</div>
+      </div>
+      <div class="step-connector" id="c3"></div>
+      <div class="step-item">
+        <div class="step-bubble" id="b4">4</div>
+        <div class="step-label" id="l4">Verify Email</div>
+      </div>
+      <div class="step-connector" id="c4"></div>
+      <div class="step-item">
+        <div class="step-bubble" id="b5">✓</div>
+        <div class="step-label" id="l5">Done</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="reg-body">
+    <div class="reg-card">
+
+      <!-- STEP 1: BASIC INFO -->
+      <div class="sp on" id="s1">
+        <div class="reg-title">Create Your Account</div>
+        <div class="reg-sub">Join 1,200+ professionals already learning with NextForge Academy</div>
+        <div class="role-row">
+          <button class="role-btn active" onclick="setRole('student',this)">👨‍🎓 Student</button>
+          <button class="role-btn" onclick="setRole('instructor',this)">👨‍🏫 Instructor</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="fg"><label class="fl">First Name</label><input class="fi" id="r_first" placeholder="First name"/></div>
+          <div class="fg"><label class="fl">Last Name</label><input class="fi" id="r_last" placeholder="Last name"/></div>
+        </div>
+        <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" id="r_email" placeholder="you@example.com"/></div>
+        <div class="fg"><label class="fl">Phone Number</label><input class="fi" type="tel" id="r_phone" placeholder="+234 or international format"/></div>
+        <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="r_pass" placeholder="Minimum 8 characters"/></div>
+        <div class="al al-err" id="e1" style="display:none"></div>
+        <button class="btn btn-primary" style="width:100%;padding:13px" onclick="step1()">Continue →</button>
+      </div>
+
+      <!-- STEP 2: PROFILE + BIO -->
+      <div class="sp" id="s2">
+        <div class="reg-title">Tell Us About Yourself</div>
+        <div class="reg-sub">This helps your instructor know who you are. Profile photo is required.</div>
+        <div class="av-upload" id="avWrap" onclick="document.getElementById('avInput').click()">
+          <img id="avPrev" src="" style="display:none"/>
+          <div id="avPlaceholder" style="text-align:center">
+            <div style="font-size:1.5rem">📷</div>
+            <div style="font-size:0.7rem;color:var(--text-2);margin-top:4px">Add Photo</div>
+          </div>
+          <input type="file" id="avInput" accept="image/*" onchange="previewAv(this)"/>
+        </div>
+        <div style="text-align:center;font-size:0.75rem;color:var(--text-2);margin-bottom:18px">Upload profile photo (required)</div>
+
+        <!-- STUDENT FIELDS -->
+        <div id="stuFields">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="fg"><label class="fl">Current Occupation</label><input class="fi" id="r_occ" placeholder="e.g. Admin Officer, NYSC"/></div>
+            <div class="fg"><label class="fl">Country</label><select class="fi" id="r_country"><option value="">Select...</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option><option>South Africa</option><option>United Kingdom</option><option>Canada</option><option>United States</option><option>Other</option></select></div>
+          </div>
+          <div class="fg"><label class="fl">City / State</label><input class="fi" id="r_city" placeholder="e.g. Lagos, Nigeria"/></div>
+          <div class="fg"><label class="fl">Address</label><input class="fi" id="r_address" placeholder="Street address, city, state, country"/></div>
+          <div class="fg"><label class="fl">Why do you want to enroll?</label><textarea class="fi" id="r_reason" rows="3" placeholder="Tell us your motivation and what you hope to achieve..."></textarea></div>
+          <div class="fg"><label class="fl">Career Goal</label><input class="fi" id="r_goal" placeholder="e.g. Get a PM role at a fintech within 6 months"/></div>
+          <div class="fg"><label class="fl">How did you hear about us?</label><select class="fi" id="r_source"><option value="">Select...</option><option>WhatsApp / Friend referral</option><option>Instagram</option><option>Twitter / X</option><option>LinkedIn</option><option>Google Search</option><option>Other</option></select></div>
+        </div>
+
+        <!-- INSTRUCTOR FIELDS -->
+        <div id="instrFields" style="display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="fg"><label class="fl">Professional Title</label><input class="fi" id="r_title" placeholder="e.g. Senior Product Manager"/></div>
+            <div class="fg"><label class="fl">Years of Experience</label><select class="fi" id="r_exp"><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
+          </div>
+          <div class="fg"><label class="fl">Country</label><select class="fi" id="r_icountry"><option value="">Select...</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option><option>South Africa</option><option>United Kingdom</option><option>Canada</option><option>United States</option><option>Other</option></select></div>
+          <div class="fg"><label class="fl">Address</label><input class="fi" id="r_iaddress" placeholder="Street address, city, state, country"/></div>
+          <div class="fg"><label class="fl">Skills / Expertise</label><input class="fi" id="r_skills" placeholder="e.g. Project Management, Agile, SQL, Power BI"/></div>
+          <div class="fg"><label class="fl">Certifications</label><input class="fi" id="r_certs" placeholder="e.g. PMP, Google Analytics, Scrum Master"/></div>
+          <div class="fg"><label class="fl">Bank Name</label><input class="fi" id="r_bank" placeholder="e.g. Access Bank"/></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="fg"><label class="fl">Account Number</label><input class="fi" id="r_acct" placeholder="10-digit number" maxlength="10"/></div>
+            <div class="fg"><label class="fl">Account Name</label><input class="fi" id="r_acctname" placeholder="Name on account"/></div>
+          </div>
+          <div class="fg"><label class="fl">Why do you want to teach here?</label><textarea class="fi" id="r_why" rows="3" placeholder="Tell us about your teaching experience and motivation..."></textarea></div>
+        </div>
+
+        <div class="al al-err" id="e2" style="display:none"></div>
+        <div style="display:flex;gap:9px">
+          <button class="btn btn-outline" onclick="goStep(1)">← Back</button>
+          <button class="btn btn-primary" style="flex:1" onclick="step2()">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: COURSE + PAYMENT -->
+      <div class="sp" id="s3">
+        <div class="reg-title" id="s3title">Choose Your Programme</div>
+        <div class="reg-sub" id="s3sub">Select a course — full payment required to complete registration</div>
+
+        <!-- STUDENT: COURSE SELECTION -->
+        <div id="courseSelSection">
+          <div id="courseList">
+            <div class="course-sel" onclick="selCourse(1,250000,'Project Management',this)"><input type="radio" name="course"/><div class="course-icon">📋</div><div><div style="font-weight:600;font-size:0.875rem;color:var(--text-dark)">Project Management</div><div style="font-size:0.72rem;color:var(--text-2)">12 weeks · Beginner welcome</div></div><div class="price-tag">₦250,000</div></div>
+            <div class="course-sel" onclick="selCourse(2,250000,'Product Management',this)"><input type="radio" name="course"/><div class="course-icon">🧭</div><div><div style="font-weight:600;font-size:0.875rem;color:var(--text-dark)">Product Management</div><div style="font-size:0.72rem;color:var(--text-2)">13 weeks · Build real products</div></div><div class="price-tag">₦250,000</div></div>
+            <div class="course-sel" onclick="selCourse(3,300000,'Data Analysis',this)"><input type="radio" name="course"/><div class="course-icon">📊</div><div><div style="font-weight:600;font-size:0.875rem;color:var(--text-dark)">Data Analysis</div><div style="font-size:0.72rem;color:var(--text-2)">12 weeks · Excel, SQL & Power BI</div></div><div class="price-tag">₦300,000</div></div>
+            <div class="course-sel" onclick="selCourse(4,160000,'Notion Mastery',this)"><input type="radio" name="course"/><div class="course-icon">🗂</div><div><div style="font-weight:600;font-size:0.875rem;color:var(--text-dark)">Notion Mastery</div><div style="font-size:0.72rem;color:var(--text-2)">6 weeks · Self-paced option</div></div><div class="price-tag">₦160,000</div></div>
+            <div class="course-sel" onclick="selCourse(5,200000,'Operations Systems',this)"><input type="radio" name="course"/><div class="course-icon">⚙️</div><div><div style="font-weight:600;font-size:0.875rem;color:var(--text-dark)">Operations Systems Design</div><div style="font-size:0.72rem;color:var(--text-2)">8 weeks · Intermediate</div></div><div class="price-tag">₦200,000</div></div>
+            <div class="course-sel" onclick="selCourse(6,200000,'Business Communication',this)"><input type="radio" name="course"/><div class="course-icon">💡</div><div><div style="font-weight:600;font-size:0.875rem;color:var(--text-dark)">Business Communication</div><div style="font-size:0.72rem;color:var(--text-2)">8 weeks · Beginner</div></div><div class="price-tag">₦200,000</div></div>
+            <!-- SKIP OPTION -->
+            <div class="course-sel" id="skipCard" onclick="selSkip(this)"><input type="radio" name="course" value="skip"/><div class="course-icon" style="background:var(--bg-4)">⏭</div><div><div style="font-weight:600;font-size:0.875rem;color:var(--text-dark)">Browse courses later</div><div style="font-size:0.72rem;color:var(--text-2)">Create account now, enroll when ready</div></div><div class="price-tag" style="color:var(--green)">Free</div></div>
+          </div>
+          <div class="pay-summary" id="paySummary" style="display:none">
+            <div><div style="font-size:0.75rem;color:var(--text-2);margin-bottom:2px">Course Fee</div><div class="pay-amount" id="payAmtDisplay">₦—</div></div>
+            <div style="text-align:right"><div style="font-size:0.72rem;color:var(--text-2);margin-bottom:4px">Secured by Paystack</div><img src="https://paystack.com/assets/img/logo_color.svg" alt="Paystack" style="height:18px;opacity:0.7"/></div>
+          </div>
+        </div>
+
+        <div class="al al-err" id="e3" style="display:none"></div>
+        <div style="display:flex;gap:9px;margin-top:14px">
+          <button class="btn btn-outline" onclick="goStep(2)">← Back</button>
+          <button class="btn btn-gold" style="flex:1;padding:13px" id="payBtn" onclick="step3Pay()">Pay & Continue 🔒</button>
+        </div>
+        <div style="text-align:center;margin-top:10px;font-size:0.72rem;color:var(--text-2)">🔒 Secured by Paystack · Cards, Bank Transfer, USSD</div>
+      </div>
+
+      <!-- STEP 4: OTP -->
+      <div class="sp" id="s4">
+        <div class="reg-title">Verify Your Email</div>
+        <div class="reg-sub" id="otpSub">Enter the 6-digit code we sent to your email address</div>
+        <div class="otp-row">
+          <input class="oi" maxlength="1" id="p0" oninput="pm(this,0)" onkeydown="pb(event,0)"/>
+          <input class="oi" maxlength="1" id="p1" oninput="pm(this,1)" onkeydown="pb(event,1)"/>
+          <input class="oi" maxlength="1" id="p2" oninput="pm(this,2)" onkeydown="pb(event,2)"/>
+          <input class="oi" maxlength="1" id="p3" oninput="pm(this,3)" onkeydown="pb(event,3)"/>
+          <input class="oi" maxlength="1" id="p4" oninput="pm(this,4)" onkeydown="pb(event,4)"/>
+          <input class="oi" maxlength="1" id="p5" oninput="pm(this,5)" onkeydown="pb(event,5)"/>
+        </div>
+        <div class="al al-err" id="e4" style="display:none"></div>
+        <button class="btn btn-primary" style="width:100%;padding:13px" id="verBtn" onclick="verifyOTP()">Verify & Create Account →</button>
+        <div style="text-align:center;margin-top:12px;font-size:0.82rem;color:var(--text-2)">Didn't receive it? <a href="#" style="color:var(--navy)" onclick="resendOTP()">Resend code</a></div>
+      </div>
+
+      <!-- STEP 5: SUCCESS -->
+      <div class="sp" id="s5">
+        <div style="text-align:center;padding:16px 0">
+          <div id="s5icon" style="font-size:4rem;margin-bottom:16px">🎉</div>
+          <div id="s5title" class="reg-title" style="text-align:center">Account Created!</div>
+          <div id="s5msg" class="reg-sub" style="text-align:center;margin-bottom:22px">Welcome to NextForge Academy!</div>
+          <div class="pbar" style="margin-bottom:8px"><div class="pfill green" id="sBar" style="width:0%"></div></div>
+          <div id="s5sub" style="font-size:0.78rem;color:var(--text-2)">Redirecting to your dashboard...</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Text.com -->
+<script>window.__lc=window.__lc||{};window.__lc.organizationId="c87e343c-6096-4b49-a57e-d41deec20b1f";window.__lc.integration_name="manual_onboarding";window.__lc.product_name="text";;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[LiveChatWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice))</script>
+
+<script>
+let role='student', avBase64='', payRef='', selCourseId=null, selCoursePrice=0, selCourseName='', skipCourse=false;
+let paystackKey='';
+fetch('/api/payments/config').then(r=>r.json()).then(d=>paystackKey=d.publicKey).catch(()=>{});
+
+// Also load actual courses from API
+async function loadCoursesFromAPI(){
+  try{
+    const res=await fetch('/api/courses');
+    const courses=await res.json();
+    if(!courses.length)return;
+    const list=document.getElementById('courseList');
+    const icons=['📋','🧭','📊','🗂','⚙️','💡'];
+    // Keep the skip card, replace the rest
+    const skipCard=document.getElementById('skipCard');
+    list.innerHTML='';
+    courses.forEach((c,i)=>{
+      const div=document.createElement('div');
+      div.className='course-sel';
+      div.innerHTML=`<input type="radio" name="course"/><div class="course-icon">${c.thumbnail||icons[i]||'📋'}</div><div><div style="font-weight:600;font-size:0.875rem;color:var(--text-dark)">${c.title}</div><div style="font-size:0.72rem;color:var(--text-2)">${c.duration} · ${c.level}</div></div><div class="price-tag">₦${Number(c.price).toLocaleString()}</div>`;
+      div.onclick=()=>selCourse(c.id,c.price,c.title,div);
+      list.appendChild(div);
+    });
+    list.appendChild(skipCard);
+  }catch{}
+}
+loadCoursesFromAPI();
+
+function setRole(r,el){
+  role=r;
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('stuFields').style.display=r==='student'?'block':'none';
+  document.getElementById('instrFields').style.display=r==='instructor'?'block':'none';
+}
+
+function goStep(n){
+  document.querySelectorAll('.sp').forEach(s=>s.classList.remove('on'));
+  document.getElementById('s'+n).classList.add('on');
+  // Update bubbles
+  for(let i=1;i<=5;i++){
+    const b=document.getElementById('b'+i);
+    const l=document.getElementById('l'+i);
+    if(i<n){b.classList.remove('active');b.classList.add('done');b.textContent='✓';}
+    else if(i===n){b.classList.add('active');b.classList.remove('done');if(i<5)b.textContent=String(i);l?.classList.add('active');}
+    else{b.classList.remove('active','done');b.textContent=i===5?'✓':String(i);l?.classList.remove('active');}
+    if(i<5){const c=document.getElementById('c'+i);if(c)c.classList.toggle('done',i<n);}
+  }
+}
+
+function err(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block';}
+function clearErr(id){document.getElementById(id).style.display='none';}
+
+function previewAv(input){
+  if(!input.files[0])return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    avBase64=e.target.result;
+    const img=document.getElementById('avPrev');
+    img.src=avBase64;img.style.display='block';
+    document.getElementById('avPlaceholder').style.display='none';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function selCourse(id,price,name,el){
+  document.querySelectorAll('.course-sel').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked=true;
+  selCourseId=id;selCoursePrice=price;selCourseName=name;skipCourse=false;
+  const s=document.getElementById('paySummary');
+  s.style.display='flex';
+  document.getElementById('payAmtDisplay').textContent='₦'+Number(price).toLocaleString();
+  document.getElementById('payBtn').textContent='Pay ₦'+Number(price).toLocaleString()+' & Continue 🔒';
+  document.getElementById('payBtn').onclick=step3Pay;
+}
+
+function selSkip(el){
+  document.querySelectorAll('.course-sel').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked=true;
+  selCourseId=null;selCoursePrice=0;skipCourse=true;
+  document.getElementById('paySummary').style.display='none';
+  document.getElementById('payBtn').textContent='Create Account (No Payment) →';
+  document.getElementById('payBtn').onclick=skipPayment;
+}
+
+async function step1(){
+  clearErr('e1');
+  const first=document.getElementById('r_first').value.trim();
+  const last=document.getElementById('r_last').value.trim();
+  const email=document.getElementById('r_email').value.trim();
+  const phone=document.getElementById('r_phone').value.trim();
+  const pass=document.getElementById('r_pass').value;
+  if(!first||!last||!email||!phone||!pass)return err('e1','Please fill in all fields.');
+  if(pass.length<8)return err('e1','Password must be at least 8 characters.');
+  if(!email.includes('@'))return err('e1','Please enter a valid email address.');
+  const btn=event.target;btn.textContent='Checking...';btn.disabled=true;
+  try{
+    const res=await fetch('/api/auth/check-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+    const d=await res.json();
+    if(d.exists)return err('e1','This email is already registered. Please sign in instead.');
+    goStep(2);
+  }catch{err('e1','Network error. Please try again.');}
+  finally{btn.textContent='Continue →';btn.disabled=false;}
+}
+
+async function step2(){
+  clearErr('e2');
+  if(!avBase64)return err('e2','Please upload a profile photo — it helps your instructor identify you.');
+  if(role==='student'){
+    const reason=document.getElementById('r_reason').value.trim();
+    const goal=document.getElementById('r_goal').value.trim();
+    if(!reason||!goal)return err('e2','Please fill in your motivation and career goal.');
+  } else {
+    const title=document.getElementById('r_title').value.trim();
+    const skills=document.getElementById('r_skills').value.trim();
+    if(!title||!skills)return err('e2','Please fill in your title and skills.');
+    // Instructor: send OTP then go to step 3 (which becomes verification)
+    document.getElementById('s3title').textContent='Verify Your Email';
+    document.getElementById('s3sub').textContent='Before we submit your application, verify your email.';
+    document.getElementById('courseSelSection').style.display='none';
+    document.getElementById('payBtn').textContent='Verify Email →';
+    document.getElementById('payBtn').onclick=instrVerifyAndGo;
+    const email=document.getElementById('r_email').value.trim();
+    const name=document.getElementById('r_first').value.trim();
+    const btn=event.target;btn.textContent='Sending code...';btn.disabled=true;
+    try{
+      const r=await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name})});
+      const d=await r.json();
+      if(!r.ok)return err('e2',d.error||'Failed to send code.');
+    }catch{err('e2','Network error.');}
+    finally{btn.textContent='Continue →';btn.disabled=false;}
+  }
+  goStep(3);
+}
+
+async function step3Pay(){
+  clearErr('e3');
+  if(!selCourseId)return err('e3','Please select a course to continue.');
+  const btn=document.getElementById('payBtn');
+  btn.textContent='Opening payment...';btn.disabled=true;
+  const email=document.getElementById('r_email').value.trim();
+  const first=document.getElementById('r_first').value.trim();
+  const last=document.getElementById('r_last').value.trim();
+  try{
+    const res=await fetch('/api/payments/initialize-registration',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,course_id:selCourseId,amount:selCoursePrice})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Payment initialization failed');
+    const handler=PaystackPop.setup({
+      key:paystackKey,email,amount:selCoursePrice*100,currency:'NGN',ref:data.reference,
+      firstname:first,lastname:last,
+      metadata:{course_id:selCourseId,type:'registration'},
+      callback:function(response){
+        payRef=response.reference;
+        btn.textContent='Payment confirmed! Sending verification...';
+        fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name:first})})
+          .then(r=>r.json()).then(d=>{
+            if(!d.success){err('e3',d.error||'Failed to send code.');return;}
+            document.getElementById('otpSub').textContent='Payment confirmed ✓ Enter the code sent to '+email;
+            goStep(4);
+          });
+      },
+      onClose:function(){btn.textContent='Pay ₦'+Number(selCoursePrice).toLocaleString()+' & Continue 🔒';btn.disabled=false;}
+    });
+    handler.openIframe();
+  }catch(e){err('e3',e.message||'Payment failed.');btn.textContent='Pay & Continue 🔒';btn.disabled=false;}
+}
+
+async function skipPayment(){
+  clearErr('e3');
+  const email=document.getElementById('r_email').value.trim();
+  const first=document.getElementById('r_first').value.trim();
+  const btn=document.getElementById('payBtn');
+  btn.textContent='Sending verification...';btn.disabled=true;
+  try{
+    const r=await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name:first})});
+    const d=await r.json();
+    if(!r.ok)return err('e3',d.error||'Failed to send code.');
+    document.getElementById('otpSub').textContent='Enter the code sent to '+email;
+    goStep(4);
+  }catch{err('e3','Network error.');}
+  finally{btn.textContent='Create Account (No Payment) →';btn.disabled=false;}
+}
+
+async function instrVerifyAndGo(){
+  clearErr('e3');
+  const email=document.getElementById('r_email').value.trim();
+  const first=document.getElementById('r_first').value.trim();
+  document.getElementById('otpSub').textContent='Enter the code sent to '+email;
+  goStep(4);
+}
+
+function pm(inp,i){if(inp.value.length===1&&i<5)document.getElementById('p'+(i+1)).focus();}
+function pb(e,i){if(e.key==='Backspace'&&!e.target.value&&i>0)document.getElementById('p'+(i-1)).focus();}
+function getOTP(){return Array.from({length:6},(_,i)=>document.getElementById('p'+i).value).join('');}
+
+async function verifyOTP(){
+  clearErr('e4');
+  const otp=getOTP();
+  if(otp.length<6)return err('e4','Please enter the complete 6-digit code.');
+  const btn=document.getElementById('verBtn');btn.textContent='Creating account...';btn.disabled=true;
+  try{
+    const bio=buildBio();
+    const payload={
+      full_name:document.getElementById('r_first').value.trim()+' '+document.getElementById('r_last').value.trim(),
+      email:document.getElementById('r_email').value.trim(),
+      phone:document.getElementById('r_phone').value.trim(),
+      password:document.getElementById('r_pass').value,
+      role,course_id:selCourseId,payment_reference:payRef,
+      avatar_base64:avBase64,bio:JSON.stringify(bio),otp
+    };
+    const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(payload)});
+    const d=await res.json();
+    if(!res.ok)return err('e4',d.error||'Registration failed.');
+    if(role==='instructor'){
+      goStep(5);
+      document.getElementById('s5icon').textContent='⏳';
+      document.getElementById('s5title').textContent='Application Submitted!';
+      document.getElementById('s5msg').textContent='Your instructor application is under review. You\'ll receive an email once approved by admin.';
+      document.getElementById('s5sub').textContent='Redirecting to home...';
+      setTimeout(()=>window.location.href='/',4000);
+    } else {
+      localStorage.setItem('nf_token',d.token);localStorage.setItem('nf_role',d.role);localStorage.setItem('nf_name',d.name);
+      goStep(5);
+      let w=0;const iv=setInterval(()=>{w+=2;document.getElementById('sBar').style.width=w+'%';if(w>=100){clearInterval(iv);window.location.href='/student/dashboard.html';}},30);
+    }
+  }catch{err('e4','Network error. Please try again.');}
+  finally{btn.textContent='Verify & Create Account →';btn.disabled=false;}
+}
+
+async function resendOTP(){
+  const email=document.getElementById('r_email').value.trim();
+  const name=document.getElementById('r_first').value.trim();
+  await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name})});
+  alert('New code sent! Check your inbox.');
+}
+
+function buildBio(){
+  return{
+    occupation:document.getElementById('r_occ')?.value?.trim()||'',
+    country:document.getElementById('r_country')?.value||document.getElementById('r_icountry')?.value||'',
+    city:document.getElementById('r_city')?.value?.trim()||'',
+    address:document.getElementById('r_address')?.value?.trim()||document.getElementById('r_iaddress')?.value?.trim()||'',
+    reason:document.getElementById('r_reason')?.value?.trim()||'',
+    goal:document.getElementById('r_goal')?.value?.trim()||'',
+    source:document.getElementById('r_source')?.value||'',
+    title:document.getElementById('r_title')?.value?.trim()||'',
+    exp:document.getElementById('r_exp')?.value||'',
+    skills:document.getElementById('r_skills')?.value?.trim()||'',
+    certs:document.getElementById('r_certs')?.value?.trim()||'',
+    bank:document.getElementById('r_bank')?.value?.trim()||'',
+    account:document.getElementById('r_acct')?.value?.trim()||'',
+    acctname:document.getElementById('r_acctname')?.value?.trim()||'',
+    why:document.getElementById('r_why')?.value?.trim()||''
+  };
+}
+</script>
+</body>
+</html>
