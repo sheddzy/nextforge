@@ -134,11 +134,19 @@ body { background:var(--bg-3); min-height:100vh; }
       </div>
     </div>
   </div>
-
+<div class="auth-head">
+  <img src="/logo.png" class="auth-logo">
+  <h1>Create account</h1>
+  <p>Start your learning journey today.</p>
+</div>
   <!-- MAIN -->
   <div class="reg-body">
     <div class="reg-card">
-
+<div class="role-switch">
+  <button class="role active" onclick="setRole('student')">👨‍🎓 Student</button>
+  <button class="role" onclick="setRole('instructor')">🧑‍🏫 Instructor</button>
+  <button class="role" onclick="setRole('admin')">⚙️ Admin</button>
+</div>
       <!-- STEP 1: BASIC INFO -->
       <div class="sp on" id="s1">
         <div class="reg-title">Create Your Account</div>
@@ -281,7 +289,12 @@ body { background:var(--bg-3); min-height:100vh; }
 let role='student', avBase64='', payRef='', selCourseId=null, selCoursePrice=0, selCourseName='', skipCourse=false;
 let paystackKey='';
 fetch('/api/payments/config').then(r=>r.json()).then(d=>paystackKey=d.publicKey).catch(()=>{});
-
+.auth-head{margin-bottom:25px}
+.auth-head h1{font-size:30px;margin:10px 0 5px}
+.auth-head p{color:var(--text-2)}
+.auth-logo{height:32px}
+  
+}
 // Also load actual courses from API
 async function loadCoursesFromAPI(){
   try{
