@@ -4,7 +4,7 @@ const db = require('../database');
 const { requireStaff, requireAdmin, requireAuth } = require('../middleware/auth');
 
 // Store scheduled classes
-router.post('/classes', requireAuth, (req, res) => {
+router.post('/classes', requireStaff, (req, res) => {
   const { title, date, time, duration, course, notes, meetingUrl, instructor } = req.body;
   try {
     db.prepare(`CREATE TABLE IF NOT EXISTS scheduled_classes (
@@ -20,7 +20,7 @@ router.post('/classes', requireAuth, (req, res) => {
 });
 
 // Get all upcoming classes (for students)
-router.get('/classes', requireAuth, (req, res) => {
+router.get('/classes', requireStaff, (req, res) => {
   try {
     db.prepare(`CREATE TABLE IF NOT EXISTS scheduled_classes (
       id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date TEXT, time TEXT,
