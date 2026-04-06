@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
-const { requireStaff, requireAdmin } = require('../middleware/auth');
+const { requireStaff, requireAdmin, requireAuth } = require('../middleware/auth');
 
 // Store scheduled classes
 router.post('/classes', requireAuth, (req, res) => {
