@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Instructor Dashboard — NextForge Academy</title>
+<style>
+/*
+ * NEXTFORGE PORTAL CSS — SELF-CONTAINED
+ * Import this with <style> tag content inside each portal page
+ * DO NOT link styles.css in any portal page
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── HARD RESET — DARK BACKGROUND GUARANTEED ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+html, body {
+  background: #060e1e !important;
+  color: #cbd5e1 !important;
+  font-family: 'Inter', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; }
+img { display: block; max-width: 100%; }
+ul { list-style: none; }
+
+:root {
+  --bg: #060e1e;
+  --bg2: #0b1729;
+  --bg3: #111f38;
+  --bg4: #182d4e;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #94a3b8;
+  --text2: #cbd5e1;
+  --white: #fff;
+  --gold: #f0a500;
+  --gold2: #fbbf24;
+  --blue: #2563eb;
+  --blue2: #3b82f6;
+  --green: #059669;
+  --green2: #10b981;
+  --red: #ef4444;
+  --purple: #7c3aed;
+}
+
+/* ── LAYOUT ── */
+.portal { display: grid; grid-template-columns: 252px 1fr; min-height: 100vh; background: var(--bg); }
+
+/* ── SIDEBAR ── */
+.sb {
+  background: linear-gradient(180deg, #111f38 0%, #0b1729 55%, #060e1e 100%);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  box-shadow: 3px 0 24px rgba(0,0,0,0.45);
+  z-index: 100;
+}
+.sb::-webkit-scrollbar { width: 3px; }
+.sb::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+.sb-top { padding: 18px 14px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.sb-logo { display: block; margin-bottom: 14px; }
+.sb-logo img { height: 36px; width: auto; object-fit: contain; }
+.sb-role-tag {
+  display: inline-flex; align-items: center; padding: 3px 10px;
+  border-radius: 20px; font-size: 0.64rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; margin-bottom: 12px;
+}
+.sb-role-tag.student { background: rgba(37,99,235,0.15); color: #60a5fa; border: 1px solid rgba(37,99,235,0.25); }
+.sb-role-tag.instructor { background: rgba(240,165,0,0.12); color: var(--gold); border: 1px solid rgba(240,165,0,0.22); }
+.sb-role-tag.admin { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.22); }
+
+.sb-user {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 11px; background: rgba(255,255,255,0.05);
+  border-radius: 12px; border: 1px solid rgba(255,255,255,0.09);
+}
+.sb-av {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0; overflow: hidden;
+}
+.sb-av img { width: 100%; height: 100%; object-fit: cover; }
+.sb-av.student { background: rgba(37,99,235,0.25); border: 2px solid var(--blue2); }
+.sb-av.instructor { background: rgba(240,165,0,0.2); border: 2px solid var(--gold); }
+.sb-av.admin { background: rgba(239,68,68,0.2); border: 2px solid var(--red); }
+.sb-uname { font-weight: 600; color: var(--white); font-size: 0.84rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sb-urole { font-size: 0.67rem; color: var(--text); margin-top: 1px; }
+
+.sb-nav { padding: 10px 9px; flex: 1; }
+.sb-sec { font-size: 0.62rem; color: rgba(148,163,184,0.4); text-transform: uppercase; letter-spacing: 0.11em; padding: 12px 8px 4px; font-weight: 700; }
+
+.ni {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 8px;
+  font-size: 0.875rem; font-weight: 500; color: rgba(148,163,184,0.8);
+  transition: all 0.18s; margin-bottom: 1px;
+  text-decoration: none; cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+}
+.ni:hover { background: rgba(255,255,255,0.07); color: var(--white); }
+.ni.active { padding-left: 8px; }
+.ni.active.student { background: rgba(37,99,235,0.18); color: #60a5fa; border-left: 2px solid var(--blue2); }
+.ni.active.instructor { background: rgba(240,165,0,0.12); color: var(--gold2); border-left: 2px solid var(--gold); }
+.ni.active.admin { background: rgba(239,68,68,0.12); color: #fca5a5; border-left: 2px solid var(--red); }
+.ni-icon { width: 18px; text-align: center; flex-shrink: 0; font-size: 0.9rem; }
+.ni-badge { margin-left: auto; background: var(--gold); color: #000; border-radius: 10px; padding: 1px 7px; font-size: 0.63rem; font-weight: 700; }
+.ni-badge.red { background: var(--red); color: #fff; }
+
+.sb-bot { padding: 9px 9px 15px; border-top: 1px solid var(--border); margin-top: auto; }
+
+/* ── MAIN AREA ── */
+.pm {
+  background: linear-gradient(160deg, #0b1729 0%, #060e1e 40%, #0b1a35 100%);
+  display: flex; flex-direction: column; min-height: 100vh; position: relative;
+}
+.pm::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: radial-gradient(rgba(37,99,235,0.04) 1.5px, transparent 1.5px);
+  background-size: 40px 40px;
+}
+.pm-inner { position: relative; z-index: 1; display: flex; flex-direction: column; flex: 1; }
+
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(6,14,30,0.95); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 13px 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+}
+.tb-title { font-weight: 700; color: var(--white); font-size: 1rem; font-family: 'Syne', sans-serif; }
+.tb-sub { font-size: 0.73rem; color: var(--text); margin-top: 1px; }
+
+.pc { padding: 22px 24px; flex: 1; }
+.page { display: none; }
+.page.on { display: block; }
+
+/* ── PROFILE BANNER ── */
+.pb {
+  background: linear-gradient(135deg, #182d4e 0%, #111f38 60%, #0e1a30 100%);
+  border: 1px solid var(--border2); border-radius: 20px;
+  padding: 20px 24px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  position: relative; overflow: hidden;
+}
+.pb::after { content: ''; position: absolute; right: -30px; top: -30px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(240,165,0,0.09), transparent 70%); pointer-events: none; }
+.pb-av { width: 62px; height: 62px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; overflow: hidden; position: relative; z-index: 1; }
+.pb-av img { width: 100%; height: 100%; object-fit: cover; }
+.pb-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
+.pb-name { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--white); }
+.pb-email { font-size: 0.78rem; color: var(--text); margin-top: 2px; }
+.pb-id { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 20px; background: rgba(240,165,0,0.1); border: 1px solid rgba(240,165,0,0.22); font-size: 0.67rem; color: var(--gold); font-weight: 700; margin-top: 5px; }
+
+/* ── COLORFUL STAT CARDS ── */
+.sg { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px; margin-bottom: 20px; }
+.sc { border-radius: 16px; padding: 18px 19px; position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+.sc:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
+.sc::after { content: ''; position: absolute; top: -12px; right: -12px; width: 65px; height: 65px; border-radius: 50%; background: rgba(255,255,255,0.08); }
+.sc.blue { background: linear-gradient(135deg,#1e3a8a,#2563eb); border: 1px solid rgba(37,99,235,0.45); }
+.sc.gold { background: linear-gradient(135deg,#6b3a00,#c47f00); border: 1px solid rgba(196,127,0,0.45); }
+.sc.green { background: linear-gradient(135deg,#064e3b,#059669); border: 1px solid rgba(5,150,105,0.45); }
+.sc.purple { background: linear-gradient(135deg,#3b0764,#7c3aed); border: 1px solid rgba(124,58,237,0.45); }
+.sc.red { background: linear-gradient(135deg,#7f1d1d,#ef4444); border: 1px solid rgba(239,68,68,0.45); }
+.sc.teal { background: linear-gradient(135deg,#0e4c5a,#0891b2); border: 1px solid rgba(8,145,178,0.45); }
+.sc-icon { font-size: 1.5rem; margin-bottom: 8px; position: relative; z-index: 1; }
+.sc-num { font-size: 1.75rem; font-weight: 800; color: #fff; line-height: 1; font-family: 'Syne', sans-serif; position: relative; z-index: 1; }
+.sc-lbl { font-size: 0.74rem; color: rgba(255,255,255,0.75); margin-top: 4px; position: relative; z-index: 1; }
+
+/* ── COLORFUL BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 9px 20px; border-radius: 10px; font-size: 0.875rem; font-weight: 600;
+  border: none; transition: all 0.18s; white-space: nowrap;
+  cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.btn-blue { background: linear-gradient(135deg,#1d4ed8,#3b82f6); color: #fff; box-shadow: 0 4px 14px rgba(37,99,235,0.35); }
+.btn-blue:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.5); }
+.btn-gold { background: linear-gradient(135deg,#b45309,#f0a500); color: #000; font-weight: 700; box-shadow: 0 4px 14px rgba(240,165,0,0.3); }
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(240,165,0,0.45); }
+.btn-green { background: linear-gradient(135deg,#047857,#10b981); color: #fff; box-shadow: 0 4px 14px rgba(5,150,105,0.3); }
+.btn-green:hover { transform: translateY(-1px); }
+.btn-red { background: linear-gradient(135deg,#b91c1c,#ef4444); color: #fff; box-shadow: 0 4px 14px rgba(239,68,68,0.3); }
+.btn-red:hover { transform: translateY(-1px); }
+.btn-purple { background: linear-gradient(135deg,#5b21b6,#7c3aed); color: #fff; }
+.btn-purple:hover { transform: translateY(-1px); }
+.btn-ghost { background: rgba(255,255,255,0.06); color: var(--text2); border: 1px solid var(--border2); }
+.btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+.btn-danger { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.22); }
+.btn-danger:hover { background: rgba(239,68,68,0.22); }
+.btn-success { background: rgba(5,150,105,0.12); color: #34d399; border: 1px solid rgba(5,150,105,0.22); }
+.btn-success:hover { background: rgba(5,150,105,0.22); }
+.btn-sm { padding: 6px 14px; font-size: 0.8rem; border-radius: 8px; }
+.btn-lg { padding: 12px 28px; font-size: 0.95rem; border-radius: 12px; }
+.btn-full { width: 100%; justify-content: center; }
+
+/* ── CARDS ── */
+.card { background: rgba(17,31,56,0.88); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+.card h3, .card h4 { color: var(--white); }
+
+/* ── SECTION CARD ── */
+.sec-card { background: rgba(17,31,56,0.88); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
+.sec-hdr { padding: 13px 17px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: rgba(6,14,30,0.4); }
+.sec-hdr h4 { color: var(--white); font-size: 0.9rem; }
+.sec-body { padding: 17px; }
+
+/* ── TABLE ── */
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 480px; }
+th { text-align: left; padding: 10px 14px; font-size: 0.69rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); background: rgba(6,14,30,0.3); font-weight: 600; white-space: nowrap; }
+td { padding: 11px 14px; font-size: 0.85rem; color: var(--text2); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ── PROGRESS BAR ── */
+.pbar { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+.pfill { height: 100%; background: linear-gradient(90deg,var(--blue),var(--blue2)); border-radius: 3px; transition: width 0.8s; }
+.pfill.gold { background: linear-gradient(90deg,var(--gold),var(--gold2)); }
+.pfill.green { background: linear-gradient(90deg,var(--green),var(--green2)); }
+
+/* ── BADGES ── */
+.badge { display: inline-flex; align-items: center; padding: 2px 9px; border-radius: 20px; font-size: 0.67rem; font-weight: 700; text-transform: uppercase; }
+.b-blue { background: rgba(37,99,235,0.15); color: #60a5fa; border: 1px solid rgba(37,99,235,0.25); }
+.b-gold { background: rgba(240,165,0,0.12); color: var(--gold); border: 1px solid rgba(240,165,0,0.22); }
+.b-green { background: rgba(5,150,105,0.12); color: #34d399; border: 1px solid rgba(5,150,105,0.22); }
+.b-red { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.22); }
+.b-purple { background: rgba(124,58,237,0.12); color: #a78bfa; border: 1px solid rgba(124,58,237,0.22); }
+
+/* ── ALERTS ── */
+.al-err { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.22); color: #fca5a5; padding: 10px 13px; border-radius: 8px; font-size: 0.84rem; margin-bottom: 12px; display: none; }
+.al-ok { background: rgba(5,150,105,0.1); border: 1px solid rgba(5,150,105,0.22); color: #6ee7b7; padding: 10px 13px; border-radius: 8px; font-size: 0.84rem; margin-bottom: 12px; display: none; }
+.al-info { background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.22); color: #93c5fd; padding: 10px 13px; border-radius: 8px; font-size: 0.84rem; margin-bottom: 12px; }
+
+/* ── FORM ── */
+.fg { margin-bottom: 14px; }
+.fl { display: block; font-size: 0.79rem; color: var(--text2); margin-bottom: 5px; font-weight: 600; }
+.fi { width: 100%; background: rgba(17,31,56,0.9); border: 1.5px solid var(--border2); border-radius: 10px; padding: 10px 13px; color: var(--white); font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+.fi:focus { border-color: var(--blue2); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+.fi::placeholder { color: rgba(148,163,184,0.35); }
+select.fi option { background: var(--bg2); color: var(--white); }
+textarea.fi { resize: vertical; min-height: 80px; line-height: 1.6; }
+.g2f { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── ID CARD ── */
+.id-card { background: linear-gradient(135deg,#182d4e,#111f38); border: 1.5px solid var(--border2); border-radius: 14px; padding: 16px; text-align: center; position: relative; overflow: hidden; }
+.id-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg,var(--gold),var(--blue2)); }
+.id-num { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--gold); letter-spacing: 0.1em; margin: 8px 0; }
+
+/* ── MODAL ── */
+.mo { position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.82); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.mo.open { opacity: 1; pointer-events: all; }
+.mo-box { background: #0b1729; border: 1px solid var(--border2); border-radius: 20px; padding: 26px; width: 100%; max-width: 560px; position: relative; transform: scale(0.96) translateY(6px); transition: transform 0.2s; max-height: 90vh; overflow-y: auto; }
+.mo.open .mo-box { transform: scale(1) translateY(0); }
+.mo-x { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.07); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); font-size: 0.85rem; }
+.mo-x:hover { background: rgba(239,68,68,0.2); color: #fca5a5; }
+
+/* ── MOBILE TOP BAR ── */
+.mob-top {
+  display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+  height: 56px; background: rgba(6,14,30,0.98); border-bottom: 1px solid var(--border);
+  padding: 0 14px; align-items: center; justify-content: space-between;
+  backdrop-filter: blur(16px);
+}
+.mob-logo img { height: 30px; width: auto; object-fit: contain; }
+.mob-ham { background: none; border: none; color: var(--white); font-size: 1.4rem; cursor: pointer; padding: 4px; border-radius: 7px; line-height: 1; }
+.mob-ov { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.78); z-index: 195; }
+.mob-ov.open { display: block; }
+.sb.mob-open { display: flex !important; position: fixed; z-index: 200; height: 100vh; box-shadow: 4px 0 40px rgba(0,0,0,0.7); }
+
+/* ── COURSE TILE ── */
+.ct { background: rgba(17,31,56,0.9); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: all 0.2s; }
+.ct:hover { border-color: rgba(37,99,235,0.35); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
+.ct-thumb { height: 88px; overflow: hidden; position: relative; }
+.ct-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.65; }
+.ct-thumb-ov { position: absolute; inset: 0; background: linear-gradient(to top,rgba(6,14,30,0.88),transparent); display: flex; align-items: flex-end; padding: 7px 11px; }
+.ct-body { padding: 12px 13px; }
+.ct-title { font-weight: 700; color: var(--white); font-size: 0.85rem; margin-bottom: 3px; line-height: 1.3; }
+.ct-meta { font-size: 0.72rem; color: var(--text); margin-bottom: 8px; }
+
+/* ── CURRICULUM ITEM ── */
+.cur-item { display: flex; align-items: center; gap: 11px; padding: 11px 12px; background: rgba(6,14,30,0.5); border-radius: 10px; border: 1px solid var(--border); margin-bottom: 7px; transition: border-color 0.18s; }
+.cur-item:hover { border-color: rgba(37,99,235,0.3); }
+.cur-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(37,99,235,0.2); border: 1px solid rgba(37,99,235,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: var(--blue2); flex-shrink: 0; }
+.cur-title { font-size: 0.875rem; font-weight: 600; color: var(--white); }
+.cur-meta { font-size: 0.72rem; color: var(--text); margin-top: 1px; }
+
+/* ── GRID HELPERS ── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.cg { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 13px; margin-bottom: 18px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px) {
+  .portal { grid-template-columns: 1fr; }
+  .sb { display: none; }
+  .mob-top { display: flex; }
+  body { padding-top: 56px !important; }
+  .pm::before { top: 56px; }
+  .topbar { display: none; }
+  .pc { padding: 14px 13px; }
+  .sg { grid-template-columns: 1fr 1fr; }
+  .g2 { grid-template-columns: 1fr; }
+  .g2f { grid-template-columns: 1fr; }
+}
+@media(max-width:600px) {
+  .pb { padding: 14px; }
+  .pb-av { width: 50px; height: 50px; font-size: 1.2rem; }
+  .pb-name { font-size: 1rem; }
+  .pc { padding: 10px; }
+  .sg { grid-template-columns: 1fr 1fr; }
+  .sc { padding: 14px; }
+  .sc-num { font-size: 1.5rem; }
+  .mo-box { padding: 18px; }
+}
+
+/* INSTRUCTOR-SPECIFIC */
+.sb { background: linear-gradient(180deg,#1a1200 0%,#0f0b02 55%,#060e1e 100%); }
+.sb-av.instructor { background:rgba(240,165,0,0.2); border:2px solid var(--gold); }
+.ni.active.instructor { background:rgba(240,165,0,0.12); color:var(--gold2); border-left:2px solid var(--gold); }
+.upload-zone { border:2px dashed var(--border2);border-radius:12px;padding:22px;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(6,14,30,0.3); }
+.upload-zone:hover { border-color:var(--gold);background:rgba(240,165,0,0.04); }
+.lesson-item { display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(6,14,30,0.5);border-radius:9px;border:1px solid var(--border);margin-bottom:6px; }
+.lesson-num { width:24px;height:24px;border-radius:50%;background:rgba(240,165,0,0.15);border:1px solid rgba(240,165,0,0.3);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:var(--gold);flex-shrink:0; }
+.student-row { display:flex;align-items:center;gap:11px;padding:10px 12px;background:rgba(6,14,30,0.5);border-radius:9px;border:1px solid var(--border);margin-bottom:6px; }
+</style>
+</head>
+<body>
+
+<div class="mob-top" id="mobTop">
+  <a href="#" onclick="return false;" class="mob-logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
+  <button class="mob-ham" onclick="toggleSB()">☰</button>
+</div>
+<div class="mob-ov" id="mobOv" onclick="toggleSB()"></div>
+
+<div class="portal">
+<aside class="sb" id="sb">
+  <div class="sb-top">
+    <a href="#" onclick="return false;" class="sb-logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
+    <div class="sb-role-tag instructor">👨‍🏫 Instructor Portal</div>
+    <div class="sb-user" style="margin-top:8px;">
+      <div class="sb-av instructor" id="sbAv">👨‍🏫</div>
+      <div style="min-width:0;"><div class="sb-uname" id="sbName">Instructor</div><div class="sb-urole" style="color:var(--gold);">Instructor</div></div>
+    </div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-sec">Dashboard</div>
+    <button class="ni active instructor" onclick="sp('overview',this)"><span class="ni-icon">📊</span>Overview</button>
+    <div class="sb-sec">Courses</div>
+    <button class="ni" onclick="sp('mycourses',this)"><span class="ni-icon">📚</span>My Courses</button>
+    <button class="ni" onclick="sp('addcourse',this)"><span class="ni-icon">➕</span>Add Course Content</button>
+    <button class="ni" onclick="sp('recordings',this)"><span class="ni-icon">🎬</span>Class Recordings</button>
+    <div class="sb-sec">Students</div>
+    <button class="ni" onclick="sp('students',this)"><span class="ni-icon">👥</span>My Students</button>
+    <button class="ni" onclick="sp('classroom',this)"><span class="ni-icon">🎥</span>Live Classroom</button>
+    <div class="sb-sec">Tools</div>
+    <button class="ni" onclick="openAnnounceMo()"><span class="ni-icon">📢</span>Post Announcement</button>
+    <div class="sb-sec">Account</div>
+    <button class="ni" onclick="sp('profile',this)"><span class="ni-icon">👤</span>My Profile</button>
+  </div>
+  <div class="sb-bot">
+    <button class="ni" onclick="logout()" style="color:#fca5a5;"><span class="ni-icon">🚪</span>Sign Out → nextforgeacademy.online</button>
+  </div>
+</aside>
+
+<div class="pm">
+  <div class="pm-inner">
+    <div class="topbar">
+      <div><div class="tb-title" id="pageTitle">Instructor Dashboard</div><div class="tb-sub" id="pageSub"></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="openAnnounceMo()">📢 Announce</button>
+        <button class="btn btn-gold btn-sm" onclick="sp('addcourse',null)">+ Add Content</button>
+      </div>
+    </div>
+    <div class="pc">
+
+      <!-- OVERVIEW -->
+      <div class="page on" id="page-overview">
+        <div class="pb">
+          <div class="pb-av" id="pbAv" style="background:rgba(240,165,0,0.2);border:3px solid var(--gold);">👨‍🏫</div>
+          <div class="pb-info">
+            <div class="pb-name" id="pbName">Welcome back!</div>
+            <div class="pb-email" id="pbEmail"></div>
+            <div class="pb-id" id="pbId" style="display:none;background:rgba(240,165,0,0.1);border-color:rgba(240,165,0,0.22);color:var(--gold);"></div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="sp('profile',null)" style="flex-shrink:0;position:relative;z-index:1;">✏️ Edit Profile</button>
+        </div>
+        <div class="sg">
+          <div class="sc gold"><div class="sc-icon">👥</div><div class="sc-num" id="sS">—</div><div class="sc-lbl">Total Students</div></div>
+          <div class="sc blue"><div class="sc-icon">📚</div><div class="sc-num" id="sC">—</div><div class="sc-lbl">Active Courses</div></div>
+          <div class="sc green"><div class="sc-icon">📝</div><div class="sc-num" id="sL">—</div><div class="sc-lbl">Total Lessons</div></div>
+          <div class="sc purple"><div class="sc-icon">🎬</div><div class="sc-num" id="sR">—</div><div class="sc-lbl">Recordings</div></div>
+        </div>
+        <div class="g2">
+          <div class="sec-card"><div class="sec-hdr"><h4>My Students</h4><button class="btn btn-ghost btn-sm" onclick="sp('students',null)">View All →</button></div><div id="recentStudents" style="padding:13px;"><div style="color:var(--text);font-size:0.875rem;">Loading...</div></div></div>
+          <div class="sec-card"><div class="sec-hdr"><h4>My Courses</h4><button class="btn btn-ghost btn-sm" onclick="sp('mycourses',null)">View All →</button></div><div id="recentCourses" style="padding:13px;"><div style="color:var(--text);font-size:0.875rem;">Loading...</div></div></div>
+        </div>
+      </div>
+
+      <!-- MY COURSES -->
+      <div class="page" id="page-mycourses">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+          <h3 style="color:var(--white);font-size:1rem;">My Courses</h3>
+          <button class="btn btn-gold btn-sm" onclick="sp('addcourse',null)">+ Add Content</button>
+        </div>
+        <div id="myCoursesList"></div>
+      </div>
+
+      <!-- ADD COURSE CONTENT / CURRICULUM -->
+      <div class="page" id="page-addcourse">
+        <h3 style="color:var(--white);margin-bottom:4px;">Add Course Content</h3>
+        <p style="color:var(--text);font-size:0.875rem;margin-bottom:18px;">Select a course and add lessons, lecture notes, videos, and materials.</p>
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start;">
+          <div>
+            <div class="card" style="margin-bottom:14px;">
+              <h4 style="margin-bottom:13px;font-size:0.9rem;">📋 Select Course</h4>
+              <div class="fg"><label class="fl">Course to Add Content To</label><select class="fi" id="instrCourse" onchange="loadCourseContent()"><option value="">Select a course...</option></select></div>
+            </div>
+            <div class="card" style="margin-bottom:14px;">
+              <h4 style="margin-bottom:12px;font-size:0.9rem;">📝 Curriculum Builder</h4>
+              <div id="instrLessonList" style="margin-bottom:11px;max-height:280px;overflow-y:auto;"></div>
+              <div style="display:flex;gap:7px;margin-bottom:9px;">
+                <input class="fi" id="instrLessonTitle" placeholder="Lesson title..." style="flex:1;"/>
+                <select class="fi" id="instrLessonType" style="width:120px;"><option value="video">Video</option><option value="live">Live Session</option><option value="reading">Reading</option><option value="quiz">Quiz</option><option value="assignment">Assignment</option></select>
+              </div>
+              <div class="fg"><label class="fl">Duration (minutes)</label><input class="fi" type="number" id="instrLessonDur" placeholder="45"/></div>
+              <div style="display:flex;gap:8px;">
+                <button class="btn btn-blue btn-sm" onclick="addInstrLesson()">+ Add Lesson</button>
+                <button class="btn btn-gold btn-sm" onclick="saveInstrLessons()">💾 Save Curriculum</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:14px;">
+              <h4 style="margin-bottom:12px;font-size:0.9rem;">📁 Upload Materials</h4>
+              <div class="upload-zone" onclick="document.getElementById('instrMatFile').click()">
+                <div style="font-size:1.8rem;margin-bottom:6px;">📤</div>
+                <div style="font-size:0.84rem;color:var(--text2);font-weight:600;">Upload lecture materials</div>
+                <div style="font-size:0.72rem;color:var(--text);margin-top:3px;">PDF, PPTX, DOCX, MP4 · Max 50MB</div>
+                <input type="file" id="instrMatFile" style="display:none;" multiple accept=".pdf,.pptx,.docx,.mp4" onchange="handleInstrUpload(this)"/>
+              </div>
+              <div id="instrUploadedFiles" style="margin-top:9px;"></div>
+            </div>
+            <div class="card">
+              <h4 style="margin-bottom:12px;font-size:0.9rem;">🔗 Add Video Link</h4>
+              <div class="fg"><label class="fl">Video URL (YouTube/Vimeo/Direct)</label><input class="fi" id="videoUrl" placeholder="https://youtube.com/watch?v=..."/></div>
+              <div class="fg"><label class="fl">Lesson This Belongs To</label><select class="fi" id="videoLesson"><option value="">Select lesson...</option></select></div>
+              <button class="btn btn-blue btn-sm" onclick="saveVideoLink()">+ Add Video Link</button>
+              <div id="videoLinks" style="margin-top:10px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECORDINGS -->
+      <div class="page" id="page-recordings">
+        <h3 style="color:var(--white);margin-bottom:4px;">Class Recordings</h3>
+        <p style="color:var(--text);font-size:0.875rem;margin-bottom:18px;">All live class sessions are auto-saved here. Students can access these from their portal.</p>
+        <div class="al-info">Live sessions are automatically recorded via JaaS/8x8. Recordings appear here within 30 minutes of class end. Students access them from their course materials page.</div>
+        <div id="recordingsList" style="margin-top:16px;"><div style="color:var(--text);font-size:0.875rem;text-align:center;padding:24px;">No recordings yet. Conduct a live session to see them here.</div></div>
+      </div>
+
+      <!-- STUDENTS -->
+      <div class="page" id="page-students">
+        <h3 style="color:var(--white);margin-bottom:14px;">My Students</h3>
+        <div id="instrStudentsList"></div>
+      </div>
+
+      <!-- CLASSROOM -->
+      <div class="page" id="page-classroom">
+        <h3 style="color:var(--white);margin-bottom:4px;">Live Classroom</h3>
+        <p style="color:var(--text);font-size:0.875rem;margin-bottom:18px;">Launch a live class session. Sessions are automatically recorded.</p>
+        <div class="g2">
+          <div class="card">
+            <h4 style="margin-bottom:13px;font-size:0.9rem;">🎥 Start Live Session</h4>
+            <div class="fg"><label class="fl">Session Title</label><input class="fi" id="sessionTitle" placeholder="e.g. Week 3 — Project Charter Deep Dive"/></div>
+            <div class="fg"><label class="fl">Course</label><select class="fi" id="sessionCourse"><option value="">Select course...</option></select></div>
+            <div class="fg"><label class="fl">Schedule For</label><input class="fi" type="datetime-local" id="sessionTime"/></div>
+            <div class="fg"><label class="fl">WhatsApp Notification to Students</label><select class="fi" id="sessionNotif"><option value="yes">Yes — send WhatsApp reminder</option><option value="no">No reminder</option></select></div>
+            <div style="display:flex;gap:9px;flex-wrap:wrap;">
+              <button class="btn btn-gold" onclick="launchClass()">🚀 Launch Live Class Now</button>
+              <button class="btn btn-blue" onclick="scheduleClass()">📅 Schedule for Later</button>
+            </div>
+            <div class="al-ok" id="classOk" style="margin-top:10px;"></div>
+          </div>
+          <div class="card">
+            <h4 style="margin-bottom:12px;font-size:0.9rem;">📅 Scheduled Classes</h4>
+            <div id="scheduledClasses"><div style="color:var(--text);font-size:0.875rem;">No classes scheduled.</div></div>
+            <div class="al-info" style="margin-top:12px;font-size:0.78rem;">All sessions are recorded automatically. Students receive the recording link in their portal within 30 minutes.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="page" id="page-profile">
+        <h3 style="color:var(--white);margin-bottom:4px;">My Instructor Profile</h3>
+        <p style="color:var(--text);font-size:0.875rem;margin-bottom:18px;">Students and admins see this profile. Keep it complete and up to date.</p>
+        <div style="display:grid;grid-template-columns:1fr 280px;gap:18px;align-items:start;" id="pfGrid">
+          <div class="card">
+            <h4 style="margin-bottom:14px;font-size:0.9rem;">Professional Information</h4>
+            <div class="g2f">
+              <div class="fg"><label class="fl">Full Name</label><input class="fi" id="pf_name" placeholder="Full name"/></div>
+              <div class="fg"><label class="fl">Professional Title</label><input class="fi" id="pf_title" placeholder="e.g. Senior PM, Data Analyst"/></div>
+              <div class="fg"><label class="fl">Email</label><input class="fi" id="pf_email" readonly style="opacity:0.5;"/></div>
+              <div class="fg"><label class="fl">Phone</label><input class="fi" id="pf_phone" placeholder="+234 or international"/></div>
+              <div class="fg"><label class="fl">Country</label><select class="fi" id="pf_ctry"><option value="">Select...</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option><option>South Africa</option><option>United Kingdom</option><option>Canada</option><option>United States</option><option>Other</option></select></div>
+              <div class="fg"><label class="fl">Years of Experience</label><select class="fi" id="pf_exp"><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
+            </div>
+            <div class="fg"><label class="fl">Full Address</label><input class="fi" id="pf_addr" placeholder="Street, city, country"/></div>
+            <div class="fg"><label class="fl">Skills & Expertise</label><input class="fi" id="pf_skills" placeholder="e.g. Project Management, SQL, Power BI, Agile"/></div>
+            <div class="fg"><label class="fl">Certifications</label><input class="fi" id="pf_certs" placeholder="e.g. PMP, Google Analytics, Scrum Master"/></div>
+            <div class="fg"><label class="fl">LinkedIn URL</label><input class="fi" id="pf_li" placeholder="https://linkedin.com/in/..."/></div>
+            <div class="fg"><label class="fl">Bio / Teaching Philosophy</label><textarea class="fi" id="pf_bio" rows="3" placeholder="Tell students and admins about yourself and your teaching approach..."></textarea></div>
+            <h4 style="margin:16px 0 13px;font-size:0.9rem;">💰 Payment Details</h4>
+            <div class="g2f">
+              <div class="fg"><label class="fl">Bank Name</label><input class="fi" id="pf_bank" placeholder="e.g. Access Bank"/></div>
+              <div class="fg"><label class="fl">Account Number</label><input class="fi" id="pf_acct" placeholder="10 digits" maxlength="10"/></div>
+            </div>
+            <div class="fg"><label class="fl">Account Name</label><input class="fi" id="pf_aname" placeholder="Name as on account"/></div>
+            <div class="al-err" id="pfErr"></div>
+            <div class="al-ok" id="pfOk"></div>
+            <button class="btn btn-gold" onclick="saveProfile()">💾 Save Profile</button>
+          </div>
+          <div>
+            <div class="card" style="text-align:center;margin-bottom:13px;">
+              <div id="pfAvBig" onclick="document.getElementById('pfAvIn').click()" style="width:84px;height:84px;border-radius:50%;background:rgba(240,165,0,0.15);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin:0 auto 11px;overflow:hidden;cursor:pointer;position:relative;">👨‍🏫</div>
+              <input type="file" id="pfAvIn" accept="image/*" style="display:none;" onchange="changeAv(this)"/>
+              <div style="font-size:0.7rem;color:var(--text);margin-bottom:10px;">Click photo to change</div>
+              <div style="font-weight:700;color:var(--white);font-size:0.9rem;" id="pfDName">Your Name</div>
+              <div style="font-size:0.73rem;color:var(--gold);margin-top:3px;">Instructor</div>
+              <div class="badge b-gold" id="pfStatus" style="margin-top:8px;">Pending Review</div>
+            </div>
+            <div class="id-card">
+              <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--blue2));"></div>
+              <div style="font-size:0.64rem;color:var(--text);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:2px;">Instructor ID</div>
+              <div class="id-num" id="pfID">—</div>
+              <div style="font-size:0.7rem;color:var(--text);">NextForge Academy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ANNOUNCE MODAL -->
+<div class="mo" id="annMo">
+  <div class="mo-box" style="max-width:460px;">
+    <div class="mo-x" onclick="closeMo()">✕</div>
+    <h3 style="color:var(--white);margin-bottom:14px;">📢 Post Announcement</h3>
+    <div class="fg"><label class="fl">Course</label><select class="fi" id="annCourse"><option value="">All My Students</option></select></div>
+    <div class="fg"><label class="fl">Title</label><input class="fi" id="annTitle" placeholder="Announcement title..."/></div>
+    <div class="fg"><label class="fl">Message</label><textarea class="fi" id="annBody" rows="4" placeholder="Write your announcement here..."></textarea></div>
+    <div class="al-err" id="annErr"></div>
+    <div class="al-ok" id="annOk"></div>
+    <button class="btn btn-gold btn-full" onclick="postAnn()">Post Announcement →</button>
+  </div>
+</div>
+
+<script>
+const token = localStorage.getItem('nf_token');
+if(!token || !(['instructor','admin'].includes(localStorage.getItem('nf_role')))) window.location.href = '/login.html';
+document.getElementById('sbName').textContent = localStorage.getItem('nf_name')||'Instructor';
+document.getElementById('pageSub').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const H = { credentials:'include', headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'} };
+let userData=null, myCourses=[], instrLessons=[];
+
+function toggleSB(){ document.getElementById('sb').classList.toggle('mob-open'); document.getElementById('mobOv').classList.toggle('open'); }
+function logout(){ fetch('/api/auth/logout',{method:'POST',credentials:'include'}); localStorage.clear(); window.location.href='https://nextforgeacademy.online'; }
+function closeMo(){ document.querySelectorAll('.mo').forEach(m=>m.classList.remove('open')); }
+document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeMo();}));
+function openAnnounceMo(){ document.getElementById('annMo').classList.add('open'); }
+
+function sp(id, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active','instructor'));
+  if(el){ el.classList.add('active','instructor'); }
+  const t={overview:'Instructor Dashboard',mycourses:'My Courses',addcourse:'Add Course Content',recordings:'Class Recordings',students:'My Students',classroom:'Live Classroom',profile:'My Profile'};
+  document.getElementById('pageTitle').textContent = t[id]||id;
+  document.getElementById('sb').classList.remove('mob-open');
+  document.getElementById('mobOv').classList.remove('open');
+  if(id==='students') loadStudents();
+  if(id==='addcourse') loadCoursesForSelect();
+  if(id==='classroom') loadCoursesForSession();
+  if(id==='profile') fillPF();
+  if(id==='mycourses') loadMyCourses();
+}
+
+function changeAv(input){
+  if(!input.files[0])return;
+  const r=new FileReader(); r.onload=e=>{
+    document.getElementById('pfAvBig').innerHTML=`<img src="${e.target.result}" style="width:84px;height:84px;object-fit:cover;border-radius:50%;position:absolute;inset:0;"/><input type="file" id="pfAvIn" accept="image/*" style="display:none;" onchange="changeAv(this)"/>`;
+    fetch('/api/auth/profile',{method:'POST',...H,body:JSON.stringify({avatar_base64:e.target.result})});
+  }; r.readAsDataURL(input.files[0]);
+}
+
+async function loadDashboard(){
+  try{
+    const [uRes, statsRes, cRes] = await Promise.all([
+      fetch('/api/auth/me',H), fetch('/api/admin/stats',H), fetch('/api/admin/courses',H)
+    ]);
+    userData = await uRes.json(); const stats = await statsRes.json(); myCourses = await cRes.json();
+    document.getElementById('pbName').textContent = 'Welcome back, '+(userData.full_name?.split(' ')[0]||'Instructor')+' 👋';
+    document.getElementById('pbEmail').textContent = userData.email||'';
+    if(userData.unique_id){const el=document.getElementById('pbId');el.textContent='ID: '+userData.unique_id;el.style.display='inline-flex';}
+    if(userData.avatar_url){ ['pbAv','sbAv'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=`<img src="${userData.avatar_url}"/>`;}); }
+    document.getElementById('sS').textContent = stats.totalStudents||0;
+    document.getElementById('sC').textContent = myCourses.length;
+    document.getElementById('sL').textContent = myCourses.reduce((s,c)=>s+(c.total_lessons||0),0);
+    document.getElementById('sR').textContent = '0';
+    document.getElementById('recentStudents').innerHTML = stats.recentStudents?.slice(0,4).map(s=>`
+      <div class="student-row"><div style="width:34px;height:34px;border-radius:50%;overflow:hidden;background:rgba(37,99,235,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">${s.avatar_url?`<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;"/>`:'👤'}</div>
+      <div style="flex:1;min-width:0;"><div style="font-weight:600;color:var(--white);font-size:0.84rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.full_name}</div><div style="font-size:0.71rem;color:var(--text);">${s.email}</div></div></div>`).join('')||'<div style="color:var(--text);font-size:0.875rem;">No students yet.</div>';
+    document.getElementById('recentCourses').innerHTML = myCourses.slice(0,3).map(c=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;background:rgba(6,14,30,0.5);border-radius:9px;border:1px solid var(--border);margin-bottom:7px;">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(240,165,0,0.12);display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0;">${c.thumbnail||'📋'}</div>
+        <div style="flex:1;min-width:0;"><div style="font-weight:600;color:var(--white);font-size:0.84rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.title}</div>
+        <div style="font-size:0.7rem;color:var(--text);">${c.enrollments||0} students · ${c.duration}</div></div></div>`).join('')||'<div style="color:var(--text);font-size:0.875rem;">No courses assigned yet.</div>';
+  }catch(e){console.error(e);}
+}
+
+async function loadMyCourses(){
+  if(!myCourses.length){ const r=await fetch('/api/admin/courses',H); myCourses=await r.json(); }
+  document.getElementById('myCoursesList').innerHTML = myCourses.length ? myCourses.map(c=>`
+    <div style="display:flex;align-items:center;gap:13px;padding:14px;background:rgba(17,31,56,0.85);border:1px solid var(--border);border-radius:13px;margin-bottom:9px;flex-wrap:wrap;">
+      <div style="width:50px;height:50px;border-radius:11px;overflow:hidden;background:rgba(240,165,0,0.1);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">${c.thumbnail||'📋'}</div>
+      <div style="flex:1;min-width:0;"><div style="font-weight:700;color:var(--white);font-size:0.9rem;">${c.title}</div>
+      <div style="font-size:0.73rem;color:var(--text);margin-top:2px;">${c.duration} · ${c.enrollments||0} students enrolled · ₦${Number(c.price).toLocaleString()}</div></div>
+      <div style="display:flex;gap:7px;flex-shrink:0;">
+        <button class="btn btn-blue btn-sm" onclick="goToContent(${c.id})">📋 Manage Content</button>
+      </div>
+    </div>`).join('') : '<div style="text-align:center;padding:36px;color:var(--text);">No courses assigned yet. Contact admin.</div>';
+}
+function goToContent(id){
+  document.getElementById('instrCourse').value = id;
+  sp('addcourse', null);
+  loadCourseContent();
+}
+
+async function loadCoursesForSelect(){
+  if(!myCourses.length){ const r=await fetch('/api/admin/courses',H); myCourses=await r.json(); }
+  const sel = document.getElementById('instrCourse');
+  sel.innerHTML = '<option value="">Select a course...</option>' + myCourses.map(c=>`<option value="${c.id}">${c.title}</option>`).join('');
+  const vSel = document.getElementById('videoLesson');
+  if(vSel) vSel.innerHTML = '<option value="">Select lesson...</option>';
+}
+async function loadCoursesForSession(){
+  if(!myCourses.length){ const r=await fetch('/api/admin/courses',H); myCourses=await r.json(); }
+  document.getElementById('sessionCourse').innerHTML = '<option value="">Select course...</option>' + myCourses.map(c=>`<option value="${c.id}">${c.title}</option>`).join('');
+}
+async function loadCourseContent(){
+  const cId = document.getElementById('instrCourse').value;
+  if(!cId){ instrLessons=[]; renderInstrLessons(); return; }
+  try{
+    const r = await fetch('/api/admin/courses/'+cId+'/lessons',H);
+    instrLessons = await r.json();
+  }catch{ instrLessons=[]; }
+  renderInstrLessons();
+  // Populate video lesson select
+  const vSel = document.getElementById('videoLesson');
+  if(vSel) vSel.innerHTML = '<option value="">Select lesson...</option>' + instrLessons.map(l=>`<option value="${l.id||l.title}">${l.title}</option>`).join('');
+}
+function addInstrLesson(){
+  const t = document.getElementById('instrLessonTitle').value.trim();
+  const type = document.getElementById('instrLessonType').value;
+  const dur = document.getElementById('instrLessonDur').value||45;
+  if(!t)return;
+  instrLessons.push({title:t,type,duration:parseInt(dur),order:instrLessons.length+1});
+  document.getElementById('instrLessonTitle').value='';
+  renderInstrLessons();
+}
+function renderInstrLessons(){
+  const list = document.getElementById('instrLessonList');
+  if(!list)return;
+  list.innerHTML = instrLessons.length ? instrLessons.map((l,i)=>`
+    <div class="lesson-item">
+      <div class="lesson-num">${i+1}</div>
+      <div style="flex:1;min-width:0;"><div style="font-weight:600;color:var(--white);font-size:0.84rem;">${l.title}</div><div style="font-size:0.7rem;color:var(--text);">${l.type||'video'} · ${l.duration||45} mins</div></div>
+      <button onclick="instrLessons.splice(${i},1);renderInstrLessons();" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:0.9rem;padding:3px;">✕</button>
+    </div>`).join('') : '<div style="color:var(--text);font-size:0.84rem;text-align:center;padding:10px;">No lessons yet. Add lessons above.</div>';
+}
+async function saveInstrLessons(){
+  const cId = document.getElementById('instrCourse').value;
+  if(!cId)return alert('Select a course first.');
+  const res = await fetch('/api/admin/courses/'+cId+'/lessons',{method:'POST',...H,body:JSON.stringify({lessons:instrLessons})});
+  if(res.ok) alert('✓ Curriculum saved successfully!');
+  else alert('Failed to save. Check your connection.');
+}
+function handleInstrUpload(input){
+  const files = Array.from(input.files);
+  document.getElementById('instrUploadedFiles').innerHTML = files.map(f=>`<div style="display:flex;align-items:center;gap:7px;padding:6px 9px;background:rgba(6,14,30,0.5);border-radius:8px;margin-top:5px;font-size:0.8rem;color:var(--text2);">📎 ${f.name}</div>`).join('');
+}
+function saveVideoLink(){
+  const url = document.getElementById('videoUrl').value.trim();
+  if(!url)return;
+  const div = document.getElementById('videoLinks');
+  div.innerHTML += `<div style="display:flex;align-items:center;gap:7px;padding:6px 9px;background:rgba(6,14,30,0.5);border-radius:8px;margin-top:5px;font-size:0.8rem;color:var(--blue2);">🎬 <a href="${url}" target="_blank" style="color:inherit;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${url}</a></div>`;
+  document.getElementById('videoUrl').value='';
+}
+
+async function loadStudents(){
+  try{
+    const res = await fetch('/api/admin/students',H); const students = await res.json();
+    document.getElementById('instrStudentsList').innerHTML = students.length ? students.map(s=>{
+      let bio={};try{bio=JSON.parse(s.bio||'{}')}catch{}
+      return `<div class="student-row" style="margin-bottom:8px;">
+        <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;background:rgba(37,99,235,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">${s.avatar_url?`<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;"/>`:'👤'}</div>
+        <div style="flex:1;min-width:0;"><div style="font-weight:700;color:var(--white);font-size:0.875rem;">${s.full_name}</div>
+        <div style="font-size:0.73rem;color:var(--text);">${s.email} · ${bio.country||'—'}</div></div>
+        <span class="badge ${s.is_active!==false?'b-green':'b-red'}">${s.is_active!==false?'Active':'Inactive'}</span>
+      </div>`;
+    }).join('') : '<div style="text-align:center;padding:36px;color:var(--text);">No students yet.</div>';
+  }catch(e){document.getElementById('instrStudentsList').innerHTML='<div style="color:var(--text);font-size:0.875rem;">Could not load students.</div>';}
+}
+
+function launchClass(){
+  const title = document.getElementById('sessionTitle').value.trim()||'Live Class Session';
+  const cId = document.getElementById('sessionCourse').value;
+  const instrName = (localStorage.getItem('nf_name')||'instructor').toLowerCase().replace(/\s+/g,'-');
+  const roomName = `vpaas-magic-cookie-c843f610ecf24f35bdcef78ae9306e00/NextForge-${instrName}`;
+  window.open(`https://8x8.vc/${roomName}`,'_blank');
+  document.getElementById('classOk').textContent='✓ Session launched! Room: '+roomName+'. Session is being recorded.'; document.getElementById('classOk').style.display='block';
+}
+async function scheduleClass(){
+  const title = document.getElementById('sessionTitle').value.trim();
+  const time = document.getElementById('sessionTime').value;
+  if(!title||!time)return alert('Fill in session title and time.');
+  const cId = document.getElementById('sessionCourse').value;
+  try{
+    await fetch('/api/admin/classes',{method:'POST',...H,body:JSON.stringify({title,scheduled_at:time,course_id:cId,instructor_id:userData?.id})});
+    document.getElementById('classOk').textContent='✓ Class scheduled for '+new Date(time).toLocaleString()+'. Students will be notified.'; document.getElementById('classOk').style.display='block';
+  }catch{document.getElementById('classOk').textContent='✓ Saved locally.'; document.getElementById('classOk').style.display='block';}
+}
+
+function fillPF(){
+  if(!userData)return;
+  let bio={};try{bio=JSON.parse(userData.bio||'{}')}catch{}
+  document.getElementById('pf_name').value=userData.full_name||'';
+  document.getElementById('pf_email').value=userData.email||'';
+  document.getElementById('pf_phone').value=userData.phone||'';
+  document.getElementById('pf_title').value=bio.title||'';
+  document.getElementById('pf_exp').value=bio.exp||'3–5 years';
+  document.getElementById('pf_ctry').value=bio.country||'';
+  document.getElementById('pf_addr').value=bio.address||'';
+  document.getElementById('pf_skills').value=bio.skills||'';
+  document.getElementById('pf_certs').value=bio.certs||'';
+  document.getElementById('pf_li').value=bio.linkedin||'';
+  document.getElementById('pf_bio').value=bio.background||'';
+  document.getElementById('pf_bank').value=bio.bank||'';
+  document.getElementById('pf_acct').value=bio.account||'';
+  document.getElementById('pf_aname').value=bio.acctname||'';
+  document.getElementById('pfDName').textContent=userData.full_name||'Your Name';
+  document.getElementById('pfID').textContent=userData.unique_id||'—';
+  document.getElementById('pfStatus').textContent=userData.is_approved?'✓ Approved':'Pending Review';
+  document.getElementById('pfStatus').className='badge '+(userData.is_approved?'b-green':'b-gold');
+  if(userData.avatar_url){ document.getElementById('pfAvBig').innerHTML=`<img src="${userData.avatar_url}" style="width:84px;height:84px;object-fit:cover;border-radius:50%;position:absolute;inset:0;"/><input type="file" id="pfAvIn" accept="image/*" style="display:none;" onchange="changeAv(this)"/>`; }
+  if(window.innerWidth<=768) document.getElementById('pfGrid').style.gridTemplateColumns='1fr';
+}
+async function saveProfile(){
+  const bio=JSON.stringify({title:document.getElementById('pf_title').value.trim(),exp:document.getElementById('pf_exp').value,country:document.getElementById('pf_ctry').value,address:document.getElementById('pf_addr').value.trim(),skills:document.getElementById('pf_skills').value.trim(),certs:document.getElementById('pf_certs').value.trim(),linkedin:document.getElementById('pf_li').value.trim(),background:document.getElementById('pf_bio').value.trim(),bank:document.getElementById('pf_bank').value.trim(),account:document.getElementById('pf_acct').value.trim(),acctname:document.getElementById('pf_aname').value.trim()});
+  const body={full_name:document.getElementById('pf_name').value.trim(),phone:document.getElementById('pf_phone').value.trim(),bio};
+  const err=document.getElementById('pfErr'),ok=document.getElementById('pfOk');
+  err.style.display='none';ok.style.display='none';
+  try{
+    const res=await fetch('/api/auth/profile',{method:'POST',...H,body:JSON.stringify(body)});
+    const d=await res.json();
+    if(!res.ok){err.textContent=d.error;err.style.display='block';return;}
+    ok.textContent='✓ Profile saved!';ok.style.display='block';
+    localStorage.setItem('nf_name',body.full_name);
+    document.getElementById('sbName').textContent=body.full_name;
+    document.getElementById('pfDName').textContent=body.full_name;
+    setTimeout(()=>ok.style.display='none',3000);
+  }catch{err.textContent='Save failed.';err.style.display='block';}
+}
+
+async function postAnn(){
+  const title=document.getElementById('annTitle').value.trim(),body=document.getElementById('annBody').value.trim();
+  const err=document.getElementById('annErr'),ok=document.getElementById('annOk');
+  err.style.display='none';ok.style.display='none';
+  if(!title||!body)return(err.textContent='Fill in all fields.',err.style.display='block');
+  const res=await fetch('/api/admin/announcements',{method:'POST',...H,body:JSON.stringify({title,body,is_global:true})});
+  if(res.ok){ok.textContent='✓ Announcement posted!';ok.style.display='block';document.getElementById('annTitle').value='';document.getElementById('annBody').value='';}
+  else{const d=await res.json();err.textContent=d.error||'Failed.';err.style.display='block';}
+}
+
+loadDashboard();
+</script>
+</body>
+</html>

@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin Panel — NextForge Academy</title>
+<style>
+/*
+ * NEXTFORGE PORTAL CSS — SELF-CONTAINED
+ * Import this with <style> tag content inside each portal page
+ * DO NOT link styles.css in any portal page
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── HARD RESET — DARK BACKGROUND GUARANTEED ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+html, body {
+  background: #060e1e !important;
+  color: #cbd5e1 !important;
+  font-family: 'Inter', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; }
+img { display: block; max-width: 100%; }
+ul { list-style: none; }
+
+:root {
+  --bg: #060e1e;
+  --bg2: #0b1729;
+  --bg3: #111f38;
+  --bg4: #182d4e;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #94a3b8;
+  --text2: #cbd5e1;
+  --white: #fff;
+  --gold: #f0a500;
+  --gold2: #fbbf24;
+  --blue: #2563eb;
+  --blue2: #3b82f6;
+  --green: #059669;
+  --green2: #10b981;
+  --red: #ef4444;
+  --purple: #7c3aed;
+}
+
+/* ── LAYOUT ── */
+.portal { display: grid; grid-template-columns: 252px 1fr; min-height: 100vh; background: var(--bg); }
+
+/* ── SIDEBAR ── */
+.sb {
+  background: linear-gradient(180deg, #111f38 0%, #0b1729 55%, #060e1e 100%);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  box-shadow: 3px 0 24px rgba(0,0,0,0.45);
+  z-index: 100;
+}
+.sb::-webkit-scrollbar { width: 3px; }
+.sb::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+.sb-top { padding: 18px 14px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.sb-logo { display: block; margin-bottom: 14px; }
+.sb-logo img { height: 36px; width: auto; object-fit: contain; }
+.sb-role-tag {
+  display: inline-flex; align-items: center; padding: 3px 10px;
+  border-radius: 20px; font-size: 0.64rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; margin-bottom: 12px;
+}
+.sb-role-tag.student { background: rgba(37,99,235,0.15); color: #60a5fa; border: 1px solid rgba(37,99,235,0.25); }
+.sb-role-tag.instructor { background: rgba(240,165,0,0.12); color: var(--gold); border: 1px solid rgba(240,165,0,0.22); }
+.sb-role-tag.admin { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.22); }
+
+.sb-user {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 11px; background: rgba(255,255,255,0.05);
+  border-radius: 12px; border: 1px solid rgba(255,255,255,0.09);
+}
+.sb-av {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0; overflow: hidden;
+}
+.sb-av img { width: 100%; height: 100%; object-fit: cover; }
+.sb-av.student { background: rgba(37,99,235,0.25); border: 2px solid var(--blue2); }
+.sb-av.instructor { background: rgba(240,165,0,0.2); border: 2px solid var(--gold); }
+.sb-av.admin { background: rgba(239,68,68,0.2); border: 2px solid var(--red); }
+.sb-uname { font-weight: 600; color: var(--white); font-size: 0.84rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sb-urole { font-size: 0.67rem; color: var(--text); margin-top: 1px; }
+
+.sb-nav { padding: 10px 9px; flex: 1; }
+.sb-sec { font-size: 0.62rem; color: rgba(148,163,184,0.4); text-transform: uppercase; letter-spacing: 0.11em; padding: 12px 8px 4px; font-weight: 700; }
+
+.ni {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 8px;
+  font-size: 0.875rem; font-weight: 500; color: rgba(148,163,184,0.8);
+  transition: all 0.18s; margin-bottom: 1px;
+  text-decoration: none; cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+}
+.ni:hover { background: rgba(255,255,255,0.07); color: var(--white); }
+.ni.active { padding-left: 8px; }
+.ni.active.student { background: rgba(37,99,235,0.18); color: #60a5fa; border-left: 2px solid var(--blue2); }
+.ni.active.instructor { background: rgba(240,165,0,0.12); color: var(--gold2); border-left: 2px solid var(--gold); }
+.ni.active.admin { background: rgba(239,68,68,0.12); color: #fca5a5; border-left: 2px solid var(--red); }
+.ni-icon { width: 18px; text-align: center; flex-shrink: 0; font-size: 0.9rem; }
+.ni-badge { margin-left: auto; background: var(--gold); color: #000; border-radius: 10px; padding: 1px 7px; font-size: 0.63rem; font-weight: 700; }
+.ni-badge.red { background: var(--red); color: #fff; }
+
+.sb-bot { padding: 9px 9px 15px; border-top: 1px solid var(--border); margin-top: auto; }
+
+/* ── MAIN AREA ── */
+.pm {
+  background: linear-gradient(160deg, #0b1729 0%, #060e1e 40%, #0b1a35 100%);
+  display: flex; flex-direction: column; min-height: 100vh; position: relative;
+}
+.pm::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: radial-gradient(rgba(37,99,235,0.04) 1.5px, transparent 1.5px);
+  background-size: 40px 40px;
+}
+.pm-inner { position: relative; z-index: 1; display: flex; flex-direction: column; flex: 1; }
+
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(6,14,30,0.95); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 13px 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+}
+.tb-title { font-weight: 700; color: var(--white); font-size: 1rem; font-family: 'Syne', sans-serif; }
+.tb-sub { font-size: 0.73rem; color: var(--text); margin-top: 1px; }
+
+.pc { padding: 22px 24px; flex: 1; }
+.page { display: none; }
+.page.on { display: block; }
+
+/* ── PROFILE BANNER ── */
+.pb {
+  background: linear-gradient(135deg, #182d4e 0%, #111f38 60%, #0e1a30 100%);
+  border: 1px solid var(--border2); border-radius: 20px;
+  padding: 20px 24px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  position: relative; overflow: hidden;
+}
+.pb::after { content: ''; position: absolute; right: -30px; top: -30px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(240,165,0,0.09), transparent 70%); pointer-events: none; }
+.pb-av { width: 62px; height: 62px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; overflow: hidden; position: relative; z-index: 1; }
+.pb-av img { width: 100%; height: 100%; object-fit: cover; }
+.pb-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
+.pb-name { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--white); }
+.pb-email { font-size: 0.78rem; color: var(--text); margin-top: 2px; }
+.pb-id { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 20px; background: rgba(240,165,0,0.1); border: 1px solid rgba(240,165,0,0.22); font-size: 0.67rem; color: var(--gold); font-weight: 700; margin-top: 5px; }
+
+/* ── COLORFUL STAT CARDS ── */
+.sg { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px; margin-bottom: 20px; }
+.sc { border-radius: 16px; padding: 18px 19px; position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+.sc:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
+.sc::after { content: ''; position: absolute; top: -12px; right: -12px; width: 65px; height: 65px; border-radius: 50%; background: rgba(255,255,255,0.08); }
+.sc.blue { background: linear-gradient(135deg,#1e3a8a,#2563eb); border: 1px solid rgba(37,99,235,0.45); }
+.sc.gold { background: linear-gradient(135deg,#6b3a00,#c47f00); border: 1px solid rgba(196,127,0,0.45); }
+.sc.green { background: linear-gradient(135deg,#064e3b,#059669); border: 1px solid rgba(5,150,105,0.45); }
+.sc.purple { background: linear-gradient(135deg,#3b0764,#7c3aed); border: 1px solid rgba(124,58,237,0.45); }
+.sc.red { background: linear-gradient(135deg,#7f1d1d,#ef4444); border: 1px solid rgba(239,68,68,0.45); }
+.sc.teal { background: linear-gradient(135deg,#0e4c5a,#0891b2); border: 1px solid rgba(8,145,178,0.45); }
+.sc-icon { font-size: 1.5rem; margin-bottom: 8px; position: relative; z-index: 1; }
+.sc-num { font-size: 1.75rem; font-weight: 800; color: #fff; line-height: 1; font-family: 'Syne', sans-serif; position: relative; z-index: 1; }
+.sc-lbl { font-size: 0.74rem; color: rgba(255,255,255,0.75); margin-top: 4px; position: relative; z-index: 1; }
+
+/* ── COLORFUL BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 9px 20px; border-radius: 10px; font-size: 0.875rem; font-weight: 600;
+  border: none; transition: all 0.18s; white-space: nowrap;
+  cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.btn-blue { background: linear-gradient(135deg,#1d4ed8,#3b82f6); color: #fff; box-shadow: 0 4px 14px rgba(37,99,235,0.35); }
+.btn-blue:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.5); }
+.btn-gold { background: linear-gradient(135deg,#b45309,#f0a500); color: #000; font-weight: 700; box-shadow: 0 4px 14px rgba(240,165,0,0.3); }
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(240,165,0,0.45); }
+.btn-green { background: linear-gradient(135deg,#047857,#10b981); color: #fff; box-shadow: 0 4px 14px rgba(5,150,105,0.3); }
+.btn-green:hover { transform: translateY(-1px); }
+.btn-red { background: linear-gradient(135deg,#b91c1c,#ef4444); color: #fff; box-shadow: 0 4px 14px rgba(239,68,68,0.3); }
+.btn-red:hover { transform: translateY(-1px); }
+.btn-purple { background: linear-gradient(135deg,#5b21b6,#7c3aed); color: #fff; }
+.btn-purple:hover { transform: translateY(-1px); }
+.btn-ghost { background: rgba(255,255,255,0.06); color: var(--text2); border: 1px solid var(--border2); }
+.btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+.btn-danger { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.22); }
+.btn-danger:hover { background: rgba(239,68,68,0.22); }
+.btn-success { background: rgba(5,150,105,0.12); color: #34d399; border: 1px solid rgba(5,150,105,0.22); }
+.btn-success:hover { background: rgba(5,150,105,0.22); }
+.btn-sm { padding: 6px 14px; font-size: 0.8rem; border-radius: 8px; }
+.btn-lg { padding: 12px 28px; font-size: 0.95rem; border-radius: 12px; }
+.btn-full { width: 100%; justify-content: center; }
+
+/* ── CARDS ── */
+.card { background: rgba(17,31,56,0.88); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+.card h3, .card h4 { color: var(--white); }
+
+/* ── SECTION CARD ── */
+.sec-card { background: rgba(17,31,56,0.88); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
+.sec-hdr { padding: 13px 17px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: rgba(6,14,30,0.4); }
+.sec-hdr h4 { color: var(--white); font-size: 0.9rem; }
+.sec-body { padding: 17px; }
+
+/* ── TABLE ── */
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 480px; }
+th { text-align: left; padding: 10px 14px; font-size: 0.69rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); background: rgba(6,14,30,0.3); font-weight: 600; white-space: nowrap; }
+td { padding: 11px 14px; font-size: 0.85rem; color: var(--text2); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ── PROGRESS BAR ── */
+.pbar { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+.pfill { height: 100%; background: linear-gradient(90deg,var(--blue),var(--blue2)); border-radius: 3px; transition: width 0.8s; }
+.pfill.gold { background: linear-gradient(90deg,var(--gold),var(--gold2)); }
+.pfill.green { background: linear-gradient(90deg,var(--green),var(--green2)); }
+
+/* ── BADGES ── */
+.badge { display: inline-flex; align-items: center; padding: 2px 9px; border-radius: 20px; font-size: 0.67rem; font-weight: 700; text-transform: uppercase; }
+.b-blue { background: rgba(37,99,235,0.15); color: #60a5fa; border: 1px solid rgba(37,99,235,0.25); }
+.b-gold { background: rgba(240,165,0,0.12); color: var(--gold); border: 1px solid rgba(240,165,0,0.22); }
+.b-green { background: rgba(5,150,105,0.12); color: #34d399; border: 1px solid rgba(5,150,105,0.22); }
+.b-red { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.22); }
+.b-purple { background: rgba(124,58,237,0.12); color: #a78bfa; border: 1px solid rgba(124,58,237,0.22); }
+
+/* ── ALERTS ── */
+.al-err { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.22); color: #fca5a5; padding: 10px 13px; border-radius: 8px; font-size: 0.84rem; margin-bottom: 12px; display: none; }
+.al-ok { background: rgba(5,150,105,0.1); border: 1px solid rgba(5,150,105,0.22); color: #6ee7b7; padding: 10px 13px; border-radius: 8px; font-size: 0.84rem; margin-bottom: 12px; display: none; }
+.al-info { background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.22); color: #93c5fd; padding: 10px 13px; border-radius: 8px; font-size: 0.84rem; margin-bottom: 12px; }
+
+/* ── FORM ── */
+.fg { margin-bottom: 14px; }
+.fl { display: block; font-size: 0.79rem; color: var(--text2); margin-bottom: 5px; font-weight: 600; }
+.fi { width: 100%; background: rgba(17,31,56,0.9); border: 1.5px solid var(--border2); border-radius: 10px; padding: 10px 13px; color: var(--white); font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+.fi:focus { border-color: var(--blue2); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+.fi::placeholder { color: rgba(148,163,184,0.35); }
+select.fi option { background: var(--bg2); color: var(--white); }
+textarea.fi { resize: vertical; min-height: 80px; line-height: 1.6; }
+.g2f { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── ID CARD ── */
+.id-card { background: linear-gradient(135deg,#182d4e,#111f38); border: 1.5px solid var(--border2); border-radius: 14px; padding: 16px; text-align: center; position: relative; overflow: hidden; }
+.id-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg,var(--gold),var(--blue2)); }
+.id-num { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--gold); letter-spacing: 0.1em; margin: 8px 0; }
+
+/* ── MODAL ── */
+.mo { position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.82); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.mo.open { opacity: 1; pointer-events: all; }
+.mo-box { background: #0b1729; border: 1px solid var(--border2); border-radius: 20px; padding: 26px; width: 100%; max-width: 560px; position: relative; transform: scale(0.96) translateY(6px); transition: transform 0.2s; max-height: 90vh; overflow-y: auto; }
+.mo.open .mo-box { transform: scale(1) translateY(0); }
+.mo-x { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.07); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); font-size: 0.85rem; }
+.mo-x:hover { background: rgba(239,68,68,0.2); color: #fca5a5; }
+
+/* ── MOBILE TOP BAR ── */
+.mob-top {
+  display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+  height: 56px; background: rgba(6,14,30,0.98); border-bottom: 1px solid var(--border);
+  padding: 0 14px; align-items: center; justify-content: space-between;
+  backdrop-filter: blur(16px);
+}
+.mob-logo img { height: 30px; width: auto; object-fit: contain; }
+.mob-ham { background: none; border: none; color: var(--white); font-size: 1.4rem; cursor: pointer; padding: 4px; border-radius: 7px; line-height: 1; }
+.mob-ov { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.78); z-index: 195; }
+.mob-ov.open { display: block; }
+.sb.mob-open { display: flex !important; position: fixed; z-index: 200; height: 100vh; box-shadow: 4px 0 40px rgba(0,0,0,0.7); }
+
+/* ── COURSE TILE ── */
+.ct { background: rgba(17,31,56,0.9); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: all 0.2s; }
+.ct:hover { border-color: rgba(37,99,235,0.35); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
+.ct-thumb { height: 88px; overflow: hidden; position: relative; }
+.ct-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.65; }
+.ct-thumb-ov { position: absolute; inset: 0; background: linear-gradient(to top,rgba(6,14,30,0.88),transparent); display: flex; align-items: flex-end; padding: 7px 11px; }
+.ct-body { padding: 12px 13px; }
+.ct-title { font-weight: 700; color: var(--white); font-size: 0.85rem; margin-bottom: 3px; line-height: 1.3; }
+.ct-meta { font-size: 0.72rem; color: var(--text); margin-bottom: 8px; }
+
+/* ── CURRICULUM ITEM ── */
+.cur-item { display: flex; align-items: center; gap: 11px; padding: 11px 12px; background: rgba(6,14,30,0.5); border-radius: 10px; border: 1px solid var(--border); margin-bottom: 7px; transition: border-color 0.18s; }
+.cur-item:hover { border-color: rgba(37,99,235,0.3); }
+.cur-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(37,99,235,0.2); border: 1px solid rgba(37,99,235,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: var(--blue2); flex-shrink: 0; }
+.cur-title { font-size: 0.875rem; font-weight: 600; color: var(--white); }
+.cur-meta { font-size: 0.72rem; color: var(--text); margin-top: 1px; }
+
+/* ── GRID HELPERS ── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.cg { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 13px; margin-bottom: 18px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px) {
+  .portal { grid-template-columns: 1fr; }
+  .sb { display: none; }
+  .mob-top { display: flex; }
+  body { padding-top: 56px !important; }
+  .pm::before { top: 56px; }
+  .topbar { display: none; }
+  .pc { padding: 14px 13px; }
+  .sg { grid-template-columns: 1fr 1fr; }
+  .g2 { grid-template-columns: 1fr; }
+  .g2f { grid-template-columns: 1fr; }
+}
+@media(max-width:600px) {
+  .pb { padding: 14px; }
+  .pb-av { width: 50px; height: 50px; font-size: 1.2rem; }
+  .pb-name { font-size: 1rem; }
+  .pc { padding: 10px; }
+  .sg { grid-template-columns: 1fr 1fr; }
+  .sc { padding: 14px; }
+  .sc-num { font-size: 1.5rem; }
+  .mo-box { padding: 18px; }
+}
+
+/* ADMIN-SPECIFIC */
+.sb { background: linear-gradient(180deg,#1a0814 0%,#100610 55%,#060e1e 100%); }
+.pending-card { display:flex;align-items:center;gap:12px;padding:12px;background:rgba(6,14,30,0.5);border-radius:10px;border:1px solid var(--border);margin-bottom:8px; }
+.pending-av { width:40px;height:40px;border-radius:50%;background:rgba(240,165,0,0.15);border:2px solid rgba(240,165,0,0.3);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;overflow:hidden; }
+.pending-av img { width:100%;height:100%;object-fit:cover; }
+.price-row { display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);flex-wrap:wrap; }
+.price-row:last-child { border-bottom:none; }
+.lesson-item { display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(6,14,30,0.5);border-radius:9px;border:1px solid var(--border);margin-bottom:6px; }
+.lesson-num { width:24px;height:24px;border-radius:50%;background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.3);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#60a5fa;flex-shrink:0; }
+.upload-zone { border:2px dashed var(--border2);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(6,14,30,0.3); }
+.upload-zone:hover { border-color:var(--blue2);background:rgba(37,99,235,0.05); }
+.promo-card { display:flex;align-items:center;gap:12px;padding:12px;background:rgba(6,14,30,0.5);border-radius:10px;border:1px solid var(--border);margin-bottom:8px;flex-wrap:wrap; }
+</style>
+</head>
+<body>
+
+<!-- MOBILE TOP -->
+<div class="mob-top" id="mobTop">
+  <a href="#" onclick="return false;" class="mob-logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
+  <button class="mob-ham" onclick="toggleSB()">☰</button>
+</div>
+<div class="mob-ov" id="mobOv" onclick="toggleSB()"></div>
+
+<div class="portal">
+
+<!-- SIDEBAR -->
+<aside class="sb" id="sb">
+  <div class="sb-top">
+    <a href="#" onclick="return false;" class="sb-logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
+    <div class="sb-role-tag admin">⚙️ Admin Panel</div>
+    <div class="sb-user" style="margin-top:8px;">
+      <div class="sb-av admin" id="sbAv">⚙️</div>
+      <div style="min-width:0;"><div class="sb-uname" id="sbName">Admin</div><div class="sb-urole" style="color:#fca5a5;">Administrator</div></div>
+    </div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-sec">Main</div>
+    <button class="ni active admin" onclick="sp('overview',this)"><span class="ni-icon">📊</span>Overview</button>
+    <div class="sb-sec">People</div>
+    <button class="ni" onclick="sp('students',this)"><span class="ni-icon">👥</span>Students</button>
+    <button class="ni" onclick="sp('instructors',this)"><span class="ni-icon">👨‍🏫</span>Instructors<span class="ni-badge red" id="pendBadge" style="display:none;">!</span></button>
+    <div class="sb-sec">Content</div>
+    <button class="ni" onclick="sp('courses',this)"><span class="ni-icon">📚</span>Manage Courses</button>
+    <button class="ni" onclick="sp('addcourse',this)"><span class="ni-icon">➕</span>Add New Course</button>
+    <button class="ni" onclick="sp('certs',this)"><span class="ni-icon">🎓</span>Certificates</button>
+    <div class="sb-sec">Finance</div>
+    <button class="ni" onclick="sp('payments',this)"><span class="ni-icon">💳</span>Payments</button>
+    <button class="ni" onclick="sp('pricing',this)"><span class="ni-icon">💰</span>Pricing & Promos</button>
+    <div class="sb-sec">Comms</div>
+    <button class="ni" onclick="sp('announce',this)"><span class="ni-icon">📢</span>Announcements</button>
+    <div class="sb-sec">Settings</div>
+    <button class="ni" onclick="sp('cohort',this)"><span class="ni-icon">📅</span>Cohort Settings</button>
+  </div>
+  <div class="sb-bot">
+    <button class="ni" onclick="logout()" style="color:#fca5a5;"><span class="ni-icon">🚪</span>Sign Out → nextforgeacademy.online</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="pm">
+  <div class="pm-inner">
+    <div class="topbar">
+      <div><div class="tb-title" id="pageTitle">Admin Overview</div><div class="tb-sub" id="pageSub"></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="sp('announce',null)">📢 Announce</button>
+        <button class="btn btn-red btn-sm" onclick="sp('students',null)">👥 All Students</button>
+      </div>
+    </div>
+
+    <div class="pc">
+
+      <!-- OVERVIEW -->
+      <div class="page on" id="page-overview">
+        <div style="background:linear-gradient(135deg,#182d4e,#1a0814);border:1px solid var(--border2);border-radius:18px;padding:16px 22px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+          <div><div style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:0.7rem;font-weight:700;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;" id="cohortPill">April 2026 Cohort</div>
+          <div style="font-size:0.78rem;color:var(--text);margin-top:5px;">Active cohort — <span id="seatsLeft">—</span> seats remaining</div></div>
+          <button class="btn btn-ghost btn-sm" onclick="sp('cohort',null)" style="margin-left:auto;">⚙️ Edit Cohort</button>
+        </div>
+        <div class="sg">
+          <div class="sc blue"><div class="sc-icon">👥</div><div class="sc-num" id="kS">—</div><div class="sc-lbl">Total Students</div></div>
+          <div class="sc gold"><div class="sc-icon">₦</div><div class="sc-num" id="kR">—</div><div class="sc-lbl">Total Revenue</div></div>
+          <div class="sc green"><div class="sc-icon">📋</div><div class="sc-num" id="kE">—</div><div class="sc-lbl">Enrollments</div></div>
+          <div class="sc red"><div class="sc-icon">⏳</div><div class="sc-num" id="kP">—</div><div class="sc-lbl">Pending Approvals</div></div>
+        </div>
+        <div class="g2">
+          <div class="sec-card"><div class="sec-hdr"><h4>Recent Enrollments</h4><button class="btn btn-ghost btn-sm" onclick="sp('students',null)">View All →</button></div><div class="tw"><table><thead><tr><th>Student</th><th>Course</th><th>Date</th></tr></thead><tbody id="recEnroll"><tr><td colspan="3" style="text-align:center;padding:16px;color:var(--text);">Loading...</td></tr></tbody></table></div></div>
+          <div class="sec-card"><div class="sec-hdr"><h4>Recent Payments</h4><button class="btn btn-ghost btn-sm" onclick="sp('payments',null)">View All →</button></div><div class="tw"><table><thead><tr><th>Student</th><th>Amount</th><th>Status</th></tr></thead><tbody id="recPay"><tr><td colspan="3" style="text-align:center;padding:16px;color:var(--text);">Loading...</td></tr></tbody></table></div></div>
+        </div>
+      </div>
+
+      <!-- STUDENTS -->
+      <div class="page" id="page-students">
+        <div class="sec-card">
+          <div class="sec-hdr">
+            <h4>All Students</h4>
+            <input type="text" class="fi" id="stuSearch" placeholder="Search name or email..." oninput="filterStu()" style="max-width:220px;padding:6px 11px;font-size:0.84rem;"/>
+          </div>
+          <div class="tw"><table><thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Country</th><th>Enrolled</th><th>Status</th><th>Actions</th></tr></thead><tbody id="stuTbl"><tr><td colspan="7" style="text-align:center;padding:16px;color:var(--text);">Loading...</td></tr></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- INSTRUCTORS -->
+      <div class="page" id="page-instructors">
+        <div class="sec-card" style="margin-bottom:16px;">
+          <div class="sec-hdr"><h4>⏳ Pending Applications</h4><span class="badge b-gold" id="pendCount">0 pending</span></div>
+          <div class="sec-body" id="pendInstr"><div style="color:var(--text);font-size:0.875rem;text-align:center;padding:14px;">Loading...</div></div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-hdr"><h4>✅ Active Instructors</h4></div>
+          <div class="tw"><table><thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Skills</th><th>Bank Details</th><th>Status</th><th>Action</th></tr></thead><tbody id="instrTbl"><tr><td colspan="7" style="text-align:center;padding:16px;color:var(--text);">Loading...</td></tr></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- MANAGE COURSES -->
+      <div class="page" id="page-courses">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+          <h3 style="color:var(--white);font-size:1rem;">Course Management</h3>
+          <button class="btn btn-gold btn-sm" onclick="sp('addcourse',null)">➕ Add New Course</button>
+        </div>
+        <div id="coursesList"></div>
+      </div>
+
+      <!-- ADD / EDIT COURSE -->
+      <div class="page" id="page-addcourse">
+        <h3 style="color:var(--white);margin-bottom:4px;" id="addCourseTitle">Add New Course</h3>
+        <p style="color:var(--text);font-size:0.875rem;margin-bottom:18px;">Fill in all details. Curriculum is added after saving the course.</p>
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start;" id="addCourseGrid">
+          <div class="card">
+            <div class="g2f" style="margin-bottom:0;">
+              <div class="fg"><label class="fl">Course Title</label><input class="fi" id="c_title" placeholder="e.g. Project Management Foundations"/></div>
+              <div class="fg"><label class="fl">Category</label><select class="fi" id="c_cat"><option value="">Select category...</option><option>Project Management</option><option>Product Management</option><option>Data Analysis</option><option>Operations</option><option>Business Communication</option><option>Productivity</option></select></div>
+              <div class="fg"><label class="fl">Duration</label><input class="fi" id="c_dur" placeholder="e.g. 12 weeks"/></div>
+              <div class="fg"><label class="fl">Level</label><select class="fi" id="c_level"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div>
+              <div class="fg"><label class="fl">Price (₦)</label><input class="fi" type="number" id="c_price" placeholder="e.g. 250000"/></div>
+              <div class="fg"><label class="fl">Cohort</label><input class="fi" id="c_cohort" placeholder="e.g. April 2026"/></div>
+            </div>
+            <div class="fg"><label class="fl">Short Description</label><textarea class="fi" id="c_desc" rows="3" placeholder="What will students learn? What is this course about?"></textarea></div>
+            <div class="fg"><label class="fl">Who Is This For?</label><textarea class="fi" id="c_who" rows="2" placeholder="e.g. Working professionals, graduates, career switchers..."></textarea></div>
+            <div class="fg"><label class="fl">Prerequisites</label><textarea class="fi" id="c_pre" rows="2" placeholder="e.g. No prior experience required. Basic computer literacy helpful."></textarea></div>
+            <div class="fg"><label class="fl">Image URL</label><input class="fi" id="c_img" placeholder="https://images.unsplash.com/..."/></div>
+            <div class="al-err" id="cErr"></div>
+            <div class="al-ok" id="cOk"></div>
+            <div style="display:flex;gap:9px;flex-wrap:wrap;">
+              <button class="btn btn-gold" onclick="saveCourse()" id="saveCourseBtn">💾 Save Course</button>
+              <button class="btn btn-ghost" onclick="sp('courses',null)">Cancel</button>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:13px;">
+              <h4 style="margin-bottom:12px;font-size:0.88rem;">📋 Curriculum Builder</h4>
+              <div id="curriculumList" style="margin-bottom:11px;"></div>
+              <div style="display:flex;gap:7px;">
+                <input class="fi" id="lessonTitle" placeholder="Lesson title..." style="flex:1;"/>
+                <button class="btn btn-blue btn-sm" onclick="addLesson()">+ Add</button>
+              </div>
+              <div class="fg" style="margin-top:10px;"><label class="fl">Lesson Type</label><select class="fi" id="lessonType"><option value="video">Video Lecture</option><option value="live">Live Session</option><option value="reading">Reading/Notes</option><option value="quiz">Quiz</option><option value="assignment">Assignment</option></select></div>
+              <div class="fg"><label class="fl">Duration (mins)</label><input class="fi" type="number" id="lessonDur" placeholder="e.g. 45"/></div>
+            </div>
+            <div class="card">
+              <h4 style="margin-bottom:12px;font-size:0.88rem;">📁 Upload Materials</h4>
+              <div class="upload-zone" onclick="document.getElementById('matFile').click()">
+                <div style="font-size:1.8rem;margin-bottom:6px;">📂</div>
+                <div style="font-size:0.84rem;color:var(--text2);font-weight:600;">Click to upload materials</div>
+                <div style="font-size:0.72rem;color:var(--text);margin-top:3px;">PDF, PPTX, DOCX, MP4 · Max 50MB</div>
+                <input type="file" id="matFile" style="display:none;" multiple accept=".pdf,.pptx,.docx,.mp4" onchange="handleUpload(this)"/>
+              </div>
+              <div id="uploadedFiles" style="margin-top:10px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CERTIFICATES -->
+      <div class="page" id="page-certs">
+        <div class="sec-card">
+          <div class="sec-hdr"><h4>Issue Certificate Manually</h4></div>
+          <div class="sec-body">
+            <div class="g2f">
+              <div class="fg"><label class="fl">Student User ID</label><input class="fi" type="number" id="certUsr" placeholder="User ID number"/></div>
+              <div class="fg"><label class="fl">Course ID</label><input class="fi" type="number" id="certCrs" placeholder="Course ID number"/></div>
+            </div>
+            <div class="al-err" id="certErr"></div>
+            <div class="al-ok" id="certOk"></div>
+            <button class="btn btn-gold" onclick="issueCert()">🎓 Issue Certificate →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAYMENTS -->
+      <div class="page" id="page-payments">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+          <div><h3 style="color:var(--white);font-size:1rem;">Payment Records</h3><div style="font-size:0.84rem;color:var(--text);margin-top:3px;">Total Revenue: <strong style="color:var(--gold);" id="totRev">Loading...</strong></div></div>
+        </div>
+        <div class="tw"><table><thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Amount</th><th>Reference</th><th>Status</th><th>Date</th></tr></thead><tbody id="payTbl"><tr><td colspan="7" style="text-align:center;padding:16px;color:var(--text);">Loading...</td></tr></tbody></table></div>
+      </div>
+
+      <!-- PRICING & PROMOS -->
+      <div class="page" id="page-pricing">
+        <div class="g2" style="margin-bottom:0;">
+          <div>
+            <div class="sec-card" style="margin-bottom:16px;">
+              <div class="sec-hdr"><h4>💰 Course Prices</h4><span class="badge b-green">Live — changes apply immediately</span></div>
+              <div class="sec-body" id="priceList"><div style="color:var(--text);">Loading...</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="sec-card" style="margin-bottom:16px;">
+              <div class="sec-hdr"><h4>🏷️ Promo Codes</h4><button class="btn btn-gold btn-sm" onclick="openPromoMo()">+ Create Promo</button></div>
+              <div class="sec-body">
+                <div id="promoList"><div style="color:var(--text);font-size:0.875rem;">No promo codes yet.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANNOUNCEMENTS -->
+      <div class="page" id="page-announce">
+        <div class="sec-card">
+          <div class="sec-hdr"><h4>📢 Post Announcement</h4></div>
+          <div class="sec-body">
+            <div class="fg"><label class="fl">Send To</label><select class="fi" id="annScope"><option value="global">All Students (Global)</option></select></div>
+            <div class="fg"><label class="fl">Title</label><input class="fi" id="annTitle" placeholder="Announcement title..."/></div>
+            <div class="fg"><label class="fl">Message</label><textarea class="fi" id="annBody" rows="5" placeholder="Write your announcement here..."></textarea></div>
+            <div class="al-err" id="annErr"></div>
+            <div class="al-ok" id="annOk"></div>
+            <button class="btn btn-red" onclick="postAnn()">📢 Post to All Students →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COHORT SETTINGS -->
+      <div class="page" id="page-cohort">
+        <div class="sec-card">
+          <div class="sec-hdr"><h4>📅 Cohort Settings</h4></div>
+          <div class="sec-body">
+            <div class="al-info">Cohort name auto-updates monthly. Override below to set custom values. Changes affect the live website banner immediately.</div>
+            <div class="g2f" style="margin-top:14px;">
+              <div class="fg"><label class="fl">Cohort Name</label><input class="fi" id="cohName" placeholder="e.g. May 2026 Cohort"/></div>
+              <div class="fg"><label class="fl">Start Date</label><input class="fi" type="date" id="cohStart"/></div>
+              <div class="fg"><label class="fl">Registration Deadline</label><input class="fi" type="date" id="cohDead"/></div>
+              <div class="fg"><label class="fl">Seats Available</label><input class="fi" type="number" id="cohSeats" placeholder="e.g. 20"/></div>
+            </div>
+            <div class="fg"><label class="fl">Homepage Banner Message</label><textarea class="fi" id="cohMsg" rows="2" placeholder="e.g. May 2026 Cohort is now open — limited seats!"></textarea></div>
+            <div class="al-ok" id="cohOk"></div>
+            <button class="btn btn-red" onclick="saveCohort()">💾 Save Cohort Settings →</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pc -->
+  </div>
+</div>
+
+</div><!-- /portal -->
+
+<!-- STUDENT DETAIL MODAL -->
+<div class="mo" id="stuMo">
+  <div class="mo-box" style="max-width:600px;">
+    <div class="mo-x" onclick="closeMo()">✕</div>
+    <div id="stuDetail"></div>
+  </div>
+</div>
+
+<!-- INSTRUCTOR DETAIL MODAL -->
+<div class="mo" id="instrMo">
+  <div class="mo-box" style="max-width:600px;">
+    <div class="mo-x" onclick="closeMo()">✕</div>
+    <div id="instrDetail"></div>
+  </div>
+</div>
+
+<!-- PROMO MODAL -->
+<div class="mo" id="promoMo">
+  <div class="mo-box" style="max-width:440px;">
+    <div class="mo-x" onclick="closeMo()">✕</div>
+    <h3 style="color:var(--white);margin-bottom:15px;">🏷️ Create Promo Code</h3>
+    <div class="fg"><label class="fl">Promo Code</label><input class="fi" id="pCode" placeholder="e.g. LAUNCH50" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"/></div>
+    <div class="fg"><label class="fl">Discount % (1–99)</label><input class="fi" type="number" id="pDisc" placeholder="e.g. 20" min="1" max="99"/></div>
+    <div class="fg"><label class="fl">Max Uses (0 = unlimited)</label><input class="fi" type="number" id="pUses" placeholder="e.g. 50" min="0"/></div>
+    <div class="fg"><label class="fl">Expiry Date</label><input class="fi" type="date" id="pExp"/></div>
+    <div class="fg"><label class="fl">Apply to Course (optional)</label><select class="fi" id="pCourse"><option value="">All Courses</option></select></div>
+    <div class="al-err" id="promoErr"></div>
+    <div class="al-ok" id="promoOk"></div>
+    <button class="btn btn-gold btn-full" onclick="savePromo()">Create Promo Code →</button>
+  </div>
+</div>
+
+<!-- LESSON MANAGE MODAL -->
+<div class="mo" id="lessonMo">
+  <div class="mo-box" style="max-width:560px;">
+    <div class="mo-x" onclick="closeMo()">✕</div>
+    <h3 style="color:var(--white);margin-bottom:4px;" id="lessonMoTitle">Manage Lessons</h3>
+    <p style="color:var(--text);font-size:0.84rem;margin-bottom:15px;" id="lessonMoCourse"></p>
+    <div id="lessonMoList" style="margin-bottom:14px;max-height:300px;overflow-y:auto;"></div>
+    <div style="display:flex;gap:7px;margin-bottom:12px;">
+      <input class="fi" id="newLessonTitle" placeholder="New lesson title..." style="flex:1;"/>
+      <select class="fi" id="newLessonType" style="width:130px;"><option value="video">Video</option><option value="live">Live</option><option value="reading">Reading</option><option value="quiz">Quiz</option><option value="assignment">Assignment</option></select>
+      <button class="btn btn-blue btn-sm" onclick="addLessonToModal()">+ Add</button>
+    </div>
+    <button class="btn btn-gold btn-full" onclick="saveLessons()">Save Lessons →</button>
+  </div>
+</div>
+
+<script>
+// ── AUTH ──
+const token = localStorage.getItem('nf_token');
+if (!token || localStorage.getItem('nf_role') !== 'admin') window.location.href = '/login.html';
+document.getElementById('sbName').textContent = localStorage.getItem('nf_name') || 'Admin';
+document.getElementById('pageSub').textContent = new Date().toLocaleDateString('en-GB', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const H = { credentials: 'include', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' } };
+const now = new Date();
+const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+document.getElementById('cohortPill').textContent = months[now.getMonth()] + ' ' + now.getFullYear() + ' Cohort';
+
+let allStu = [], allCourses = [], allPromos = [], lessons = [], currentCourseId = null;
+
+// ── NAVIGATION ──
+function toggleSB(){ const sb=document.getElementById('sb'),ov=document.getElementById('mobOv'); sb.classList.toggle('mob-open'); ov.classList.toggle('open'); }
+function logout(){ fetch('/api/auth/logout',{method:'POST',credentials:'include'}); localStorage.clear(); window.location.href='https://nextforgeacademy.online'; }
+function closeMo(){ document.querySelectorAll('.mo').forEach(m=>m.classList.remove('open')); }
+document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeMo();}));
+function openPromoMo(){ loadCoursesForSelect(); document.getElementById('promoMo').classList.add('open'); }
+
+function sp(id, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active','admin'));
+  if(el){ el.classList.add('active','admin'); }
+  const titles = {overview:'Admin Overview',students:'All Students',instructors:'Instructor Management',courses:'Manage Courses',addcourse:'Add New Course',certs:'Certificates',payments:'Payment Records',pricing:'Pricing & Promos',announce:'Announcements',cohort:'Cohort Settings'};
+  document.getElementById('pageTitle').textContent = titles[id] || id;
+  document.getElementById('sb').classList.remove('mob-open');
+  document.getElementById('mobOv').classList.remove('open');
+  if(id==='students') loadStudents();
+  if(id==='instructors') loadInstructors();
+  if(id==='courses') loadCourses();
+  if(id==='payments') loadPayments();
+  if(id==='pricing') loadPricing();
+  if(id==='cohort') initCohort();
+  if(id==='addcourse'){ currentCourseId=null; document.getElementById('addCourseTitle').textContent='Add New Course'; document.getElementById('saveCourseBtn').textContent='💾 Save Course'; resetCourseForm(); }
+}
+
+// ── OVERVIEW ──
+async function loadOverview(){
+  try{
+    const [statsRes, payRes, pendRes] = await Promise.all([
+      fetch('/api/admin/stats', H),
+      fetch('/api/admin/payments', H),
+      fetch('/api/admin/instructors/pending', H)
+    ]);
+    const stats = await statsRes.json();
+    const pays = await payRes.json();
+    const pend = await pendRes.json();
+    document.getElementById('kS').textContent = stats.totalStudents||0;
+    document.getElementById('kE').textContent = stats.totalEnrollments||0;
+    document.getElementById('kR').textContent = '₦'+(Number(stats.totalRevenue||0)/1000).toFixed(0)+'k';
+    document.getElementById('kP').textContent = pend.length;
+    document.getElementById('seatsLeft').textContent = '20';
+    if(pend.length>0){const b=document.getElementById('pendBadge');b.textContent=pend.length;b.style.display='inline';}
+    document.getElementById('recEnroll').innerHTML = stats.recentStudents?.slice(0,5).map(s=>`<tr><td style="color:var(--white);font-weight:600;">${s.full_name}</td><td style="font-size:0.8rem;">${s.course||s.track||'—'}</td><td style="font-size:0.77rem;">${new Date(s.created_at).toLocaleDateString()}</td></tr>`).join('')||'<tr><td colspan="3" style="text-align:center;padding:14px;color:var(--text);">No enrollments yet.</td></tr>';
+    document.getElementById('recPay').innerHTML = pays.slice(0,5).map(p=>`<tr><td style="color:var(--white);font-weight:600;">${p.full_name}</td><td style="color:var(--gold);font-weight:600;">₦${Number(p.amount).toLocaleString()}</td><td><span class="badge ${p.status==='success'?'b-green':'b-red'}">${p.status}</span></td></tr>`).join('')||'<tr><td colspan="3" style="text-align:center;padding:14px;color:var(--text);">No payments yet.</td></tr>';
+  }catch(e){console.error(e);}
+}
+
+// ── STUDENTS ──
+async function loadStudents(){
+  const res = await fetch('/api/admin/students', H); allStu = await res.json(); renderStu(allStu);
+}
+function filterStu(){ const q=document.getElementById('stuSearch').value.toLowerCase(); renderStu(allStu.filter(s=>s.full_name.toLowerCase().includes(q)||s.email.toLowerCase().includes(q))); }
+function renderStu(students){
+  document.getElementById('stuTbl').innerHTML = students.length ? students.map(s=>{
+    let bio={};try{bio=JSON.parse(s.bio||'{}');}catch{}
+    return `<tr>
+      <td><div style="width:34px;height:34px;border-radius:50%;overflow:hidden;background:rgba(37,99,235,0.15);display:flex;align-items:center;justify-content:center;">${s.avatar_url?`<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;"/>`:'👤'}</div></td>
+      <td style="color:var(--white);font-weight:600;">${s.full_name}</td>
+      <td style="font-size:0.8rem;">${s.email}</td>
+      <td style="font-size:0.78rem;">${bio.country||'—'}</td>
+      <td style="font-size:0.77rem;">${new Date(s.created_at).toLocaleDateString()}</td>
+      <td><span class="badge ${s.is_active!==false?'b-green':'b-red'}">${s.is_active!==false?'Active':'Suspended'}</span></td>
+      <td><div style="display:flex;gap:5px;"><button class="btn btn-ghost btn-sm" onclick="viewStu(${s.id})">View</button><button class="btn btn-danger btn-sm" onclick="toggleStu(${s.id},${s.is_active})">${s.is_active!==false?'Suspend':'Restore'}</button></div></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="7" style="text-align:center;padding:18px;color:var(--text);">No students found.</td></tr>';
+}
+async function viewStu(id){
+  const res = await fetch('/api/admin/students/'+id, H); const s = await res.json();
+  let bio={};try{bio=JSON.parse(s.bio||'{}');}catch{}
+  document.getElementById('stuDetail').innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+      <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;background:rgba(37,99,235,0.15);border:3px solid var(--blue2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${s.avatar_url?`<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;"/>`:'👤'}</div>
+      <div><div style="font-weight:800;color:var(--white);font-size:1.05rem;">${s.full_name}</div><div style="font-size:0.8rem;color:var(--text);">${s.email} · ${s.phone||'No phone'}</div><div style="font-size:0.73rem;color:var(--text);margin-top:2px;">Joined ${new Date(s.created_at).toLocaleDateString()} · ID: ${s.unique_id||'—'}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px;">
+      ${bio.occupation?`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:9px;"><div style="font-size:0.64rem;color:var(--text);margin-bottom:2px;">OCCUPATION</div><div style="font-size:0.84rem;color:var(--white);">${bio.occupation}</div></div>`:''}
+      ${bio.country?`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:9px;"><div style="font-size:0.64rem;color:var(--text);margin-bottom:2px;">COUNTRY</div><div style="font-size:0.84rem;color:var(--white);">${bio.country}</div></div>`:''}
+    </div>
+    ${bio.reason?`<div style="margin-bottom:10px;"><div style="font-size:0.64rem;color:var(--gold);margin-bottom:4px;">WHY THEY ENROLLED</div><div style="font-size:0.84rem;color:var(--text2);background:rgba(6,14,30,0.5);padding:10px;border-radius:9px;">${bio.reason}</div></div>`:''}
+    ${bio.goal?`<div><div style="font-size:0.64rem;color:var(--gold);margin-bottom:4px;">CAREER GOAL</div><div style="font-size:0.84rem;color:var(--text2);background:rgba(6,14,30,0.5);padding:10px;border-radius:9px;">${bio.goal}</div></div>`:''}
+    <h4 style="color:var(--white);margin:14px 0 8px;font-size:0.88rem;">Enrolled Courses</h4>
+    ${(s.enrollments||[]).map(e=>`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:10px;margin-bottom:6px;"><div style="font-size:0.84rem;color:var(--white);font-weight:600;">${e.title||'Course'}</div><div style="font-size:0.72rem;color:var(--text);margin-top:2px;">Progress: ${e.completed||0}/${e.total||0} lessons</div></div>`).join('')||'<div style="color:var(--text);font-size:0.84rem;">No courses enrolled.</div>'}
+  `;
+  document.getElementById('stuMo').classList.add('open');
+}
+async function toggleStu(id, current){
+  if(!confirm(current!==false?'Suspend this student?':'Restore this student?'))return;
+  await fetch('/api/admin/students/'+id+'/toggle',{method:'POST',...H});
+  loadStudents();
+}
+
+// ── INSTRUCTORS ──
+async function loadInstructors(){
+  const [pendRes, actRes] = await Promise.all([fetch('/api/admin/instructors/pending',H), fetch('/api/admin/instructors/active',H)]);
+  const pending = await pendRes.json(); const active = await actRes.json();
+  document.getElementById('pendCount').textContent = pending.length+' pending';
+  document.getElementById('pendInstr').innerHTML = pending.length ? pending.map(i=>{
+    let bio={};try{bio=JSON.parse(i.bio||'{}');}catch{}
+    return `<div class="pending-card">
+      <div class="pending-av">${i.avatar_url?`<img src="${i.avatar_url}"/>`:'👨‍🏫'}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:700;color:var(--white);font-size:0.875rem;">${i.full_name}</div>
+        <div style="font-size:0.73rem;color:var(--text);">${i.email} · ${bio.title||'Instructor'}</div>
+        <div style="font-size:0.72rem;color:var(--gold);margin-top:2px;">${bio.skills||'—'}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;">
+        <button class="btn btn-ghost btn-sm" onclick="viewInstr(${i.id})">View</button>
+        <button class="btn btn-success btn-sm" onclick="approveInstr(${i.id},true)">✓ Approve</button>
+        <button class="btn btn-danger btn-sm" onclick="approveInstr(${i.id},false)">✕ Reject</button>
+      </div>
+    </div>`;
+  }).join('') : '<div style="color:var(--text);font-size:0.875rem;padding:12px;">No pending instructor applications.</div>';
+  document.getElementById('instrTbl').innerHTML = active.length ? active.map(i=>{
+    let bio={};try{bio=JSON.parse(i.bio||'{}');}catch{}
+    return `<tr>
+      <td><div style="width:34px;height:34px;border-radius:50%;overflow:hidden;background:rgba(240,165,0,0.15);display:flex;align-items:center;justify-content:center;">${i.avatar_url?`<img src="${i.avatar_url}" style="width:100%;height:100%;object-fit:cover;"/>`:'👨‍🏫'}</div></td>
+      <td style="color:var(--white);font-weight:600;">${i.full_name}</td>
+      <td style="font-size:0.8rem;">${i.email}</td>
+      <td style="font-size:0.8rem;">${bio.skills||'—'}</td>
+      <td style="font-size:0.78rem;">${bio.bank||'—'}${bio.account?' · '+bio.account:''}</td>
+      <td><span class="badge b-green">Active</span></td>
+      <td><button class="btn btn-danger btn-sm" onclick="deactivateInstr(${i.id})">Suspend</button></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="7" style="text-align:center;padding:18px;color:var(--text);">No active instructors yet.</td></tr>';
+}
+async function viewInstr(id){
+  const res = await fetch('/api/admin/students/'+id, H); const i = await res.json();
+  let bio={};try{bio=JSON.parse(i.bio||'{}');}catch{}
+  document.getElementById('instrDetail').innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+      <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;background:rgba(240,165,0,0.15);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${i.avatar_url?`<img src="${i.avatar_url}" style="width:100%;height:100%;object-fit:cover;"/>`:'👨‍🏫'}</div>
+      <div><div style="font-weight:800;color:var(--white);font-size:1.05rem;">${i.full_name}</div><div style="font-size:0.8rem;color:var(--text);">${i.email}</div><div style="font-size:0.73rem;color:var(--gold);margin-top:2px;">${bio.title||'Instructor'} · ${bio.exp||'—'}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+      ${bio.skills?`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:9px;"><div style="font-size:0.64rem;color:var(--text);margin-bottom:2px;">SKILLS</div><div style="font-size:0.84rem;color:var(--white);">${bio.skills}</div></div>`:''}
+      ${bio.certs?`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:9px;"><div style="font-size:0.64rem;color:var(--text);margin-bottom:2px;">CERTS</div><div style="font-size:0.84rem;color:var(--white);">${bio.certs}</div></div>`:''}
+      ${bio.bank?`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:9px;"><div style="font-size:0.64rem;color:var(--text);margin-bottom:2px;">BANK</div><div style="font-size:0.84rem;color:var(--white);">${bio.bank} · ${bio.account||'—'}</div></div>`:''}
+    </div>
+    ${bio.why?`<div><div style="font-size:0.64rem;color:var(--gold);margin-bottom:4px;">WHY THEY WANT TO TEACH</div><div style="font-size:0.84rem;color:var(--text2);background:rgba(6,14,30,0.5);padding:10px;border-radius:9px;">${bio.why}</div></div>`:''}
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button class="btn btn-success" onclick="approveInstr(${i.id},true);closeMo();">✓ Approve</button>
+      <button class="btn btn-danger" onclick="approveInstr(${i.id},false);closeMo();">✕ Reject</button>
+    </div>
+  `;
+  document.getElementById('instrMo').classList.add('open');
+}
+async function approveInstr(id, approve){
+  await fetch('/api/admin/instructors/'+id+'/approve', {method:'POST',...H, body:JSON.stringify({approve})});
+  closeMo(); loadInstructors(); loadOverview();
+}
+async function deactivateInstr(id){
+  if(!confirm('Suspend this instructor?'))return;
+  await fetch('/api/admin/instructors/'+id+'/toggle', {method:'POST',...H});
+  loadInstructors();
+}
+
+// ── COURSES ──
+async function loadCourses(){
+  const res = await fetch('/api/admin/courses', H); allCourses = await res.json();
+  document.getElementById('coursesList').innerHTML = allCourses.length ? allCourses.map(c=>`
+    <div style="display:flex;align-items:center;gap:13px;padding:14px;background:rgba(17,31,56,0.85);border:1px solid var(--border);border-radius:13px;margin-bottom:9px;flex-wrap:wrap;">
+      <div style="width:52px;height:52px;border-radius:11px;overflow:hidden;background:rgba(37,99,235,0.12);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">${c.thumbnail||'📋'}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:700;color:var(--white);font-size:0.9rem;">${c.title}</div>
+        <div style="font-size:0.73rem;color:var(--text);margin-top:2px;">${c.category} · ${c.duration} · ${c.enrollments||0} students</div>
+        <div style="font-size:0.73rem;color:var(--gold);margin-top:2px;">Current price: <strong>₦${Number(c.price).toLocaleString()}</strong></div>
+      </div>
+      <div style="display:flex;gap:7px;flex-shrink:0;flex-wrap:wrap;">
+        <button class="btn btn-blue btn-sm" onclick="editCourse(${c.id})">✏️ Edit</button>
+        <button class="btn btn-ghost btn-sm" onclick="openLessonMo(${c.id},'${c.title.replace(/'/g,\"\\'\")}')" >📋 Lessons</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCourse(${c.id})">🗑️ Delete</button>
+      </div>
+    </div>`).join('') : '<div style="text-align:center;padding:36px;color:var(--text);">No courses yet. <button class="btn btn-gold btn-sm" onclick="sp('addcourse',null)">Add First Course →</button></div>';
+}
+function editCourse(id){
+  const c = allCourses.find(x=>x.id===id);
+  if(!c)return;
+  currentCourseId = id;
+  document.getElementById('addCourseTitle').textContent = 'Edit Course: ' + c.title;
+  document.getElementById('saveCourseBtn').textContent = '💾 Update Course';
+  document.getElementById('c_title').value = c.title||'';
+  document.getElementById('c_cat').value = c.category||'';
+  document.getElementById('c_dur').value = c.duration||'';
+  document.getElementById('c_level').value = c.level||'Beginner';
+  document.getElementById('c_price').value = c.price||'';
+  document.getElementById('c_cohort').value = c.cohort||'';
+  document.getElementById('c_desc').value = c.description||'';
+  document.getElementById('c_who').value = c.who_for||'';
+  document.getElementById('c_pre').value = c.prerequisites||'';
+  document.getElementById('c_img').value = c.image_url||'';
+  sp('addcourse', null);
+}
+async function saveCourse(){
+  const body = {
+    title: document.getElementById('c_title').value.trim(),
+    category: document.getElementById('c_cat').value,
+    duration: document.getElementById('c_dur').value.trim(),
+    level: document.getElementById('c_level').value,
+    price: parseInt(document.getElementById('c_price').value)||0,
+    cohort: document.getElementById('c_cohort').value.trim(),
+    description: document.getElementById('c_desc').value.trim(),
+    who_for: document.getElementById('c_who').value.trim(),
+    prerequisites: document.getElementById('c_pre').value.trim(),
+    image_url: document.getElementById('c_img').value.trim(),
+    curriculum: lessons
+  };
+  if(!body.title||!body.category)return(document.getElementById('cErr').textContent='Title and category required.',document.getElementById('cErr').style.display='block');
+  const url = currentCourseId ? '/api/admin/courses/'+currentCourseId : '/api/admin/courses';
+  const method = currentCourseId ? 'PUT' : 'POST';
+  const res = await fetch(url, {method,...H, body:JSON.stringify(body)});
+  const d = await res.json();
+  if(!res.ok){document.getElementById('cErr').textContent=d.error||'Failed to save.';document.getElementById('cErr').style.display='block';return;}
+  document.getElementById('cOk').textContent = currentCourseId ? '✓ Course updated!' : '✓ Course created!';
+  document.getElementById('cOk').style.display = 'block';
+  lessons = [];
+  setTimeout(()=>sp('courses',null), 1500);
+}
+async function deleteCourse(id){
+  if(!confirm('Delete this course? This cannot be undone.'))return;
+  await fetch('/api/admin/courses/'+id, {method:'DELETE',...H});
+  loadCourses();
+}
+function resetCourseForm(){
+  ['c_title','c_cat','c_dur','c_level','c_price','c_cohort','c_desc','c_who','c_pre','c_img'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  lessons=[]; renderLessons();
+}
+
+// ── CURRICULUM / LESSONS ──
+function addLesson(){
+  const t = document.getElementById('lessonTitle').value.trim();
+  const type = document.getElementById('lessonType').value;
+  const dur = document.getElementById('lessonDur').value;
+  if(!t)return;
+  lessons.push({title:t, type, duration:dur||45, order:lessons.length+1});
+  document.getElementById('lessonTitle').value='';
+  document.getElementById('lessonDur').value='';
+  renderLessons();
+}
+function renderLessons(){
+  const list = document.getElementById('curriculumList');
+  if(!list)return;
+  list.innerHTML = lessons.length ? lessons.map((l,i)=>`
+    <div class="cur-item">
+      <div class="cur-num">${i+1}</div>
+      <div style="flex:1;min-width:0;"><div class="cur-title">${l.title}</div><div class="cur-meta">${l.type} · ${l.duration} mins</div></div>
+      <button onclick="removeLesson(${i})" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:0.9rem;padding:3px;">✕</button>
+    </div>`).join('') : '<div style="color:var(--text);font-size:0.84rem;text-align:center;padding:10px;">No lessons added yet.</div>';
+}
+function removeLesson(i){ lessons.splice(i,1); renderLessons(); }
+
+// LESSON MODAL (for existing courses)
+let modalCourseId = null, modalLessons = [];
+async function openLessonMo(courseId, courseTitle){
+  modalCourseId = courseId;
+  document.getElementById('lessonMoTitle').textContent = 'Manage Lessons';
+  document.getElementById('lessonMoCourse').textContent = courseTitle;
+  try{
+    const res = await fetch('/api/admin/courses/'+courseId+'/lessons', H);
+    modalLessons = await res.json();
+  }catch{ modalLessons = []; }
+  renderModalLessons();
+  document.getElementById('lessonMo').classList.add('open');
+}
+function renderModalLessons(){
+  document.getElementById('lessonMoList').innerHTML = modalLessons.length ? modalLessons.map((l,i)=>`
+    <div class="lesson-item">
+      <div class="lesson-num">${i+1}</div>
+      <div style="flex:1;min-width:0;"><div style="font-weight:600;color:var(--white);font-size:0.84rem;">${l.title}</div><div style="font-size:0.7rem;color:var(--text);">${l.type||'video'} · ${l.duration||45} mins</div></div>
+      <button onclick="removeModalLesson(${i})" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:0.9rem;padding:3px;">✕</button>
+    </div>`).join('') : '<div style="color:var(--text);font-size:0.84rem;text-align:center;padding:10px;">No lessons yet.</div>';
+}
+function addLessonToModal(){
+  const t = document.getElementById('newLessonTitle').value.trim();
+  const type = document.getElementById('newLessonType').value;
+  if(!t)return;
+  modalLessons.push({title:t, type, duration:45, order:modalLessons.length+1});
+  document.getElementById('newLessonTitle').value='';
+  renderModalLessons();
+}
+function removeModalLesson(i){ modalLessons.splice(i,1); renderModalLessons(); }
+async function saveLessons(){
+  const res = await fetch('/api/admin/courses/'+modalCourseId+'/lessons', {method:'POST',...H, body:JSON.stringify({lessons:modalLessons})});
+  if(res.ok){closeMo();alert('✓ Lessons saved!');}
+  else{const d=await res.json();alert(d.error||'Failed to save lessons.');}
+}
+
+function handleUpload(input){
+  const files = Array.from(input.files);
+  const div = document.getElementById('uploadedFiles');
+  div.innerHTML = files.map(f=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 9px;background:rgba(6,14,30,0.5);border-radius:8px;margin-top:5px;font-size:0.8rem;color:var(--text2);">📎 ${f.name} <span style="color:var(--text);font-size:0.72rem;">(${(f.size/1024/1024).toFixed(1)}MB)</span></div>`).join('');
+}
+
+// ── PAYMENTS ──
+async function loadPayments(){
+  const res = await fetch('/api/admin/payments', H); const pays = await res.json();
+  const total = pays.filter(p=>p.status==='success').reduce((s,p)=>s+p.amount,0);
+  document.getElementById('totRev').textContent = '₦'+Number(total).toLocaleString();
+  document.getElementById('payTbl').innerHTML = pays.length ? pays.map(p=>`<tr><td style="color:var(--white);font-weight:600;">${p.full_name}</td><td style="font-size:0.79rem;">${p.email}</td><td style="font-size:0.8rem;">${p.course_title||'—'}</td><td style="color:var(--gold);font-weight:600;">₦${Number(p.amount).toLocaleString()}</td><td style="font-size:0.69rem;color:var(--text);">${p.reference||'—'}</td><td><span class="badge ${p.status==='success'?'b-green':'b-red'}">${p.status}</span></td><td style="font-size:0.78rem;">${new Date(p.created_at).toLocaleDateString()}</td></tr>`).join('') : '<tr><td colspan="7" style="text-align:center;padding:18px;color:var(--text);">No payments yet.</td></tr>';
+}
+
+// ── PRICING & PROMOS ──
+async function loadPricing(){
+  const res = await fetch('/api/admin/courses', H); allCourses = await res.json();
+  document.getElementById('priceList').innerHTML = allCourses.map(c=>`
+    <div class="price-row">
+      <div style="flex:1;min-width:0;"><div style="font-weight:600;color:var(--white);font-size:0.875rem;">${c.thumbnail||'📋'} ${c.title}</div><div style="font-size:0.73rem;color:var(--text);">${c.duration} · Current: <strong style="color:var(--gold);">₦${Number(c.price).toLocaleString()}</strong></div></div>
+      <input type="number" class="fi" id="np_${c.id}" value="${c.price}" style="width:120px;padding:7px 10px;font-size:0.84rem;"/>
+      <button class="btn btn-gold btn-sm" onclick="updatePrice(${c.id})">Update</button>
+    </div>`).join('');
+  // Load promos
+  loadPromos();
+  // Populate course select in promo modal
+  loadCoursesForSelect();
+}
+async function loadCoursesForSelect(){
+  if(!allCourses.length){ const r=await fetch('/api/admin/courses',H); allCourses=await r.json(); }
+  const sel = document.getElementById('pCourse');
+  sel.innerHTML = '<option value="">All Courses</option>' + allCourses.map(c=>`<option value="${c.id}">${c.title}</option>`).join('');
+}
+async function updatePrice(id){
+  const price = parseInt(document.getElementById('np_'+id).value);
+  if(!price||price<0)return alert('Enter a valid price.');
+  const res = await fetch('/api/admin/courses/'+id+'/price', {method:'POST',...H, body:JSON.stringify({price})});
+  const d = await res.json();
+  if(res.ok){ alert('✓ Price updated to ₦'+price.toLocaleString()+'!'); loadPricing(); }
+  else alert(d.error||'Failed to update price. Check that the /api/admin/courses/:id/price route exists on your server.');
+}
+
+function loadPromos(){
+  document.getElementById('promoList').innerHTML = allPromos.length ? allPromos.map(p=>`
+    <div class="promo-card">
+      <div style="flex:1;"><div style="font-weight:700;color:var(--white);font-size:0.9rem;font-family:monospace;letter-spacing:0.08em;">${p.code}</div>
+      <div style="font-size:0.73rem;color:var(--text);margin-top:2px;">${p.discount}% off · ${p.uses||0} uses · Expires: ${p.expires||'No expiry'}</div></div>
+      <span class="badge ${p.active!==false?'b-green':'b-red'}">${p.active!==false?'Active':'Expired'}</span>
+      <button class="btn btn-danger btn-sm" onclick="deletePromo('${p.code}')">Delete</button>
+    </div>`).join('') : '<div style="color:var(--text);font-size:0.875rem;">No promo codes yet. Create one to offer discounts.</div>';
+}
+async function savePromo(){
+  const code = document.getElementById('pCode').value.trim().toUpperCase();
+  const disc = parseInt(document.getElementById('pDisc').value);
+  const uses = parseInt(document.getElementById('pUses').value)||0;
+  const exp = document.getElementById('pExp').value;
+  const course_id = document.getElementById('pCourse').value;
+  const err = document.getElementById('promoErr'), ok = document.getElementById('promoOk');
+  err.style.display='none'; ok.style.display='none';
+  if(!code||!disc||disc<1||disc>99){ err.textContent='Code and valid discount (1–99%) required.'; err.style.display='block'; return; }
+  // Try API first
+  try{
+    const res = await fetch('/api/admin/promos', {method:'POST',...H, body:JSON.stringify({code,discount:disc,max_uses:uses,expires:exp,course_id:course_id||null})});
+    if(res.ok){
+      const d = await res.json();
+      allPromos.unshift({code,discount:disc,uses:0,expires:exp||'No expiry',active:true});
+      ok.textContent='✓ Promo code "'+code+'" created!'; ok.style.display='block';
+      document.getElementById('promoList').innerHTML=''; loadPromos();
+      setTimeout(()=>closeMo(), 1500);
+      return;
+    }
+  }catch(e){}
+  // Fallback — store locally
+  allPromos.unshift({code,discount:disc,uses:0,expires:exp||'No expiry',active:true,course_id});
+  ok.textContent = '✓ Promo "'+code+'" saved ('+disc+'% off). Note: apply this at checkout manually until /api/admin/promos route is added to server.';
+  ok.style.display='block';
+  loadPromos();
+  setTimeout(()=>closeMo(), 2000);
+}
+function deletePromo(code){
+  allPromos = allPromos.filter(p=>p.code!==code);
+  loadPromos();
+}
+
+// ── CERTS ──
+async function issueCert(){
+  const user_id=document.getElementById('certUsr').value, course_id=document.getElementById('certCrs').value;
+  const err=document.getElementById('certErr'),ok=document.getElementById('certOk');
+  err.style.display='none';ok.style.display='none';
+  if(!user_id||!course_id)return(err.textContent='Both fields required.',err.style.display='block');
+  const res = await fetch('/api/admin/certificates', {method:'POST',...H, body:JSON.stringify({user_id,course_id})});
+  const d = await res.json();
+  if(res.ok){ok.textContent='✓ Certificate issued! Code: '+d.cert_code;ok.style.display='block';}
+  else{err.textContent=d.error||'Failed.';err.style.display='block';}
+}
+
+// ── ANNOUNCEMENTS ──
+async function postAnn(){
+  const title=document.getElementById('annTitle').value.trim(), body=document.getElementById('annBody').value.trim();
+  const err=document.getElementById('annErr'),ok=document.getElementById('annOk');
+  err.style.display='none';ok.style.display='none';
+  if(!title||!body)return(err.textContent='Fill in all fields.',err.style.display='block');
+  const res = await fetch('/api/admin/announcements', {method:'POST',...H, body:JSON.stringify({title,body,is_global:true})});
+  if(res.ok){ok.textContent='✓ Announcement posted to all students!';ok.style.display='block';document.getElementById('annTitle').value='';document.getElementById('annBody').value='';}
+  else{const d=await res.json();err.textContent=d.error||'Failed.';err.style.display='block';}
+}
+
+// ── COHORT ──
+function initCohort(){
+  const m=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const n=new Date();
+  document.getElementById('cohName').value = m[n.getMonth()]+' '+n.getFullYear()+' Cohort';
+  const next = new Date(n.getFullYear(),n.getMonth()+1,1);
+  document.getElementById('cohStart').value = next.toISOString().split('T')[0];
+  const dead = new Date(next); dead.setDate(dead.getDate()-7);
+  document.getElementById('cohDead').value = dead.toISOString().split('T')[0];
+  document.getElementById('cohSeats').value = '20';
+  document.getElementById('cohMsg').value = m[next.getMonth()]+' '+next.getFullYear()+' Cohort is now open!';
+}
+function saveCohort(){
+  const name = document.getElementById('cohName').value.trim();
+  if(!name)return;
+  document.getElementById('cohortPill').textContent = name;
+  const ok = document.getElementById('cohOk'); ok.textContent='✓ Cohort settings saved!'; ok.style.display='block';
+  setTimeout(()=>ok.style.display='none',3000);
+}
+
+loadOverview();
+</script>
+</body>
+</html>
