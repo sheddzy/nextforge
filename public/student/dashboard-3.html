@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Dashboard — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+<style>
+/* ═══ DARK COLORFUL DASHBOARD ═══ */
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:#060e1e;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+
+/* ANIMATED GRID BACKGROUND */
+.pm{
+  background:linear-gradient(160deg,#0b1729 0%,#060e1e 45%,#111f38 100%);
+  position:relative;min-height:100vh;
+}
+.pm::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(37,99,235,0.035) 1.5px,transparent 1.5px);
+  background-size:42px 42px;
+}
+
+/* PORTAL */
+.portal{display:grid;grid-template-columns:248px 1fr;min-height:100vh;}
+
+/* ═══ SIDEBAR ═══ */
+.sb{
+  background:linear-gradient(180deg,#111f38 0%,#0b1729 60%,#060e1e 100%);
+  border-right:1px solid rgba(255,255,255,0.06);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  box-shadow:2px 0 20px rgba(0,0,0,0.3);
+}
+.sb::-webkit-scrollbar{width:3px;}
+.sb::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+
+.sb-top{padding:18px 15px 14px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0;}
+.sb-logo{display:inline-flex;align-items:center;text-decoration:none;margin-bottom:14px;}
+.sb-logo img{height:34px;width:auto;object-fit:contain;display:block;}
+
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:12px;border:1px solid rgba(255,255,255,0.09);}
+.sb-av{width:34px;height:34px;border-radius:50%;background:rgba(37,99,235,0.2);border:2px solid #3b82f6;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;overflow:hidden;}
+.sb-av img{width:100%;height:100%;object-fit:cover;}
+.sb-uname{font-weight:600;color:#fff;font-size:0.84rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-urole{font-size:0.67rem;color:rgba(148,163,184,0.7);margin-top:1px;}
+
+.sb-nav{padding:10px 9px;flex:1;}
+.sb-sec{font-size:0.62rem;color:rgba(148,163,184,0.4);text-transform:uppercase;letter-spacing:0.1em;padding:12px 8px 4px;font-weight:700;}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:0.875rem;font-weight:500;color:rgba(148,163,184,0.75);transition:all 0.18s;margin-bottom:1px;text-decoration:none;cursor:pointer;border:none;background:none;width:100%;}
+.ni:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.ni.active{background:rgba(37,99,235,0.15);color:#60a5fa;border-left:2px solid #3b82f6;padding-left:8px;}
+.ni-icon{width:18px;text-align:center;flex-shrink:0;font-size:0.9rem;}
+.ni-badge{margin-left:auto;background:#f0a500;color:#000;border-radius:10px;padding:1px 7px;font-size:0.63rem;font-weight:700;}
+
+.sb-bot{padding:10px 9px 16px;border-top:1px solid rgba(255,255,255,0.07);margin-top:auto;}
+
+/* ═══ MAIN ═══ */
+.pm-inner{display:flex;flex-direction:column;min-height:100vh;position:relative;z-index:1;}
+
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(6,14,30,0.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  padding:12px 26px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-shrink:0;
+}
+.tb-title{font-weight:700;color:#fff;font-size:1rem;font-family:'Syne',sans-serif;}
+.tb-sub{font-size:0.74rem;color:rgba(148,163,184,0.7);margin-top:1px;}
+
+/* PAGE CONTENT */
+.pc{padding:24px 26px;flex:1;}
+
+/* ═══ PROFILE BANNER ═══ */
+.pb{
+  background:linear-gradient(135deg,#182d4e 0%,#111f38 100%);
+  border:1px solid rgba(255,255,255,0.1);border-radius:20px;
+  padding:22px 26px;margin-bottom:20px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  position:relative;overflow:hidden;
+}
+.pb::after{content:'';position:absolute;right:-30px;top:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(240,165,0,0.08),transparent 70%);pointer-events:none;}
+.pb::before{content:'';position:absolute;left:-20px;bottom:-20px;width:160px;height:160px;background:radial-gradient(circle,rgba(37,99,235,0.07),transparent 70%);pointer-events:none;}
+.pb-av{width:60px;height:60px;border-radius:50%;background:rgba(37,99,235,0.2);border:3px solid #3b82f6;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;overflow:hidden;position:relative;z-index:1;}
+.pb-av img{width:100%;height:100%;object-fit:cover;}
+.pb-info{flex:1;min-width:0;position:relative;z-index:1;}
+.pb-name{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;}
+.pb-email{font-size:0.78rem;color:rgba(148,163,184,0.8);margin-top:2px;}
+.pb-id{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:20px;background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.2);font-size:0.67rem;color:#f0a500;font-weight:700;margin-top:5px;}
+
+/* ═══ COLORFUL STAT CARDS ═══ */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:20px;}
+.sc{border-radius:16px;padding:18px 20px;position:relative;overflow:hidden;transition:all 0.2s;cursor:default;}
+.sc:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,0.4);}
+.sc.c-blue{background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);border:1px solid rgba(37,99,235,0.4);}
+.sc.c-gold{background:linear-gradient(135deg,#78350f 0%,#c47f00 100%);border:1px solid rgba(196,127,0,0.4);}
+.sc.c-green{background:linear-gradient(135deg,#064e3b 0%,#059669 100%);border:1px solid rgba(5,150,105,0.4);}
+.sc.c-purple{background:linear-gradient(135deg,#4c1d95 0%,#7c3aed 100%);border:1px solid rgba(124,58,237,0.4);}
+.sc::after{content:'';position:absolute;top:-15px;right:-15px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.07);}
+.sc-icon{font-size:1.4rem;margin-bottom:8px;position:relative;z-index:1;}
+.sc-num{font-size:1.7rem;font-weight:800;color:#fff;line-height:1;font-family:'Syne',sans-serif;position:relative;z-index:1;}
+.sc-lbl{font-size:0.74rem;color:rgba(255,255,255,0.72);margin-top:4px;position:relative;z-index:1;}
+
+/* ═══ CARDS ═══ */
+.card{background:rgba(17,31,56,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;}
+.card h3,.card h4{color:#fff;}
+.card p{color:rgba(148,163,184,0.8);font-size:0.875rem;}
+
+/* ═══ COURSE TILES ═══ */
+.ct{background:rgba(17,31,56,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;transition:all 0.2s;}
+.ct:hover{border-color:rgba(37,99,235,0.3);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.35);}
+.ct-img{height:88px;overflow:hidden;position:relative;}
+.ct-img img{width:100%;height:100%;object-fit:cover;opacity:0.65;}
+.ct-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,14,30,0.85),transparent);display:flex;align-items:flex-end;padding:7px 11px;}
+.ct-body{padding:12px 13px;}
+.ct-title{font-weight:700;color:#fff;font-size:0.85rem;margin-bottom:3px;line-height:1.3;}
+.ct-meta{font-size:0.73rem;color:rgba(148,163,184,0.7);margin-bottom:8px;}
+.pbar{width:100%;height:5px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;margin-bottom:4px;}
+.pfill{height:100%;background:linear-gradient(90deg,#2563eb,#3b82f6);border-radius:3px;transition:width 0.8s;}
+.pfill.g{background:linear-gradient(90deg,#059669,#10b981);}
+
+/* ═══ NOTIF ═══ */
+.ni-item{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:0.83rem;}
+.ni-item:last-child{border-bottom:none;}
+.ndot{width:6px;height:6px;border-radius:50%;background:#f0a500;flex-shrink:0;margin-top:4px;}
+
+/* ALERT */
+.al-err{background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.22);color:#fca5a5;padding:10px 13px;border-radius:8px;font-size:0.84rem;margin-bottom:12px;display:none;}
+.al-ok{background:rgba(5,150,105,0.1);border:1px solid rgba(5,150,105,0.22);color:#6ee7b7;padding:10px 13px;border-radius:8px;font-size:0.84rem;margin-bottom:12px;display:none;}
+
+/* FORM */
+.fg{margin-bottom:15px;}
+.fl{display:block;font-size:0.78rem;color:rgba(203,213,225,0.9);margin-bottom:5px;font-weight:600;}
+.fi{width:100%;background:rgba(17,31,56,0.9);border:1.5px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 13px;color:#fff;font-size:0.9rem;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.fi:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(37,99,235,0.12);}
+.fi::placeholder{color:rgba(148,163,184,0.35);}
+select.fi option{background:#0b1729;color:#fff;}
+textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
+
+/* ID CARD */
+.id-card{background:linear-gradient(135deg,#182d4e,#111f38);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px;text-align:center;position:relative;overflow:hidden;}
+.id-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f0a500,#3b82f6);}
+.id-num{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#f0a500;letter-spacing:0.1em;margin:8px 0;}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:20px;font-size:0.67rem;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;}
+.b-blue{background:rgba(37,99,235,0.15);color:#60a5fa;border:1px solid rgba(37,99,235,0.25);}
+.b-gold{background:rgba(240,165,0,0.12);color:#f0a500;border:1px solid rgba(240,165,0,0.22);}
+.b-green{background:rgba(5,150,105,0.12);color:#34d399;border:1px solid rgba(5,150,105,0.22);}
+
+/* BTN */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 20px;border-radius:10px;font-size:0.875rem;font-weight:600;border:none;transition:all 0.18s;white-space:nowrap;cursor:pointer;text-decoration:none;}
+.btn-primary{background:#2563eb;color:#fff;}
+.btn-primary:hover{background:#3b82f6;transform:translateY(-1px);}
+.btn-gold{background:#f0a500;color:#000;font-weight:700;}
+.btn-gold:hover{background:#fbbf24;transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:#cbd5e1;border:1.5px solid rgba(255,255,255,0.15);}
+.btn-ghost:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.btn-danger{background:rgba(220,38,38,0.12);color:#f87171;border:1px solid rgba(220,38,38,0.2);}
+.btn-sm{padding:6px 13px;font-size:0.8rem;border-radius:8px;}
+
+/* PAGE VISIBILITY */
+.page{display:none;}
+.page.on{display:block;}
+
+/* ═══ MOBILE TOP BAR ═══ */
+.mob-top{
+  display:none;position:fixed;top:0;left:0;right:0;z-index:200;
+  height:58px;background:rgba(6,14,30,0.97);border-bottom:1px solid rgba(255,255,255,0.07);
+  padding:0 15px;align-items:center;justify-content:space-between;
+  backdrop-filter:blur(14px);
+}
+.mob-ham{background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer;padding:5px;border-radius:7px;}
+.mob-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:190;}
+.mob-ov.open{display:block;}
+.sb.mob-open{display:flex!important;position:fixed;z-index:195;height:100vh;box-shadow:0 0 60px rgba(0,0,0,0.6);}
+
+/* PROFILE FORM 2-COL */
+.pf2{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .portal{grid-template-columns:1fr;}
+  .sb{display:none;}
+  .mob-top{display:flex;}
+  .pm-inner{padding-top:58px;}
+  .pc{padding:16px 14px;}
+  .topbar{display:none;}
+  .sg{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .sg{grid-template-columns:1fr 1fr;}
+  .pb{padding:16px;}
+  .pf2{grid-template-columns:1fr;}
+  .pc{padding:12px 10px;}
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE TOP BAR -->
+<div class="mob-top" id="mobTop">
+  <a href="/" style="display:inline-flex;align-items:center;text-decoration:none;">
+    <img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy" style="height:30px;width:auto;object-fit:contain;display:block;"/>
+  </a>
+  <button class="mob-ham" onclick="toggleSB()">☰</button>
+</div>
+<div class="mob-ov" id="mobOv" onclick="toggleSB()"></div>
+
+<div class="portal">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sb" id="sb">
+    <div class="sb-top">
+      <a href="/" class="sb-logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
+      <div class="sb-user">
+        <div class="sb-av" id="sbAv">👤</div>
+        <div style="min-width:0;">
+          <div class="sb-uname" id="sbName">Student</div>
+          <div class="sb-urole">Student Account</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-nav">
+      <button class="ni active" onclick="sp('dash',this)"><span class="ni-icon">🏠</span>Dashboard</button>
+      <button class="ni" onclick="sp('courses',this)"><span class="ni-icon">📚</span>My Courses</button>
+      <a href="/student/assignments.html" class="ni"><span class="ni-icon">📝</span>Assignments</a>
+      <a href="/student/classroom.html" class="ni"><span class="ni-icon">🎥</span>Live Classroom</a>
+      <button class="ni" onclick="sp('notifs',this)">
+        <span class="ni-icon">🔔</span>Notifications
+        <span class="ni-badge" id="nbadge" style="display:none;">0</span>
+      </button>
+      <button class="ni" onclick="sp('ann',this)"><span class="ni-icon">📢</span>Announcements</button>
+      <div class="sb-sec">Account</div>
+      <button class="ni" onclick="sp('profile',this)"><span class="ni-icon">👤</span>My Profile</button>
+      <a href="/courses.html" class="ni"><span class="ni-icon">🔍</span>Browse Courses</a>
+    </div>
+    <div class="sb-bot">
+      <a href="/" class="ni"><span class="ni-icon">🌐</span>Main Website</a>
+      <button class="ni" onclick="logout()" style="color:#f87171;"><span class="ni-icon">🚪</span>Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="pm">
+    <div class="pm-inner">
+      <div class="topbar">
+        <div><div class="tb-title" id="pageTitle">Dashboard</div><div class="tb-sub" id="pageSub"></div></div>
+        <a href="/courses.html" class="btn btn-gold btn-sm">+ Enroll</a>
+      </div>
+
+      <div class="pc">
+
+        <!-- DASHBOARD -->
+        <div class="page on" id="page-dash">
+          <div class="pb">
+            <div class="pb-av" id="pbAv">👤</div>
+            <div class="pb-info">
+              <div class="pb-name" id="pbName">Welcome back!</div>
+              <div class="pb-email" id="pbEmail"></div>
+              <div class="pb-id" id="pbId" style="display:none;"></div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="sp('profile',null)" style="flex-shrink:0;position:relative;z-index:1;">Edit Profile</button>
+          </div>
+
+          <div class="sg">
+            <div class="sc c-blue"><div class="sc-icon">📚</div><div class="sc-num" id="sC">0</div><div class="sc-lbl">Courses Enrolled</div></div>
+            <div class="sc c-gold"><div class="sc-icon">✅</div><div class="sc-num" id="sL">0</div><div class="sc-lbl">Lessons Done</div></div>
+            <div class="sc c-green"><div class="sc-icon">📈</div><div class="sc-num" id="sP">0%</div><div class="sc-lbl">Overall Progress</div></div>
+            <div class="sc c-purple"><div class="sc-icon">🎓</div><div class="sc-num" id="sCt">0</div><div class="sc-lbl">Certificates</div></div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap;gap:8px;">
+            <h3 style="color:#fff;font-size:1rem;">Continue Learning</h3>
+            <button class="btn btn-ghost btn-sm" onclick="sp('courses',null)">View All →</button>
+          </div>
+          <div id="dashCourses" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:13px;margin-bottom:20px;"></div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="card"><h4 style="margin-bottom:11px;font-size:0.9rem;">📢 Latest Announcement</h4><div id="latAnn" style="font-size:0.84rem;color:rgba(148,163,184,0.8);">No announcements yet.</div></div>
+            <div class="card"><h4 style="margin-bottom:11px;font-size:0.9rem;">🔔 Notifications</h4><div id="recNotifs" style="font-size:0.84rem;color:rgba(148,163,184,0.8);">Loading...</div></div>
+          </div>
+        </div>
+
+        <!-- MY COURSES -->
+        <div class="page" id="page-courses">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+            <h3 style="color:#fff;">My Courses</h3>
+            <a href="/courses.html" class="btn btn-gold btn-sm">+ Enroll New</a>
+          </div>
+          <div id="allCourses"></div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="page" id="page-notifs">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;flex-wrap:wrap;gap:8px;">
+            <h3 style="color:#fff;">Notifications</h3>
+            <button class="btn btn-ghost btn-sm" onclick="markRead()">Mark all read</button>
+          </div>
+          <div class="card" style="padding:0;overflow:hidden;"><div id="allNotifs" style="max-height:480px;overflow-y:auto;"><div style="padding:22px;text-align:center;color:rgba(148,163,184,0.7);">Loading...</div></div></div>
+        </div>
+
+        <!-- ANNOUNCEMENTS -->
+        <div class="page" id="page-ann">
+          <h3 style="color:#fff;margin-bottom:15px;">Announcements</h3>
+          <div id="allAnn"><div style="color:rgba(148,163,184,0.7);text-align:center;padding:22px;">No announcements yet.</div></div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="page" id="page-profile">
+          <h3 style="color:#fff;margin-bottom:4px;">My Profile</h3>
+          <p style="color:rgba(148,163,184,0.7);font-size:0.875rem;margin-bottom:18px;">Keep your details complete and up to date.</p>
+          <div style="display:grid;grid-template-columns:1fr 290px;gap:18px;align-items:start;" id="pfGrid">
+            <div class="card">
+              <h4 style="margin-bottom:15px;font-size:0.9rem;">Personal Information</h4>
+              <div class="pf2">
+                <div class="fg"><label class="fl">Full Name</label><input class="fi" id="pf_name" placeholder="Full name"/></div>
+                <div class="fg"><label class="fl">Email</label><input class="fi" id="pf_email" readonly style="opacity:0.5;"/></div>
+                <div class="fg"><label class="fl">Phone</label><input class="fi" id="pf_phone" placeholder="+234 or international"/></div>
+                <div class="fg"><label class="fl">Country</label><select class="fi" id="pf_country"><option value="">Select...</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option><option>South Africa</option><option>United Kingdom</option><option>Canada</option><option>United States</option><option>Other</option></select></div>
+                <div class="fg"><label class="fl">City / State</label><input class="fi" id="pf_city" placeholder="e.g. Lagos, Nigeria"/></div>
+                <div class="fg"><label class="fl">Occupation</label><input class="fi" id="pf_occ" placeholder="e.g. Admin Officer"/></div>
+              </div>
+              <div class="fg"><label class="fl">Full Address</label><input class="fi" id="pf_addr" placeholder="Street, city, state, country"/></div>
+              <div class="fg"><label class="fl">Why I Enrolled at NextForge</label><textarea class="fi" id="pf_why" rows="2" placeholder="Your motivation..."></textarea></div>
+              <div class="fg"><label class="fl">Career Goal</label><textarea class="fi" id="pf_goal" rows="2" placeholder="What do you want to achieve?"></textarea></div>
+              <div class="al-err" id="pfErr"></div>
+              <div class="al-ok" id="pfOk"></div>
+              <button class="btn btn-gold" onclick="saveProfile()">Save Profile →</button>
+            </div>
+            <div>
+              <div class="card" style="text-align:center;margin-bottom:13px;">
+                <div id="pfAvBig" onclick="document.getElementById('pfAvIn').click()" style="width:80px;height:80px;border-radius:50%;background:rgba(37,99,235,0.2);border:3px solid #3b82f6;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 11px;overflow:hidden;cursor:pointer;">👤</div>
+                <input type="file" id="pfAvIn" accept="image/*" style="display:none;" onchange="changeAv(this)"/>
+                <div style="font-size:0.7rem;color:rgba(148,163,184,0.6);margin-bottom:10px;">Click photo to change</div>
+                <div style="font-weight:700;color:#fff;font-size:0.9rem;" id="pfDName">Your Name</div>
+                <div style="font-size:0.73rem;color:#f0a500;margin-top:3px;">Student</div>
+                <div style="font-size:0.7rem;color:rgba(148,163,184,0.6);margin-top:4px;" id="pfMember"></div>
+              </div>
+              <div class="id-card">
+                <div style="font-size:0.64rem;color:rgba(148,163,184,0.6);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:2px;">Student ID</div>
+                <div class="id-num" id="pfID">—</div>
+                <div style="font-size:0.7rem;color:rgba(148,163,184,0.6);">NextForge Academy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /pc -->
+    </div><!-- /pm-inner -->
+  </div><!-- /pm -->
+</div><!-- /portal -->
+
+<script>
+const token=localStorage.getItem('nf_token');
+if(!token)window.location.href='/login.html';
+const name=localStorage.getItem('nf_name')||'Student';
+document.getElementById('sbName').textContent=name;
+document.getElementById('pageSub').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const H={credentials:'include',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'}};
+let userData=null,enrollments=[];
+
+function toggleSB(){
+  const sb=document.getElementById('sb'),ov=document.getElementById('mobOv');
+  sb.classList.toggle('mob-open');ov.classList.toggle('open');
+}
+function logout(){fetch('/api/auth/logout',{method:'POST',credentials:'include'});localStorage.clear();window.location.href='/login.html';}
+
+function sp(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+  const t={dash:'Dashboard',courses:'My Courses',notifs:'Notifications',ann:'Announcements',profile:'My Profile'};
+  document.getElementById('pageTitle').textContent=t[id]||id;
+  if(id==='profile')fillPF();
+  if(id==='notifs')loadAllNotifs();
+  document.getElementById('sb').classList.remove('mob-open');
+  document.getElementById('mobOv').classList.remove('open');
+}
+
+function courseCard(e){
+  const pct=e.total_lessons>0?Math.round(e.completed_lessons/e.total_lessons*100):0;
+  const done=pct>=80;
+  return`<div class="ct">
+    <div class="ct-img"><img src="${e.image_url||'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&q=60'}" alt="" loading="lazy"/><div class="ct-ov"><span style="font-size:0.64rem;color:#f0a500;font-weight:700;text-transform:uppercase;">${e.category||''}</span></div></div>
+    <div class="ct-body">
+      <div class="ct-title">${e.title}</div>
+      <div class="ct-meta">${e.duration}</div>
+      <div class="pbar"><div class="pfill ${done?'g':''}" style="width:${pct}%;"></div></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font-size:0.69rem;color:rgba(148,163,184,0.7);">${pct}% · ${e.completed_lessons}/${e.total_lessons} lessons</span>${done?'<span class="badge b-gold" style="font-size:0.6rem;">🎓 Ready</span>':''}</div>
+      <div style="display:flex;gap:6px;">
+        <a href="/student/lesson.html?course=${e.id}" class="btn btn-primary btn-sm" style="flex:1;">${pct>0?'Continue →':'Start →'}</a>
+        ${done?`<a href="/student/certificate.html?course=${e.id}" class="btn btn-sm" style="background:rgba(240,165,0,0.12);color:#f0a500;border:1px solid rgba(240,165,0,0.2);padding:6px 10px;">🎓</a>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+async function loadAllNotifs(){
+  const res=await fetch('/api/progress/notifications',H);const n=await res.json();
+  document.getElementById('allNotifs').innerHTML=n.length?
+    n.map(x=>`<div class="ni-item">${!x.is_read?'<div class="ndot"></div>':'<div style="width:6px;"></div>'}<div style="flex:1;"><div style="color:${x.is_read?'rgba(148,163,184,0.7)':'#fff'};font-size:0.83rem;">${x.message}</div><div style="font-size:0.68rem;color:rgba(148,163,184,0.5);margin-top:2px;">${new Date(x.created_at).toLocaleDateString()}</div></div></div>`).join(''):
+    '<div style="padding:22px;text-align:center;color:rgba(148,163,184,0.6);">No notifications yet.</div>';
+}
+async function markRead(){await fetch('/api/progress/notifications/read-all',{method:'POST',...H});document.getElementById('nbadge').style.display='none';loadAllNotifs();}
+
+function fillPF(){
+  if(!userData)return;
+  let bio={};try{bio=JSON.parse(userData.bio||'{}');}catch{}
+  document.getElementById('pf_name').value=userData.full_name||'';
+  document.getElementById('pf_email').value=userData.email||'';
+  document.getElementById('pf_phone').value=userData.phone||'';
+  document.getElementById('pf_country').value=bio.country||'';
+  document.getElementById('pf_city').value=bio.city||'';
+  document.getElementById('pf_occ').value=bio.occupation||'';
+  document.getElementById('pf_addr').value=bio.address||'';
+  document.getElementById('pf_why').value=bio.reason||bio.why||'';
+  document.getElementById('pf_goal').value=bio.goal||'';
+  document.getElementById('pfDName').textContent=userData.full_name||'Your Name';
+  document.getElementById('pfID').textContent=userData.unique_id||'—';
+  document.getElementById('pfMember').textContent='Member since '+new Date(userData.created_at).toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  if(userData.avatar_url){
+    document.getElementById('pfAvBig').innerHTML=`<img src="${userData.avatar_url}" style="width:80px;height:80px;object-fit:cover;border-radius:50%;"/><input type="file" id="pfAvIn" accept="image/*" style="display:none;" onchange="changeAv(this)"/>`;
+  }
+}
+function changeAv(input){
+  if(!input.files[0])return;
+  const r=new FileReader();r.onload=e=>{
+    document.getElementById('pfAvBig').innerHTML=`<img src="${e.target.result}" style="width:80px;height:80px;object-fit:cover;border-radius:50%;"/><input type="file" id="pfAvIn" accept="image/*" style="display:none;" onchange="changeAv(this)"/>`;
+    fetch('/api/auth/profile',{method:'POST',...H,body:JSON.stringify({avatar_base64:e.target.result})});
+  };r.readAsDataURL(input.files[0]);
+}
+async function saveProfile(){
+  const bio=JSON.stringify({country:document.getElementById('pf_country').value,city:document.getElementById('pf_city').value.trim(),occupation:document.getElementById('pf_occ').value.trim(),address:document.getElementById('pf_addr').value.trim(),reason:document.getElementById('pf_why').value.trim(),goal:document.getElementById('pf_goal').value.trim()});
+  const body={full_name:document.getElementById('pf_name').value.trim(),phone:document.getElementById('pf_phone').value.trim(),bio};
+  const err=document.getElementById('pfErr'),ok=document.getElementById('pfOk');
+  err.style.display='none';ok.style.display='none';
+  try{
+    const res=await fetch('/api/auth/profile',{method:'POST',...H,body:JSON.stringify(body)});
+    const d=await res.json();
+    if(!res.ok){err.textContent=d.error;err.style.display='block';return;}
+    ok.textContent='✓ Profile saved!';ok.style.display='block';
+    localStorage.setItem('nf_name',body.full_name);
+    document.getElementById('sbName').textContent=body.full_name;
+    document.getElementById('pfDName').textContent=body.full_name;
+    setTimeout(()=>ok.style.display='none',3000);
+  }catch{err.textContent='Save failed.';err.style.display='block';}
+}
+
+async function loadDashboard(){
+  const [uRes,eRes,nRes]=await Promise.all([fetch('/api/auth/me',H),fetch('/api/courses/my/enrollments',H),fetch('/api/progress/notifications',H)]);
+  userData=await uRes.json();enrollments=await eRes.json();const notifs=await nRes.json();
+
+  // Banner
+  document.getElementById('pbName').textContent='Welcome back, '+(userData.full_name?.split(' ')[0]||'Student')+' 👋';
+  document.getElementById('pbEmail').textContent=userData.email||'';
+  if(userData.unique_id){const el=document.getElementById('pbId');el.textContent='ID: '+userData.unique_id;el.style.display='inline-flex';}
+  if(userData.avatar_url){document.getElementById('pbAv').innerHTML=`<img src="${userData.avatar_url}"/>`;document.getElementById('sbAv').innerHTML=`<img src="${userData.avatar_url}"/>`;}
+
+  // Stats
+  const done=enrollments.reduce((s,e)=>s+(e.completed_lessons||0),0);
+  const total=enrollments.reduce((s,e)=>s+(e.total_lessons||0),0);
+  const pct=total>0?Math.round(done/total*100):0;
+  let certs=0;enrollments.forEach(e=>{if(e.total_lessons>0&&e.completed_lessons/e.total_lessons>=0.8)certs++;});
+  document.getElementById('sC').textContent=enrollments.length;
+  document.getElementById('sL').textContent=done;
+  document.getElementById('sP').textContent=pct+'%';
+  document.getElementById('sCt').textContent=certs;
+
+  // Courses
+  const dc=document.getElementById('dashCourses');
+  if(!enrollments.length){
+    dc.innerHTML='<div style="grid-column:1/-1;background:rgba(17,31,56,0.8);border:2px dashed rgba(255,255,255,0.1);border-radius:14px;padding:36px;text-align:center;"><div style="font-size:2.5rem;margin-bottom:11px;">📚</div><div style="font-weight:700;color:#fff;margin-bottom:5px;">No Courses Yet</div><div style="color:rgba(148,163,184,0.7);font-size:0.875rem;margin-bottom:16px;">Browse our programmes to start your tech career journey.</div><a href="/courses.html" class="btn btn-gold">Browse Courses →</a></div>';
+  }else{dc.innerHTML=enrollments.slice(0,3).map(courseCard).join('');}
+
+  document.getElementById('allCourses').innerHTML=enrollments.length?
+    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:13px;">'+enrollments.map(courseCard).join('')+'</div>':
+    '<div style="text-align:center;padding:36px;color:rgba(148,163,184,0.7);"><a href="/courses.html" class="btn btn-gold">Browse Courses →</a></div>';
+
+  const unread=notifs.filter(n=>!n.is_read).length;
+  if(unread>0){const b=document.getElementById('nbadge');b.textContent=unread;b.style.display='inline';}
+  document.getElementById('recNotifs').innerHTML=notifs.length?
+    notifs.slice(0,3).map(n=>`<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:0.81rem;color:${n.is_read?'rgba(148,163,184,0.7)':'#fff'};">${n.message}</div>`).join(''):
+    '<span style="color:rgba(148,163,184,0.6);">No notifications yet.</span>';
+}
+
+if(window.innerWidth<=768)document.getElementById('pfGrid')?.style&&(document.getElementById('pfGrid').style.gridTemplateColumns='1fr');
+loadDashboard();
+</script>
+</body>
+</html>
