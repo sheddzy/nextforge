@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="All NextForge Academy programmes — Project Management, Data Analysis, Product Management, Notion Mastery, Operations Systems, Business Communication."/>
+<title>All Courses — NextForge Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;}
+html,body{background:#060e1e!important;color:#cbd5e1;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}img{display:block;max-width:100%;}ul{list-style:none;}
+h1,h2,h3,h4{color:#fff;line-height:1.2;font-weight:700;}
+h1{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,3rem);}
+p{line-height:1.75;color:#94a3b8;}
+
+:root{
+  --navy:#060e1e;--navy2:#0b1729;--navy3:#111f38;--navy4:#182d4e;
+  --gold:#f0a500;--gold2:#fbbf24;--blue:#2563eb;--blue2:#3b82f6;
+  --green:#059669;--red:#ef4444;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#94a3b8;--text2:#cbd5e1;--white:#fff;
+}
+
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;display:flex;align-items:center;padding:0 24px;background:rgba(6,14,30,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1200px;width:100%;margin:0 auto;display:flex;align-items:center;gap:24px;}
+.logo{display:inline-flex;align-items:center;text-decoration:none;flex-shrink:0;}
+.logo img{height:40px;width:auto;object-fit:contain;display:block;}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;}
+.nav-links a{padding:7px 13px;border-radius:8px;font-size:0.9rem;font-weight:500;color:var(--text2);transition:all 0.18s;}
+.nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,0.08);}
+.nav-actions{display:flex;align-items:center;gap:9px;margin-left:auto;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 20px;border-radius:10px;font-size:0.875rem;font-weight:600;border:none;transition:all 0.18s;white-space:nowrap;cursor:pointer;text-decoration:none;font-family:'Inter',sans-serif;}
+.btn-gold{background:linear-gradient(135deg,#b45309,var(--gold));color:#000;font-weight:700;box-shadow:0 4px 14px rgba(240,165,0,0.3);}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(240,165,0,0.45);}
+.btn-ghost{background:rgba(255,255,255,0.06);color:var(--text2);border:1px solid var(--border2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.btn-blue{background:linear-gradient(135deg,#1d4ed8,var(--blue2));color:#fff;box-shadow:0 4px 14px rgba(37,99,235,0.3);}
+.btn-blue:hover{transform:translateY(-1px);}
+.btn-sm{padding:6px 14px;font-size:0.8rem;border-radius:8px;}
+.btn-outline{background:transparent;color:#fff;border:1.5px solid var(--border2);}
+.btn-outline:hover{background:rgba(255,255,255,0.08);}
+
+/* MOBILE NAV */
+.mob-bar{display:none;position:fixed;top:0;left:0;right:0;z-index:500;height:58px;background:rgba(6,14,30,0.98);border-bottom:1px solid var(--border);padding:0 14px;align-items:center;justify-content:space-between;backdrop-filter:blur(16px);}
+.mob-bar img{height:32px;width:auto;object-fit:contain;display:block;}
+.mob-ham{background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;padding:4px;border-radius:7px;}
+.mob-drawer{display:none;position:fixed;top:58px;left:0;right:0;z-index:490;background:var(--navy2);border-bottom:1px solid var(--border);padding:12px;flex-direction:column;gap:3px;box-shadow:0 12px 40px rgba(0,0,0,0.5);}
+.mob-drawer.open{display:flex;}
+.mob-drawer a{padding:11px 14px;border-radius:8px;font-size:0.95rem;font-weight:500;color:var(--text2);transition:all 0.18s;}
+.mob-drawer a:hover{background:rgba(255,255,255,0.07);color:#fff;}
+.mob-divider{height:1px;background:var(--border);margin:6px 0;}
+.mob-btn-row{display:flex;gap:8px;padding:6px 0;}
+.mob-btn-row .btn{flex:1;justify-content:center;}
+.mob-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:480;}
+.mob-ov.open{display:block;}
+@media(max-width:900px){.navbar{display:none;}.mob-bar{display:flex;}body{padding-top:58px;}}
+
+/* LAYOUT */
+.container{max-width:1280px;margin:0 auto;padding:0 24px;}
+@media(max-width:768px){.container{padding:0 16px;}}
+body{padding-top:68px;}
+
+/* HERO */
+.page-hero{background:linear-gradient(145deg,#0b1729 0%,#060e1e 100%);padding:52px 0 40px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.page-hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.03) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;}
+
+/* FILTER BAR */
+.filter-bar{background:var(--navy2);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:68px;z-index:100;backdrop-filter:blur(12px);}
+@media(max-width:900px){.filter-bar{top:58px;}}
+.filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.filter-chip{padding:6px 14px;border-radius:20px;font-size:0.8rem;font-weight:600;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all 0.18s;font-family:'Inter',sans-serif;white-space:nowrap;}
+.filter-chip:hover{border-color:rgba(240,165,0,0.4);color:var(--gold);}
+.filter-chip.active{background:rgba(240,165,0,0.12);border-color:var(--gold);color:var(--gold);}
+.sort-sel{background:var(--navy3);border:1px solid var(--border2);border-radius:8px;padding:6px 12px;color:var(--text2);font-size:0.8rem;font-family:'Inter',sans-serif;outline:none;cursor:pointer;margin-left:auto;}
+.sort-sel option{background:var(--navy2);color:#fff;}
+
+/* COURSE GRID */
+.courses-section{padding:36px 0 60px;}
+.count-bar{font-size:0.84rem;color:var(--text);margin-bottom:20px;}
+.count-bar strong{color:#fff;}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+@media(max-width:1024px){.grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.grid{grid-template-columns:1fr;}}
+
+/* COURSE CARD */
+.cc{background:var(--navy2);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:all 0.22s;}
+.cc:hover{transform:translateY(-5px);border-color:rgba(37,99,235,0.35);box-shadow:0 14px 40px rgba(0,0,0,0.5);}
+.cc-img{height:160px;overflow:hidden;position:relative;}
+.cc-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}
+.cc:hover .cc-img img{transform:scale(1.06);}
+.cc-img-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,14,30,0.75),transparent);display:flex;align-items:flex-end;padding:10px 13px;}
+.cc-body{padding:16px 17px 18px;display:flex;flex-direction:column;flex:1;}
+.cc-cat{font-size:0.68rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;}
+.cc-title{font-size:1rem;font-weight:700;color:#fff;margin-bottom:6px;line-height:1.3;}
+.cc-desc{font-size:0.84rem;color:var(--text);line-height:1.65;margin-bottom:12px;flex:1;}
+.cc-meta{display:flex;gap:10px;align-items:center;font-size:0.78rem;color:var(--text);margin-bottom:13px;flex-wrap:wrap;}
+.cc-stars{color:var(--gold);}
+.cc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.tag{display:inline-flex;padding:2px 9px;border-radius:20px;font-size:0.67rem;font-weight:700;text-transform:uppercase;}
+.tag-cert{background:rgba(37,99,235,0.12);color:#60a5fa;border:1px solid rgba(37,99,235,0.22);}
+.tag-live{background:rgba(5,150,105,0.12);color:#34d399;border:1px solid rgba(5,150,105,0.22);}
+.tag-self{background:rgba(124,58,237,0.12);color:#a78bfa;border:1px solid rgba(124,58,237,0.22);}
+.cc-foot{display:flex;align-items:center;justify-content:space-between;padding-top:13px;border-top:1px solid var(--border);}
+.cc-price{font-size:1.05rem;font-weight:800;color:#fff;}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:60px 20px;}
+.empty-icon{font-size:3rem;margin-bottom:14px;}
+
+/* MODAL */
+.mo{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.mo.open{opacity:1;pointer-events:all;}
+.mo-box{background:var(--navy2);border:1px solid var(--border2);border-radius:20px;padding:26px;width:100%;max-width:520px;position:relative;transform:scale(0.96);transition:transform 0.2s;max-height:90vh;overflow-y:auto;}
+.mo.open .mo-box{transform:scale(1);}
+.mo-x{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:0.85rem;}
+.mo-x:hover{background:rgba(239,68,68,0.2);color:#fca5a5;}
+.fg{margin-bottom:14px;}
+.fl{display:block;font-size:0.79rem;color:var(--text2);margin-bottom:5px;font-weight:600;}
+.fi{width:100%;background:rgba(17,31,56,0.9);border:1.5px solid var(--border2);border-radius:10px;padding:10px 13px;color:#fff;font-size:0.9rem;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s;}
+.fi:focus{border-color:var(--blue2);}
+.al-err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.22);color:#fca5a5;padding:10px 13px;border-radius:8px;font-size:0.84rem;margin-bottom:12px;display:none;}
+.al-ok{background:rgba(5,150,105,0.1);border:1px solid rgba(5,150,105,0.22);color:#6ee7b7;padding:10px 13px;border-radius:8px;font-size:0.84rem;margin-bottom:12px;display:none;}
+
+/* FOOTER */
+footer{background:var(--navy2);border-top:1px solid var(--border);padding:52px 0 26px;}
+.fg-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+.fg-brand p{font-size:0.875rem;color:rgba(255,255,255,0.5);line-height:1.72;max-width:260px;margin-top:13px;}
+.fc-title{font-size:0.71rem;color:#fff;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:13px;font-weight:700;}
+.fc-links{display:flex;flex-direction:column;gap:9px;}
+.fc-links a{font-size:0.875rem;color:rgba(255,255,255,0.5);}
+.fc-links a:hover{color:var(--gold);}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid var(--border);font-size:0.8rem;color:rgba(255,255,255,0.35);flex-wrap:wrap;gap:10px;}
+.socials{display:flex;gap:8px;margin-top:16px;}
+.soc-btn{width:36px;height:36px;min-width:36px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.6);text-decoration:none;overflow:hidden;flex-shrink:0;transition:all 0.18s;}
+.soc-btn:hover{background:var(--gold);border-color:var(--gold);color:#000;}
+.soc-btn svg{width:15px;height:15px;display:block;}
+@media(max-width:900px){.fg-grid{grid-template-columns:1fr 1fr;gap:24px;}}
+@media(max-width:480px){.fg-grid{grid-template-columns:1fr;}.footer-bottom{flex-direction:column;text-align:center;}}
+
+/* WA FLOAT — above LiveChat widget */
+.wa-float{position:fixed;bottom:88px;right:20px;z-index:9999;width:52px;height:52px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,0.4);text-decoration:none;}
+.wa-float:hover{transform:scale(1.1);}
+.wa-float svg{width:24px;height:24px;}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
+    <ul class="nav-links">
+      <li><a href="/courses.html" class="active">Courses</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li><a href="/#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/login.html" class="btn btn-ghost btn-sm">Log In</a>
+      <a href="/register.html" class="btn btn-gold btn-sm">Enroll Now</a>
+    </div>
+  </div>
+</nav>
+
+<div class="mob-bar" id="mobBar">
+  <a href="/"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
+  <button class="mob-ham" onclick="toggleNav()">☰</button>
+</div>
+<div class="mob-drawer" id="mobDrawer">
+  <a href="/" onclick="closeNav()">🏠 Home</a>
+  <a href="/courses.html" onclick="closeNav()">📚 Courses</a>
+  <a href="/about.html" onclick="closeNav()">ℹ️ About</a>
+  <a href="/contact.html" onclick="closeNav()">✉️ Contact</a>
+  <div class="mob-divider"></div>
+  <div class="mob-btn-row">
+    <a href="/login.html" class="btn btn-ghost btn-sm">Log In</a>
+    <a href="/register.html" class="btn btn-gold btn-sm">Enroll Now</a>
+  </div>
+</div>
+<div class="mob-ov" id="mobOv" onclick="closeNav()"></div>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="container">
+    <div style="max-width:600px;">
+      <div style="font-size:0.72rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;font-weight:700;margin-bottom:10px;">All Programmes</div>
+      <h1 style="margin-bottom:12px;">Choose Your Path</h1>
+      <p style="color:rgba(255,255,255,0.65);font-size:1rem;max-width:500px;line-height:1.8;">Every programme takes you from beginner to job-ready with expert live instruction, real-world projects, and career guidance included.</p>
+      <div style="display:flex;gap:14px;margin-top:20px;flex-wrap:wrap;">
+        <div style="font-size:0.85rem;color:var(--text2);">🇳🇬🇬🇭🇰🇪🇿🇦🇬🇧🇨🇦 Students from 15+ countries</div>
+        <div style="font-size:0.85rem;color:var(--text2);">📜 Verified certificates</div>
+        <div style="font-size:0.85rem;color:var(--text2);">🎥 All sessions recorded</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="container">
+    <div class="filters">
+      <button class="filter-chip active" onclick="setFilter('all',this)">All Courses</button>
+      <button class="filter-chip" onclick="setFilter('Project Management',this)">Project Management</button>
+      <button class="filter-chip" onclick="setFilter('Product Management',this)">Product Management</button>
+      <button class="filter-chip" onclick="setFilter('Data Analysis',this)">Data Analysis</button>
+      <button class="filter-chip" onclick="setFilter('Operations',this)">Operations</button>
+      <button class="filter-chip" onclick="setFilter('Productivity',this)">Notion</button>
+      <button class="filter-chip" onclick="setFilter('Business Communication',this)">Communication</button>
+      <select class="sort-sel" id="sortSel" onchange="sortCourses()">
+        <option value="default">Sort: Default</option>
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+        <option value="duration">Duration: Shortest</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- COURSES -->
+<div class="courses-section">
+  <div class="container">
+    <div class="count-bar" id="countBar">Loading programmes...</div>
+    <div class="grid" id="coursesGrid">
+      <!-- Skeleton cards while loading -->
+      <div style="background:var(--navy2);border:1px solid var(--border);border-radius:16px;height:380px;animation:pulse 1.5s infinite;" id="sk1"></div>
+      <div style="background:var(--navy2);border:1px solid var(--border);border-radius:16px;height:380px;animation:pulse 1.5s infinite;animation-delay:0.15s;" id="sk2"></div>
+      <div style="background:var(--navy2);border:1px solid var(--border);border-radius:16px;height:380px;animation:pulse 1.5s infinite;animation-delay:0.3s;" id="sk3"></div>
+    </div>
+  </div>
+</div>
+<style>@keyframes pulse{0%,100%{opacity:0.5}50%{opacity:0.8}}</style>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="fg-grid">
+      <div class="fg-brand">
+        <a href="/" class="logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
+        <p>Expert-led tech training for ambitious professionals worldwide. Small cohorts, real projects, verified certificates.</p>
+        <div class="socials">
+          <a href="https://wa.me/2349060914286" target="_blank" class="soc-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9 9 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+          <a href="mailto:info@nextforgeacademy.online" class="soc-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg></a>
+          <a href="https://www.linkedin.com/company/nextforgeacademy/" target="_blank" class="soc-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+        </div>
+      </div>
+      <div><div class="fc-title">Programmes</div><div class="fc-links"><a href="/courses.html">Project Management</a><a href="/courses.html">Product Management</a><a href="/courses.html">Data Analysis</a><a href="/courses.html">Notion Mastery</a><a href="/courses.html">Operations Systems</a><a href="/courses.html">Business Communication</a></div></div>
+      <div><div class="fc-title">Company</div><div class="fc-links"><a href="/about.html">About Us</a><a href="/contact.html">Contact</a><a href="/#faq">FAQ</a></div></div>
+      <div><div class="fc-title">Student</div><div class="fc-links"><a href="/login.html">Log In</a><a href="/register.html">Enroll Now</a><a href="/student/dashboard.html">My Dashboard</a></div></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 NextForge Academy · nextforgeacademy.online · Lagos, Nigeria</span></div>
+  </div>
+</footer>
+
+<!-- ENROLL MODAL (for logged-in students) -->
+<div class="mo" id="enrollMo">
+  <div class="mo-box" style="max-width:460px;">
+    <div class="mo-x" onclick="document.getElementById('enrollMo').classList.remove('open')">✕</div>
+    <h3 style="color:#fff;margin-bottom:4px;" id="enrollMoTitle">Enroll in Course</h3>
+    <p style="color:var(--text);font-size:0.84rem;margin-bottom:16px;" id="enrollMoDesc"></p>
+    <div style="background:rgba(6,14,30,0.5);border:1px solid var(--border2);border-radius:10px;padding:14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
+      <div><div style="font-size:0.72rem;color:var(--text);">Course Fee</div><div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--gold);" id="enrollMoPrice">₦—</div></div>
+      <div style="text-align:right;"><div style="font-size:0.7rem;color:var(--text);">Secured by</div><div style="font-size:0.84rem;color:var(--gold2);font-weight:700;">Paystack 🔒</div></div>
+    </div>
+    <div class="fg"><label class="fl">Promo Code (optional)</label><div style="display:flex;gap:8px;"><input class="fi" id="promoInput" placeholder="e.g. LAUNCH50" oninput="this.value=this.value.toUpperCase()" style="flex:1;"/><button class="btn btn-ghost btn-sm" onclick="applyPromo()">Apply</button></div></div>
+    <div class="al-ok" id="promoOk"></div>
+    <div class="al-err" id="enrollErr"></div>
+    <button class="btn btn-gold" id="payNowBtn" style="width:100%;padding:13px;font-size:0.95rem;" onclick="initiatePayment()">Pay Now 🔒</button>
+    <div style="text-align:center;font-size:0.72rem;color:var(--text);margin-top:8px;">Cards, Bank Transfer, USSD accepted · 30-day money-back guarantee</div>
+  </div>
+</div>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/2349060914286" class="wa-float" target="_blank" title="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9 9 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+// ── NAV ──
+function toggleNav(){const d=document.getElementById('mobDrawer'),o=document.getElementById('mobOv');d.classList.contains('open')?(d.classList.remove('open'),o.classList.remove('open')):(d.classList.add('open'),o.classList.add('open'));}
+function closeNav(){document.getElementById('mobDrawer').classList.remove('open');document.getElementById('mobOv').classList.remove('open');}
+
+// ── COURSE DATA ──
+const FALLBACK = [
+  {id:1,title:'Project Management',category:'Project Management',duration:'12 weeks',level:'Beginner',price:250000,weeks:12,description:'Master PM fundamentals — from project initiation and planning to execution, monitoring, and closure. Build a full PM portfolio from real-world projects.',image_url:'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=70',thumbnail:'📋'},
+  {id:2,title:'Product Management',category:'Product Management',duration:'13 weeks',level:'Intermediate',price:250000,weeks:13,description:'Learn to build and ship products people love. Discovery, roadmapping, user stories, prioritisation frameworks, and stakeholder management.',image_url:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=70',thumbnail:'🧭'},
+  {id:3,title:'Data Analysis',category:'Data Analysis',duration:'12 weeks',level:'Beginner',price:300000,weeks:12,description:'Go from zero to data analyst using Excel, SQL, and Power BI. Build dashboards, clean data, and produce insights that drive business decisions.',image_url:'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=70',thumbnail:'📊'},
+  {id:4,title:'Notion Mastery',category:'Productivity',duration:'6 weeks',level:'Beginner',price:160000,weeks:6,description:'Build personal and business operating systems in Notion. Create client systems, freelance packages, and team workspaces that generate revenue.',image_url:'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=70',thumbnail:'🗂'},
+  {id:5,title:'Operations Systems Design',category:'Operations',duration:'8 weeks',level:'Intermediate',price:200000,weeks:8,description:'Design and implement business operations systems. SOPs, workflows, vendor management, team coordination, and tools like Notion and Lark.',image_url:'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&q=70',thumbnail:'⚙️'},
+  {id:6,title:'Business Communication',category:'Business Communication',duration:'8 weeks',level:'Beginner',price:200000,weeks:8,description:'Professional writing, presentations, workplace communication, and global business English for career advancement.',image_url:'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=70',thumbnail:'💡'}
+];
+
+let courses = [], filtered = [], activeFilter = 'all', activeSort = 'default';
+let selectedCourse = null, paystackKey = '', appliedDiscount = 0;
+
+// ── LOAD COURSES ──
+async function loadCourses() {
+  try {
+    const res = await fetch('/api/courses');
+    if (!res.ok) throw new Error('API unavailable');
+    courses = await res.json();
+    if (!courses.length) throw new Error('Empty response');
+  } catch {
+    courses = FALLBACK;
+  }
+  filtered = [...courses];
+  render();
+  // Load Paystack key
+  try { const r = await fetch('/api/payments/config'); const d = await r.json(); paystackKey = d.publicKey||d.public_key||''; } catch {}
+}
+
+// ── FILTER & SORT ──
+function setFilter(cat, el) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  applyFilterSort();
+}
+function sortCourses() {
+  activeSort = document.getElementById('sortSel').value;
+  applyFilterSort();
+}
+function applyFilterSort() {
+  filtered = activeFilter === 'all' ? [...courses] : courses.filter(c => c.category === activeFilter);
+  if (activeSort === 'price-asc') filtered.sort((a,b) => a.price-b.price);
+  else if (activeSort === 'price-desc') filtered.sort((a,b) => b.price-a.price);
+  else if (activeSort === 'duration') filtered.sort((a,b) => (a.weeks||0)-(b.weeks||0));
+  render();
+}
+function render() {
+  const grid = document.getElementById('coursesGrid');
+  document.getElementById('countBar').innerHTML = '<strong>' + filtered.length + '</strong> programme' + (filtered.length!==1?'s':'') + ' found' + (activeFilter!=='all'?' in '+activeFilter:'');
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1;"><div class="empty-icon">🔍</div><div style="font-weight:700;color:#fff;margin-bottom:8px;">No courses in this category</div><button class="btn btn-gold btn-sm" onclick="setFilter(\'all\',document.querySelector(\'.filter-chip\'))">View All</button></div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(c => {
+    const isSelfPaced = (c.weeks||0) <= 6;
+    return '<div class="cc">' +
+      '<div class="cc-img"><img src="' + (c.image_url||'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=70') + '" alt="' + c.title + '" loading="lazy"/>' +
+      '<div class="cc-img-ov"><span style="font-size:0.68rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">' + c.category + '</span></div></div>' +
+      '<div class="cc-body">' +
+      '<div class="cc-cat">' + (c.thumbnail||'📋') + ' ' + c.category + '</div>' +
+      '<div class="cc-title">' + c.title + '</div>' +
+      '<div class="cc-desc">' + (c.description||'Expert-led programme with live instruction, real projects, and career guidance.') + '</div>' +
+      '<div class="cc-meta"><span class="cc-stars">★★★★★</span><span>4.9</span><span>·</span><span>' + c.duration + '</span><span>·</span><span>' + (c.level||'Beginner') + '</span></div>' +
+      '<div class="cc-tags"><span class="tag tag-cert">Certificate</span><span class="tag ' + (isSelfPaced?'tag-self':'tag-live') + '">' + (isSelfPaced?'Self-Paced':'Live Cohort') + '</span></div>' +
+      '<div class="cc-foot"><div class="cc-price">₦' + Number(c.price).toLocaleString() + '</div>' +
+      '<button class="btn btn-gold btn-sm" onclick="enrollNow(' + JSON.stringify(c).replace(/"/g,'&quot;') + ')">Enroll Now</button></div>' +
+      '</div></div>';
+  }).join('');
+}
+
+// ── ENROLL FLOW ──
+function enrollNow(course) {
+  const token = localStorage.getItem('nf_token');
+  if (!token) {
+    // Not logged in — go to register with course pre-selected
+    window.location.href = '/register.html?course=' + course.id;
+    return;
+  }
+  // Logged in — show payment modal
+  selectedCourse = course;
+  appliedDiscount = 0;
+  document.getElementById('enrollMoTitle').textContent = course.title;
+  document.getElementById('enrollMoDesc').textContent = course.duration + ' · ' + (course.level||'Beginner') + ' · Certificate included';
+  document.getElementById('enrollMoPrice').textContent = '₦' + Number(course.price).toLocaleString();
+  document.getElementById('promoInput').value = '';
+  document.getElementById('promoOk').style.display = 'none';
+  document.getElementById('enrollErr').style.display = 'none';
+  document.getElementById('payNowBtn').textContent = 'Pay ₦' + Number(course.price).toLocaleString() + ' Now 🔒';
+  document.getElementById('enrollMo').classList.add('open');
+}
+
+function applyPromo() {
+  const code = document.getElementById('promoInput').value.trim().toUpperCase();
+  if (!code) return;
+  // Simple client-side validation — real validation happens server-side
+  const ok = document.getElementById('promoOk');
+  const err = document.getElementById('enrollErr');
+  ok.style.display='none'; err.style.display='none';
+  // Try fetching promo from server
+  fetch('/api/promos/validate', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({code, course_id: selectedCourse?.id})
+  }).then(r => r.json()).then(d => {
+    if (d.valid) {
+      appliedDiscount = d.discount;
+      const discPrice = Math.round(selectedCourse.price * (1 - appliedDiscount/100));
+      ok.textContent = 'Promo applied! ' + appliedDiscount + '% off → ₦' + Number(discPrice).toLocaleString();
+      ok.style.display = 'block';
+      document.getElementById('enrollMoPrice').textContent = '₦' + Number(discPrice).toLocaleString();
+      document.getElementById('payNowBtn').textContent = 'Pay ₦' + Number(discPrice).toLocaleString() + ' Now 🔒';
+    } else {
+      err.textContent = d.error || 'Invalid promo code.';
+      err.style.display = 'block';
+    }
+  }).catch(() => {
+    err.textContent = 'Could not validate promo. Continue without code or contact support.';
+    err.style.display = 'block';
+  });
+}
+
+async function initiatePayment() {
+  if (!selectedCourse) return;
+  const token = localStorage.getItem('nf_token');
+  const email = localStorage.getItem('nf_email') || '';
+  const btn = document.getElementById('payNowBtn');
+  btn.textContent = 'Opening payment...'; btn.disabled = true;
+  const discPrice = appliedDiscount > 0 ? Math.round(selectedCourse.price * (1 - appliedDiscount/100)) : selectedCourse.price;
+  const promoCode = document.getElementById('promoInput').value.trim().toUpperCase();
+  try {
+    const res = await fetch('/api/payments/initialize', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ course_id: selectedCourse.id, amount: discPrice, promo_code: promoCode||null })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Payment init failed');
+    const handler = PaystackPop.setup({
+      key: paystackKey,
+      email: email || data.email || '',
+      amount: discPrice * 100,
+      currency: 'NGN',
+      ref: data.reference,
+      metadata: { course_id: selectedCourse.id, type: 'course_enrollment' },
+      callback: function(response) {
+        // Verify payment
+        fetch('/api/payments/verify', {
+          method: 'POST', credentials: 'include',
+          headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reference: response.reference, course_id: selectedCourse.id })
+        }).then(r => r.json()).then(d => {
+          document.getElementById('enrollMo').classList.remove('open');
+          if (d.success || d.enrolled) {
+            alert('Payment successful! You are now enrolled in ' + selectedCourse.title + '. Redirecting to your dashboard...');
+            window.location.href = '/student/dashboard.html';
+          } else {
+            alert('Payment received but enrollment failed. Please contact support at info@nextforgeacademy.online with your reference: ' + response.reference);
+          }
+        });
+      },
+      onClose: function() { btn.textContent = 'Pay ₦' + Number(discPrice).toLocaleString() + ' Now 🔒'; btn.disabled = false; }
+    });
+    handler.openIframe();
+  } catch(e) {
+    document.getElementById('enrollErr').textContent = e.message || 'Payment failed. Try again.';
+    document.getElementById('enrollErr').style.display = 'block';
+    btn.textContent = 'Pay Now 🔒'; btn.disabled = false;
+  }
+}
+
+loadCourses();
+</script>
+
+<!-- LiveChat -->
+<script>window.__lc=window.__lc||{};window.__lc.organizationId="c87e343c-6096-4b49-a57e-d41deec20b1f";window.__lc.integration_name="manual_onboarding";window.__lc.product_name="text";;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[LiveChatWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice))</script>
+</body>
+</html>
