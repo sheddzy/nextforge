@@ -1,26 +1,28 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<meta name="description" content="Comprehensive tech and operations programmes at NextForge Academy. Master Project Management, Data Analysis, Product Management, and more."/>
-<title>All Programmes — NextForge Academy</title>
+<meta name="description" content="All NextForge Academy programmes — Project Management, Data Analysis, Product Management, Notion Mastery, Operations Systems, Business Communication."/>
+<title>Programmes — NextForge Academy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{font-size:16px;}
-body{background:#060e1e!important;color:#cbd5e1;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-top:70px;}
-
-:root{
-  --navy:#060e1e;--navy2:#0b1729;--navy3:#111f38;
-  --gold:#f0a500;--gold2:#fbbf24;--blue:#2563eb;
-  --border:rgba(255,255,255,0.07);--text:#94a3b8;--text2:#cbd5e1;
+/* CSS VARIABLES & RESET */
+:root {
+  --navy: #060e1e; --navy2: #0b1729; --navy3: #111f38;
+  --gold: #f0a500; --gold2: #fbbf24; --blue: #2563eb;
+  --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+  --text: #94a3b8; --text2: #cbd5e1; --white: #fff;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy)!important;color:var(--text2);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding-top:70px;}
 
+/* LAYOUT */
 .container{max-width:1200px;margin:0 auto;padding:0 24px;}
 h1,h2,h3{color:#fff;font-family:'Syne',sans-serif;}
-p{line-height:1.7;color:var(--text);}
 
 /* NAVBAR */
 .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:70px;background:rgba(6,14,30,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;}
@@ -29,32 +31,35 @@ p{line-height:1.7;color:var(--text);}
 
 /* HERO */
 .hero{padding:60px 0 40px;text-align:center;border-bottom:1px solid var(--border);}
-.hero h1{font-size:clamp(2rem,5vw,3.5rem);margin-bottom:16px;}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);margin-bottom:12px;}
 
-/* COURSE GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(350px, 1fr));gap:24px;padding:40px 0;}
-
-/* CARD STYLES */
-.cc{background:var(--navy2);border:1px solid var(--border);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;transition:0.3s;}
+/* GRID & CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));gap:24px;padding:40px 0;}
+.cc{background:var(--navy2);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:0.3s;display:flex;flex-direction:column;}
 .cc:hover{transform:translateY(-5px);border-color:var(--gold);}
-.cc-img{height:200px;width:100%;object-fit:cover;}
+.cc-img{height:180px;width:100%;object-fit:cover;}
 .cc-body{padding:24px;flex:1;}
 .cc-cat{font-size:0.7rem;color:var(--gold);text-transform:uppercase;font-weight:800;letter-spacing:1px;margin-bottom:10px;}
-.cc-title{font-size:1.4rem;margin-bottom:12px;}
-.cc-desc{font-size:0.9rem;margin-bottom:20px;color:var(--text2);}
+.cc-title{font-size:1.3rem;margin-bottom:12px;}
+.cc-price{font-size:1.1rem;font-weight:800;color:#fff;}
 
-/* EXPANDABLE SECTION */
-.cc-details{border-top:1px solid var(--border);padding-top:20px;margin-top:auto;}
-.detail-label{font-size:0.8rem;color:#fff;font-weight:700;margin-bottom:8px;display:block;}
-.gain-list{list-style:none;margin-bottom:20px;}
-.gain-list li{font-size:0.85rem;margin-bottom:6px;display:flex;gap:8px;align-items:flex-start;}
-.gain-list li::before{content:'✓';color:var(--gold);font-weight:bold;}
+/* MODAL SYSTEM */
+.mo{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.9);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:0.2s;}
+.mo.open{opacity:1;pointer-events:all;}
+.mo-box{background:var(--navy2);border:1px solid var(--border2);border-radius:24px;width:100%;max-width:650px;position:relative;max-height:90vh;overflow-y:auto;padding:32px;}
+.mo-x{position:absolute;top:20px;right:20px;cursor:pointer;color:var(--text);font-size:1.2rem;background:rgba(255,255,255,0.05);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
 
-.btn{display:inline-block;width:100%;padding:12px;text-align:center;border-radius:10px;font-weight:700;cursor:pointer;transition:0.2s;text-decoration:none;}
+/* CONTENT STYLING */
+.gain-item{display:flex;gap:10px;margin-bottom:10px;font-size:0.9rem;}
+.gain-item::before{content:'✓';color:var(--gold);font-weight:bold;}
+.btn{display:inline-block;padding:14px 28px;border-radius:12px;font-weight:700;cursor:pointer;text-align:center;border:none;transition:0.2s;text-decoration:none;font-family:'Inter',sans-serif;}
 .btn-gold{background:var(--gold);color:#000;}
-.btn-gold:hover{background:var(--gold2);}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(240,165,0,0.2);}
+.btn-ghost{background:rgba(255,255,255,0.05);color:#fff;border:1px solid var(--border2);}
 
-@media(max-width:600px){.grid{grid-template-columns:1fr;}}
+/* PAYMENT STAGE STYLING */
+.fi{width:100%;background:var(--navy3);border:1px solid var(--border2);border-radius:10px;padding:12px;color:#fff;margin-top:8px;outline:none;}
+.al-ok{background:rgba(5,150,105,0.1);color:#6ee7b7;padding:12px;border-radius:8px;font-size:0.85rem;margin:12px 0;display:none;}
 </style>
 </head>
 <body>
@@ -62,131 +67,172 @@ p{line-height:1.7;color:var(--text);}
 <nav class="navbar">
   <div class="container nav-inner">
     <a href="/" class="logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
-    <div style="color:#fff; font-weight:600;">All Courses</div>
+    <div style="display:flex; gap:20px;">
+        <a href="/login.html" style="color:#fff; font-size:0.9rem; font-weight:600;">Log In</a>
+    </div>
   </div>
 </nav>
 
 <div class="hero">
   <div class="container">
-    <h1>Master Your Future</h1>
-    <p>Professional certification programmes designed for the modern economy.</p>
+    <h1>All Programmes</h1>
+    <p>Select a course to see curriculum and enrollment details.</p>
   </div>
 </div>
 
 <div class="container">
-  <div class="grid" id="courseGrid">
+  <div class="grid" id="courseGrid"></div>
+</div>
+
+<div class="mo" id="courseModal">
+  <div class="mo-box">
+    <div class="mo-x" onclick="closeModal()">✕</div>
+    
+    <div id="stageInfo">
+      <div id="mCat" class="cc-cat"></div>
+      <h2 id="mTitle" style="margin-bottom:16px; font-size:2rem;"></h2>
+      
+      <h4 style="color:var(--gold); margin-bottom:8px; font-size:0.9rem; text-transform:uppercase;">About the Course</h4>
+      <p id="mAbout" style="margin-bottom:24px; font-size:1rem; line-height:1.8;"></p>
+      
+      <h4 style="color:var(--gold); margin-bottom:12px; font-size:0.9rem; text-transform:uppercase;">What You Stand to Gain</h4>
+      <div id="mGains" style="margin-bottom:30px;"></div>
+      
+      <div style="display:flex; align-items:center; justify-content:space-between; padding-top:20px; border-top:1px solid var(--border);">
+        <div>
+            <div style="font-size:0.8rem; color:var(--text);">Tuition Fee</div>
+            <div id="mPrice" style="font-size:1.5rem; font-weight:800; color:#fff;"></div>
+        </div>
+        <button class="btn btn-gold" onclick="goToPayment()">Continue to Enrollment</button>
+      </div>
     </div>
+
+    <div id="stagePay" style="display:none;">
+      <button class="btn btn-ghost" onclick="showInfo()" style="padding:8px 16px; font-size:0.8rem; margin-bottom:20px;">← Back to Details</button>
+      <h3 id="mPayTitle" style="margin-bottom:8px;">Enrollment</h3>
+      <p style="margin-bottom:24px; font-size:0.9rem;">Complete your secure payment via Paystack to get instant access.</p>
+      
+      <div style="background:var(--navy3); padding:20px; border-radius:15px; border:1px solid var(--border2); margin-bottom:20px;">
+        <label style="font-size:0.8rem; color:var(--text2);">Promo Code</label>
+        <div style="display:flex; gap:10px; margin-top:8px;">
+            <input class="fi" id="promoInput" placeholder="e.g. EARLYBIRD" style="margin-top:0;">
+            <button class="btn btn-ghost" onclick="applyPromo()" style="padding:10px 20px;">Apply</button>
+        </div>
+        <div class="al-ok" id="promoMsg"></div>
+      </div>
+
+      <button class="btn btn-gold" id="payBtn" style="width:100%;" onclick="initiatePayment()">Pay Now</button>
+      <p style="text-align:center; font-size:0.75rem; margin-top:15px; color:var(--text);">Secure SSL Encryption 🔒 · Paystack Certified</p>
+    </div>
+  </div>
 </div>
 
 <script>
-const COURSES = [
+// DATA ARCHITECTURE
+const DATA = [
   {
-    id: 1,
-    title: 'Project Management Professional',
-    category: 'Management',
-    price: '250,000',
+    id: 1, title: 'Project Management Professional', category: 'Management', price: 250000,
     img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600',
-    desc: 'A comprehensive journey into modern PM methodologies including Agile, Scrum, and Waterfall.',
-    about: 'This course is designed to turn you into a strategic leader. We move beyond theory to show you how to manage budgets, mitigate risks, and lead high-performing teams in tech and construction.',
-    gains: [
-      'Master Gantt charts and Resource Leveling',
-      'Earn a Global Industry-Recognized Certificate',
-      'Hands-on training with Jira and Trello',
-      'Prepare for the PMP® Exam with Mock Trials'
-    ]
+    about: 'Move beyond the textbook to focus on practical realities. You will dive deep into Agile, Scrum, and Waterfall frameworks while learning to mitigate risks and lead high-performing teams.',
+    gains: ['Hands-on training with Jira and Trello','Master Gantt charts and Resource Leveling','Earn a Global Industry-Recognized Certificate','Portfolio of real-world projects']
   },
   {
-    id: 2,
-    title: 'Data Analysis & Visualization',
-    category: 'Data Science',
-    price: '300,000',
+    id: 2, title: 'Data Analysis & Visualization', category: 'Data Science', price: 300000,
     img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600',
-    desc: 'Transform raw numbers into compelling business stories using industry-standard tools.',
-    about: 'In an era where data is the new oil, this course gives you the drill. You will learn to clean messy data, perform complex queries, and build interactive dashboards that C-suite executives rely on.',
-    gains: [
-      'Advanced Excel & SQL Mastery',
-      'Build Power BI and Tableau Dashboards',
-      'Statistical Analysis for Business Growth',
-      'Portfolio of 3 Real-world Data Projects'
-    ]
+    about: 'In an era where data is the new oil, this course gives you the drill. Learn to clean messy data, perform complex SQL queries, and build interactive dashboards.',
+    gains: ['Advanced Excel & SQL Mastery','Build Power BI and Tableau Dashboards','Statistical Analysis for Business Growth','3 Real-world Capstone Projects']
   },
   {
-    id: 3,
-    title: 'Product Management',
-    category: 'Product',
-    price: '250,000',
+    id: 3, title: 'Product Management', category: 'Product', price: 250000,
     img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600',
-    desc: 'Learn to bridge the gap between business, technology, and user experience.',
-    about: 'Product Management is about solving the right problems. We teach you how to conduct user research, define product roadmaps, and work with engineers to ship products that users love.',
-    gains: [
-      'Master User Discovery & Market Research',
-      'Create Agile Roadmaps & PRDs',
-      'Learn Product Analytics (Mixpanel/Amplitude)',
-      'Career coaching for Product Manager roles'
-    ]
+    about: 'Bridge the gap between business, technology, and users. Conduct research, define roadmaps, and work with engineers to ship products that matter.',
+    gains: ['Master User Discovery & Research','Create Agile Roadmaps & PRDs','Learn Product Analytics (Mixpanel)','Post-course Career Coaching']
   },
   {
-    id: 4,
-    title: 'Notion Systems Mastery',
-    category: 'Productivity',
-    price: '160,000',
+    id: 4, title: 'Notion Mastery (Systems Design)', category: 'Productivity', price: 160000,
     img: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600',
-    desc: 'Build high-performance operating systems for yourself or your business.',
-    about: 'Stop using Notion as a basic note-taker. This course teaches you Advanced Database Relations, Formulas 2.0, and Automation to build "Second Brain" systems that save 10+ hours a week.',
-    gains: [
-      'Advanced Database & Formula Architecture',
-      'Build Client Portals & Project Managers',
-      'Automate workflows with Zapier/Make',
-      'Access to exclusive OS Templates'
-    ]
+    about: 'Build high-performance operating systems. Learn Advanced Database Relations, Formulas 2.0, and Automation to build "Second Brain" systems.',
+    gains: ['Advanced Database Architecture','Build Client Portals & CRM Systems','Automate with Zapier/Make','Access to Premium OS Templates']
   },
   {
-    id: 5,
-    title: 'Operations Systems Design',
-    category: 'Operations',
-    price: '200,000',
+    id: 5, title: 'Operations Systems Design', category: 'Operations', price: 200000,
     img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600',
-    desc: 'The blueprint for scaling businesses through efficient processes and SOPs.',
-    about: 'Designed for Founders and Ops Leads, this course focuses on eliminating bottlenecks. Learn to document Standard Operating Procedures (SOPs) and build a scalable tech stack for your team.',
-    gains: [
-      'Design End-to-End Business Workflows',
-      'SOP Documentation & Management',
-      'Team Performance Tracking Systems',
-      'Vendor & Tool Stack Optimization'
-    ]
+    about: 'The blueprint for scaling. Focus on eliminating bottlenecks, documenting SOPs, and building a scalable tech stack for modern businesses.',
+    gains: ['Design End-to-End Workflows','SOP Documentation Mastery','Team Performance Tracking','Tech Stack Optimization']
   },
-  
-    function render() {
+  {
+    id: 6, title: 'Business Communication', category: 'Communication', price: 200000,
+    img: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600',
+    about: 'Elevate your professional presence. Master executive presentations, high-stakes emailing, and the art of persuasion in a global environment.',
+    gains: ['Executive Presence & Public Speaking','High-Impact Professional Writing','Mastering Negotiation','Crisis Communication Frameworks']
+  }
+];
+
+let selected = null;
+
+// RENDER GRID
+function render() {
   const grid = document.getElementById('courseGrid');
-  grid.innerHTML = COURSES.map(c => `
-    <div class="cc">
-      <img src="${c.img}" class="cc-img" alt="${c.title}">
+  grid.innerHTML = DATA.map(c => `
+    <div class="cc" onclick="openCourse(${c.id})">
+      <img src="${c.img}" class="cc-img">
       <div class="cc-body">
         <div class="cc-cat">${c.category}</div>
         <h3 class="cc-title">${c.title}</h3>
-        <p class="cc-desc">${c.desc}</p>
-        
-        <div class="cc-details">
-          <span class="detail-label">About the Course</span>
-          <p style="font-size:0.85rem; margin-bottom:15px;">${c.about}</p>
-          
-          <span class="detail-label">What You Will Gain</span>
-          <ul class="gain-list">
-            ${c.gains.map(g => `<li>${g}</li>`).join('')}
-          </ul>
-          
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:20px;">
-            <div style="font-size:1.2rem; font-weight:800; color:#fff;">₦${c.price}</div>
-            <a href="/register.html?course=${c.id}" class="btn btn-gold" style="width:auto; padding:10px 25px;">Enroll Now</a>
-          </div>
-        </div>
+        <div class="cc-price">₦${c.price.toLocaleString()}</div>
       </div>
     </div>
   `).join('');
 }
 
+// MODAL LOGIC
+function openCourse(id) {
+  selected = DATA.find(c => c.id === id);
+  document.getElementById('mTitle').innerText = selected.title;
+  document.getElementById('mPayTitle').innerText = 'Enroll: ' + selected.title;
+  document.getElementById('mCat').innerText = selected.category;
+  document.getElementById('mAbout').innerText = selected.about;
+  document.getElementById('mPrice').innerText = '₦' + selected.price.toLocaleString();
+  document.getElementById('payBtn').innerText = 'Pay ₦' + selected.price.toLocaleString();
+  
+  document.getElementById('mGains').innerHTML = selected.gains.map(g => `<div class="gain-item">${g}</div>`).join('');
+  
+  showInfo();
+  document.getElementById('courseModal').classList.add('open');
+}
+
+function showInfo() {
+  document.getElementById('stageInfo').style.display = 'block';
+  document.getElementById('stagePay').style.display = 'none';
+}
+
+function goToPayment() {
+  const token = localStorage.getItem('nf_token');
+  if(!token) {
+    window.location.href = '/register.html?course=' + selected.id;
+    return;
+  }
+  document.getElementById('stageInfo').style.display = 'none';
+  document.getElementById('stagePay').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('courseModal').classList.remove('open');
+}
+
+function applyPromo() {
+    const msg = document.getElementById('promoMsg');
+    msg.innerText = "Applying code...";
+    msg.style.display = 'block';
+    setTimeout(() => { msg.innerText = "Invalid or expired promo code."; msg.style.color = "#fca5a5"; }, 1000);
+}
+
+function initiatePayment() {
+    alert("Initializing Paystack for " + selected.title);
+    // Add your existing Paystack logic here
+}
+
 render();
 </script>
-
 </body>
 </html>
