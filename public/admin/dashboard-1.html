@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin Panel — NextForge Academy</title>
+<link rel="stylesheet" href="/styles.css"/>
+<style>
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:#060e1e;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+.pm{background:linear-gradient(160deg,#0b1729 0%,#060e1e 45%,#111f38 100%);position:relative;min-height:100vh;}
+.pm::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(rgba(37,99,235,0.035) 1.5px,transparent 1.5px);background-size:42px 42px;}
+.portal{display:grid;grid-template-columns:248px 1fr;min-height:100vh;}
+
+/* SIDEBAR - RED THEMED FOR ADMIN */
+.sb{background:linear-gradient(180deg,#1a0a20 0%,#0e0717 60%,#060e1e 100%);border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;box-shadow:2px 0 20px rgba(0,0,0,0.4);}
+.sb::-webkit-scrollbar{width:3px;}
+.sb::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+.sb-top{padding:18px 15px 14px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0;}
+.sb-logo img{height:34px;width:auto;object-fit:contain;display:block;}
+.sb-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:0.62rem;font-weight:700;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.2);color:#f87171;margin-top:5px;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.05);border-radius:12px;border:1px solid rgba(255,255,255,0.09);margin-top:13px;}
+.sb-av{width:34px;height:34px;border-radius:50%;background:rgba(239,68,68,0.2);border:2px solid #ef4444;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;overflow:hidden;}
+.sb-av img{width:100%;height:100%;object-fit:cover;}
+.sb-uname{font-weight:600;color:#fff;font-size:0.84rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-urole{font-size:0.67rem;color:#f87171;margin-top:1px;}
+.sb-nav{padding:10px 9px;flex:1;}
+.sb-sec{font-size:0.62rem;color:rgba(148,163,184,0.4);text-transform:uppercase;letter-spacing:0.1em;padding:12px 8px 4px;font-weight:700;}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:0.875rem;font-weight:500;color:rgba(148,163,184,0.75);transition:all 0.18s;margin-bottom:1px;text-decoration:none;cursor:pointer;border:none;background:none;width:100%;}
+.ni:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.ni.active{background:rgba(239,68,68,0.12);color:#fca5a5;border-left:2px solid #ef4444;padding-left:8px;}
+.ni-icon{width:18px;text-align:center;flex-shrink:0;font-size:0.9rem;}
+.ni-badge{margin-left:auto;background:#ef4444;color:#fff;border-radius:10px;padding:1px 7px;font-size:0.63rem;font-weight:700;}
+.sb-bot{padding:10px 9px 16px;border-top:1px solid rgba(255,255,255,0.07);margin-top:auto;}
+
+/* MAIN */
+.pm-inner{display:flex;flex-direction:column;min-height:100vh;position:relative;z-index:1;}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(6,14,30,0.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.07);padding:12px 26px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-shrink:0;}
+.tb-title{font-weight:700;color:#fff;font-size:1rem;font-family:'Syne',sans-serif;}
+.tb-sub{font-size:0.74rem;color:rgba(148,163,184,0.7);margin-top:1px;}
+.pc{padding:24px 26px;flex:1;}
+
+/* COHORT BANNER */
+.coh-banner{background:linear-gradient(135deg,#182d4e 0%,#1a0a20 100%);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:18px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative;overflow:hidden;}
+.coh-banner::after{content:'';position:absolute;right:-20px;top:-20px;width:140px;height:140px;background:radial-gradient(circle,rgba(239,68,68,0.07),transparent 70%);pointer-events:none;}
+.coh-pill{background:#ef4444;color:#fff;padding:3px 12px;border-radius:20px;font-size:0.72rem;font-weight:700;}
+
+/* KPI CARDS */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:20px;}
+.sc{border-radius:16px;padding:18px 20px;position:relative;overflow:hidden;transition:all 0.2s;}
+.sc:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,0.4);}
+.sc.c1{background:linear-gradient(135deg,#1e40af,#2563eb);border:1px solid rgba(37,99,235,0.4);}
+.sc.c2{background:linear-gradient(135deg,#78350f,#c47f00);border:1px solid rgba(196,127,0,0.4);}
+.sc.c3{background:linear-gradient(135deg,#064e3b,#059669);border:1px solid rgba(5,150,105,0.4);}
+.sc.c4{background:linear-gradient(135deg,#7f1d1d,#ef4444);border:1px solid rgba(239,68,68,0.4);}
+.sc::after{content:'';position:absolute;top:-15px;right:-15px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.07);}
+.sc-icon{font-size:1.4rem;margin-bottom:8px;position:relative;z-index:1;}
+.sc-num{font-size:1.7rem;font-weight:800;color:#fff;line-height:1;font-family:'Syne',sans-serif;position:relative;z-index:1;}
+.sc-lbl{font-size:0.74rem;color:rgba(255,255,255,0.72);margin-top:4px;position:relative;z-index:1;}
+
+/* CARDS */
+.card{background:rgba(17,31,56,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;}
+.card h3,.card h4{color:#fff;}
+.sec-card{background:rgba(17,31,56,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:14px;margin-bottom:16px;overflow:hidden;}
+.sec-hdr{padding:13px 17px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:rgba(6,14,30,0.4);}
+.sec-hdr h4{color:#fff;font-size:0.9rem;}
+.sec-body{padding:17px;}
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;min-width:500px;}
+th{text-align:left;padding:10px 14px;font-size:0.69rem;color:rgba(148,163,184,0.6);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid rgba(255,255,255,0.07);background:rgba(6,14,30,0.3);font-weight:600;white-space:nowrap;}
+td{padding:12px 14px;font-size:0.86rem;color:rgba(203,213,225,0.85);border-bottom:1px solid rgba(255,255,255,0.05);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,0.02);}
+
+.pbar{width:100%;height:5px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;}
+.pfill{height:100%;background:linear-gradient(90deg,#2563eb,#3b82f6);border-radius:3px;transition:width 0.8s;}
+
+.al-err{background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.22);color:#fca5a5;padding:10px 13px;border-radius:8px;font-size:0.84rem;margin-bottom:12px;display:none;}
+.al-ok{background:rgba(5,150,105,0.1);border:1px solid rgba(5,150,105,0.22);color:#6ee7b7;padding:10px 13px;border-radius:8px;font-size:0.84rem;margin-bottom:12px;display:none;}
+.fg{margin-bottom:14px;}
+.fl{display:block;font-size:0.78rem;color:rgba(203,213,225,0.9);margin-bottom:5px;font-weight:600;}
+.fi{width:100%;background:rgba(17,31,56,0.9);border:1.5px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 13px;color:#fff;font-size:0.9rem;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s;}
+.fi:focus{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,0.1);}
+.fi::placeholder{color:rgba(148,163,184,0.35);}
+select.fi option{background:#0b1729;color:#fff;}
+textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
+
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:0.67rem;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;}
+.b-blue{background:rgba(37,99,235,0.15);color:#60a5fa;border:1px solid rgba(37,99,235,0.25);}
+.b-gold{background:rgba(240,165,0,0.12);color:#f0a500;border:1px solid rgba(240,165,0,0.22);}
+.b-green{background:rgba(5,150,105,0.12);color:#34d399;border:1px solid rgba(5,150,105,0.22);}
+.b-red{background:rgba(220,38,38,0.12);color:#f87171;border:1px solid rgba(220,38,38,0.2);}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 20px;border-radius:10px;font-size:0.875rem;font-weight:600;border:none;transition:all 0.18s;white-space:nowrap;cursor:pointer;text-decoration:none;}
+.btn-red{background:#ef4444;color:#fff;font-weight:700;}
+.btn-red:hover{background:#f87171;transform:translateY(-1px);}
+.btn-gold{background:#f0a500;color:#000;font-weight:700;}
+.btn-gold:hover{background:#fbbf24;}
+.btn-primary{background:#2563eb;color:#fff;}
+.btn-primary:hover{background:#3b82f6;}
+.btn-ghost{background:transparent;color:#cbd5e1;border:1.5px solid rgba(255,255,255,0.15);}
+.btn-ghost:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.btn-danger{background:rgba(220,38,38,0.12);color:#f87171;border:1px solid rgba(220,38,38,0.2);}
+.btn-success{background:rgba(5,150,105,0.12);color:#34d399;border:1px solid rgba(5,150,105,0.22);}
+.btn-sm{padding:6px 13px;font-size:0.8rem;border-radius:8px;}
+
+.mo{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.mo.open{opacity:1;pointer-events:all;}
+.mo-box{background:#0b1729;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px;width:100%;max-width:560px;position:relative;transform:scale(0.96);transition:transform 0.2s;max-height:90vh;overflow-y:auto;}
+.mo.open .mo-box{transform:scale(1);}
+.mo-x{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(148,163,184,0.7);font-size:0.85rem;}
+.mo-x:hover{background:rgba(220,38,38,0.2);color:#f87171;}
+
+.page{display:none;}.page.on{display:block;}
+
+.mob-top{display:none;position:fixed;top:0;left:0;right:0;z-index:200;height:58px;background:rgba(6,14,30,0.97);border-bottom:1px solid rgba(255,255,255,0.07);padding:0 15px;align-items:center;justify-content:space-between;backdrop-filter:blur(14px);}
+.mob-ham{background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer;padding:5px;border-radius:7px;}
+.mob-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:190;}
+.mob-ov.open{display:block;}
+.sb.mob-open{display:flex!important;position:fixed;z-index:195;height:100vh;box-shadow:0 0 60px rgba(0,0,0,0.6);}
+
+/* PENDING INSTRUCTOR CARD */
+.pi-card{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(6,14,30,0.5);border-radius:10px;border:1px solid rgba(255,255,255,0.07);margin-bottom:8px;}
+.pi-av{width:40px;height:40px;border-radius:50%;background:rgba(240,165,0,0.15);border:2px solid rgba(240,165,0,0.3);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;overflow:hidden;}
+.pi-av img{width:100%;height:100%;object-fit:cover;}
+
+/* PRICE ROW */
+.price-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);flex-wrap:wrap;}
+.price-row:last-child{border-bottom:none;}
+
+@media(max-width:1024px){.portal{grid-template-columns:1fr;}.sb{display:none;}.mob-top{display:flex;}.pm-inner{padding-top:58px;}.pc{padding:16px 14px;}.topbar{display:none;}.sg{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.sg{grid-template-columns:1fr 1fr;}.pc{padding:12px 10px;}}
+</style>
+</head>
+<body>
+
+<div class="mob-top" id="mobTop">
+  <a href="/" style="display:inline-flex;align-items:center;text-decoration:none;"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy" style="height:30px;width:auto;object-fit:contain;display:block;"/></a>
+  <button class="mob-ham" onclick="toggleSB()">☰</button>
+</div>
+<div class="mob-ov" id="mobOv" onclick="toggleSB()"></div>
+
+<div class="portal">
+  <aside class="sb" id="sb">
+    <div class="sb-top">
+      <a href="/" style="display:inline-flex;text-decoration:none;"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy" style="height:34px;width:auto;object-fit:contain;display:block;"/></a>
+      <div class="sb-badge">Admin Panel</div>
+      <div class="sb-user" style="margin-top:10px;">
+        <div class="sb-av" id="sbAv">⚙️</div>
+        <div style="min-width:0;"><div class="sb-uname" id="sbName">Admin</div><div class="sb-urole">Administrator</div></div>
+      </div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-sec">Main</div>
+      <button class="ni active" onclick="sp('overview',this)"><span class="ni-icon">📊</span>Overview</button>
+      <div class="sb-sec">People</div>
+      <button class="ni" onclick="sp('students',this)"><span class="ni-icon">👥</span>Students</button>
+      <button class="ni" onclick="sp('instructors',this)">
+        <span class="ni-icon">👨‍🏫</span>Instructors
+        <span class="ni-badge" id="pendBadge" style="display:none;">!</span>
+      </button>
+      <div class="sb-sec">Content</div>
+      <button class="ni" onclick="sp('courses',this)"><span class="ni-icon">📚</span>Courses</button>
+      <a href="/instructor/course.html" class="ni"><span class="ni-icon">✏️</span>Manage Lessons</a>
+      <button class="ni" onclick="sp('certs',this)"><span class="ni-icon">🎓</span>Certificates</button>
+      <div class="sb-sec">Finance</div>
+      <button class="ni" onclick="sp('payments',this)"><span class="ni-icon">💳</span>Payments</button>
+      <button class="ni" onclick="sp('pricing',this)"><span class="ni-icon">💰</span>Pricing & Promos</button>
+      <div class="sb-sec">Communications</div>
+      <button class="ni" onclick="sp('announce',this)"><span class="ni-icon">📢</span>Announcements</button>
+      <div class="sb-sec">Settings</div>
+      <button class="ni" onclick="sp('cohort',this)"><span class="ni-icon">📅</span>Cohort Settings</button>
+      <a href="/" class="ni"><span class="ni-icon">🌐</span>View Website</a>
+    </div>
+    <div class="sb-bot">
+      <button class="ni" onclick="logout()" style="color:#f87171;"><span class="ni-icon">🚪</span>Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="pm">
+    <div class="pm-inner">
+      <div class="topbar">
+        <div><div class="tb-title" id="pageTitle">Admin Overview</div><div class="tb-sub" id="pageSub"></div></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="sp('announce',null)">📢 Announce</button>
+          <a href="/admin/students.html" class="btn btn-red btn-sm">View All Students</a>
+        </div>
+      </div>
+      <div class="pc">
+
+        <!-- COHORT BANNER -->
+        <div class="coh-banner">
+          <div><div class="coh-pill" id="cohortPill">April 2026 Cohort</div><div style="font-size:0.78rem;color:rgba(148,163,184,0.7);margin-top:6px;">Update cohort details in Settings → Cohort Settings</div></div>
+          <button class="btn btn-ghost btn-sm" onclick="sp('cohort',null)" style="margin-left:auto;">⚙️ Edit Cohort</button>
+        </div>
+
+        <!-- OVERVIEW -->
+        <div class="page on" id="page-overview">
+          <div class="sg">
+            <div class="sc c1"><div class="sc-icon">👥</div><div class="sc-num" id="kS">—</div><div class="sc-lbl">Total Students</div></div>
+            <div class="sc c2"><div class="sc-icon">₦</div><div class="sc-num" id="kR">—</div><div class="sc-lbl">Total Revenue</div></div>
+            <div class="sc c3"><div class="sc-icon">📋</div><div class="sc-num" id="kE">—</div><div class="sc-lbl">Enrollments</div></div>
+            <div class="sc c4"><div class="sc-icon">⏳</div><div class="sc-num" id="kP">—</div><div class="sc-lbl">Pending Approvals</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="sec-card"><div class="sec-hdr"><h4>Recent Enrollments</h4><button class="btn btn-ghost btn-sm" onclick="sp('students',null)">View All →</button></div><div class="tw"><table><thead><tr><th>Student</th><th>Course</th><th>Date</th></tr></thead><tbody id="recEnroll"><tr><td colspan="3" style="text-align:center;padding:16px;color:rgba(148,163,184,0.6);">Loading...</td></tr></tbody></table></div></div>
+            <div class="sec-card"><div class="sec-hdr"><h4>Recent Payments</h4><button class="btn btn-ghost btn-sm" onclick="sp('payments',null)">View All →</button></div><div class="tw"><table><thead><tr><th>Student</th><th>Amount</th><th>Status</th></tr></thead><tbody id="recPay"><tr><td colspan="3" style="text-align:center;padding:16px;color:rgba(148,163,184,0.6);">Loading...</td></tr></tbody></table></div></div>
+          </div>
+        </div>
+
+        <!-- STUDENTS -->
+        <div class="page" id="page-students">
+          <div class="sec-card">
+            <div class="sec-hdr"><h4>All Students</h4><input type="text" class="fi" id="stuSearch" placeholder="Search name or email..." oninput="filterStu()" style="max-width:240px;padding:7px 12px;font-size:0.84rem;"/></div>
+            <div class="tw"><table><thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Country</th><th>Course</th><th>Enrolled</th><th>Status</th><th>Actions</th></tr></thead><tbody id="stuTbl"><tr><td colspan="8" style="text-align:center;padding:18px;color:rgba(148,163,184,0.6);">Loading...</td></tr></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- INSTRUCTORS -->
+        <div class="page" id="page-instructors">
+          <div class="sec-card" style="margin-bottom:16px;">
+            <div class="sec-hdr"><h4>⏳ Pending Applications</h4></div>
+            <div class="sec-body" id="pendInstr"><div style="color:rgba(148,163,184,0.6);font-size:0.875rem;">Loading...</div></div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-hdr"><h4>Active Instructors</h4></div>
+            <div class="tw"><table><thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Skills</th><th>Bank</th><th>Status</th><th>Action</th></tr></thead><tbody id="instrTbl"><tr><td colspan="7" style="text-align:center;padding:18px;color:rgba(148,163,184,0.6);">Loading...</td></tr></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- COURSES -->
+        <div class="page" id="page-courses">
+          <div class="sec-card">
+            <div class="sec-hdr"><h4>All Courses</h4><a href="/instructor/course.html" class="btn btn-gold btn-sm">+ Manage Content</a></div>
+            <div class="tw"><table><thead><tr><th>Course</th><th>Category</th><th>Duration</th><th>Price</th><th>Students</th></tr></thead><tbody id="coursesTbl"><tr><td colspan="5" style="text-align:center;padding:18px;color:rgba(148,163,184,0.6);">Loading...</td></tr></tbody></table></div>
+          </div>
+        </div>
+
+        <!-- PAYMENTS -->
+        <div class="page" id="page-payments">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:8px;">
+            <div><h3 style="color:#fff;font-size:1rem;">Payment Records</h3><div style="font-size:0.84rem;color:rgba(148,163,184,0.7);">Total Revenue: <strong style="color:#f0a500;" id="totRev">Loading...</strong></div></div>
+          </div>
+          <div class="tw"><table><thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Amount</th><th>Reference</th><th>Status</th><th>Date</th></tr></thead><tbody id="payTbl"><tr><td colspan="7" style="text-align:center;padding:18px;color:rgba(148,163,184,0.6);">Loading...</td></tr></tbody></table></div>
+        </div>
+
+        <!-- PRICING -->
+        <div class="page" id="page-pricing">
+          <div class="sec-card" style="margin-bottom:16px;">
+            <div class="sec-hdr"><h4>💰 Course Prices</h4></div>
+            <div class="sec-body" id="priceList"><div style="color:rgba(148,163,184,0.6);">Loading...</div></div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-hdr"><h4>🏷️ Promo Codes</h4><button class="btn btn-gold btn-sm" onclick="document.getElementById('promoMo').classList.add('open')">+ Create Promo</button></div>
+            <div class="sec-body"><div style="font-size:0.84rem;color:rgba(148,163,184,0.7);">No promo codes yet. Create one to offer discounts to students.</div></div>
+          </div>
+        </div>
+
+        <!-- ANNOUNCEMENTS -->
+        <div class="page" id="page-announce">
+          <div class="sec-card">
+            <div class="sec-hdr"><h4>Post Announcement</h4></div>
+            <div class="sec-body">
+              <div class="fg"><label class="fl">Send To</label><select class="fi" id="annScope"><option value="global">All Students (Global)</option></select></div>
+              <div class="fg"><label class="fl">Title</label><input class="fi" id="annTitle" placeholder="Announcement title"/></div>
+              <div class="fg"><label class="fl">Message</label><textarea class="fi" id="annBody" rows="4" placeholder="Write your announcement..."></textarea></div>
+              <div class="al-err" id="annErr"></div>
+              <div class="al-ok" id="annOk"></div>
+              <button class="btn btn-red" onclick="postAnn()">Post to All Students →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CERTIFICATES -->
+        <div class="page" id="page-certs">
+          <div class="sec-card">
+            <div class="sec-hdr"><h4>Issue Certificate Manually</h4></div>
+            <div class="sec-body">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;">
+                <div class="fg"><label class="fl">Student User ID</label><input class="fi" type="number" id="certUsr" placeholder="Student ID number"/></div>
+                <div class="fg"><label class="fl">Course ID</label><input class="fi" type="number" id="certCrs" placeholder="Course ID number"/></div>
+              </div>
+              <div class="al-err" id="certErr"></div>
+              <div class="al-ok" id="certOk"></div>
+              <button class="btn btn-gold" onclick="issueCert()">Issue Certificate →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- COHORT -->
+        <div class="page" id="page-cohort">
+          <div class="sec-card">
+            <div class="sec-hdr"><h4>📅 Cohort Settings</h4></div>
+            <div class="sec-body">
+              <div style="background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:11px 14px;margin-bottom:16px;font-size:0.84rem;color:#93c5fd;">Cohort name auto-updates every month. You can override it below. Current year: <strong>2026</strong>.</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;">
+                <div class="fg"><label class="fl">Cohort Name</label><input class="fi" id="cohName" placeholder="e.g. May 2026 Cohort"/></div>
+                <div class="fg"><label class="fl">Start Date</label><input class="fi" type="date" id="cohStart"/></div>
+                <div class="fg"><label class="fl">Registration Deadline</label><input class="fi" type="date" id="cohDead"/></div>
+                <div class="fg"><label class="fl">Seats Available</label><input class="fi" type="number" id="cohSeats" placeholder="e.g. 20"/></div>
+              </div>
+              <div class="fg"><label class="fl">Homepage Banner Message</label><textarea class="fi" id="cohMsg" rows="2" placeholder="e.g. April 2026 Cohort is now open — 8 seats left!"></textarea></div>
+              <div class="al-ok" id="cohOk"></div>
+              <button class="btn btn-red" onclick="saveCohort()">Save Cohort Settings →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT DETAIL MODAL -->
+<div class="mo" id="stuMo">
+  <div class="mo-box" style="max-width:600px;">
+    <div class="mo-x" onclick="closeMo()">✕</div>
+    <div id="stuDetail"></div>
+  </div>
+</div>
+
+<!-- INSTRUCTOR DETAIL MODAL -->
+<div class="mo" id="instrMo">
+  <div class="mo-box" style="max-width:600px;">
+    <div class="mo-x" onclick="closeMo()">✕</div>
+    <div id="instrDetail"></div>
+  </div>
+</div>
+
+<!-- PROMO MODAL -->
+<div class="mo" id="promoMo">
+  <div class="mo-box">
+    <div class="mo-x" onclick="closeMo()">✕</div>
+    <h3 style="color:#fff;margin-bottom:15px;">Create Promo Code</h3>
+    <div class="fg"><label class="fl">Promo Code</label><input class="fi" id="pCode" placeholder="e.g. LAUNCH50" style="text-transform:uppercase;"/></div>
+    <div class="fg"><label class="fl">Discount %</label><input class="fi" type="number" id="pDisc" placeholder="e.g. 20" min="1" max="100"/></div>
+    <div class="fg"><label class="fl">Expires</label><input class="fi" type="date" id="pExp"/></div>
+    <button class="btn btn-gold" style="width:100%;" onclick="savePromo()">Create Promo Code →</button>
+  </div>
+</div>
+
+<script>
+const token=localStorage.getItem('nf_token');
+if(!token||localStorage.getItem('nf_role')!=='admin')window.location.href='/login.html';
+document.getElementById('sbName').textContent=localStorage.getItem('nf_name')||'Admin';
+const now=new Date();
+const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+document.getElementById('cohortPill').textContent=months[now.getMonth()]+' '+now.getFullYear()+' Cohort';
+document.getElementById('pageSub').textContent=now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const H={credentials:'include',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'}};
+let allStu=[];
+
+function toggleSB(){document.getElementById('sb').classList.toggle('mob-open');document.getElementById('mobOv').classList.toggle('open');}
+function logout(){fetch('/api/auth/logout',{method:'POST',credentials:'include'});localStorage.clear();window.location.href='/login.html';}
+function closeMo(){document.querySelectorAll('.mo').forEach(m=>m.classList.remove('open'));}
+document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)closeMo();}));
+
+function sp(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+  const t={overview:'Admin Overview',students:'All Students',instructors:'Instructor Management',courses:'Course Management',payments:'Payment Records',pricing:'Pricing & Promos',announce:'Announcements',certs:'Certificates',cohort:'Cohort Settings'};
+  document.getElementById('pageTitle').textContent=t[id]||id;
+  document.getElementById('sb').classList.remove('mob-open');
+  document.getElementById('mobOv').classList.remove('open');
+  if(id==='students')loadStudents();
+  if(id==='instructors')loadInstructors();
+  if(id==='courses')loadCourses();
+  if(id==='payments')loadPayments();
+  if(id==='pricing')loadPricing();
+  if(id==='cohort')initCohort();
+}
+
+async function loadOverview(){
+  const [statsRes,payRes,pendRes]=await Promise.all([fetch('/api/admin/stats',H),fetch('/api/admin/payments',H),fetch('/api/admin/instructors/pending',H)]);
+  const stats=await statsRes.json();const pays=await payRes.json();const pend=await pendRes.json();
+  document.getElementById('kS').textContent=stats.totalStudents||0;
+  document.getElementById('kE').textContent=stats.totalEnrollments||0;
+  document.getElementById('kR').textContent='₦'+Number(stats.totalRevenue||0).toLocaleString();
+  document.getElementById('kP').textContent=pend.length;
+  if(pend.length>0){const b=document.getElementById('pendBadge');b.textContent=pend.length;b.style.display='inline';}
+  document.getElementById('recEnroll').innerHTML=stats.recentStudents?.slice(0,6).map(s=>`<tr><td style="color:#fff;font-weight:600;">${s.full_name}</td><td style="font-size:0.8rem;">${s.course||s.track||'—'}</td><td style="font-size:0.77rem;">${new Date(s.created_at).toLocaleDateString()}</td></tr>`).join('')||'<tr><td colspan="3" style="text-align:center;padding:16px;color:rgba(148,163,184,0.6);">No enrollments yet.</td></tr>';
+  document.getElementById('recPay').innerHTML=pays.slice(0,6).map(p=>`<tr><td style="color:#fff;font-weight:600;">${p.full_name}</td><td style="color:#f0a500;font-weight:600;">₦${Number(p.amount).toLocaleString()}</td><td><span class="badge ${p.status==='success'?'b-green':'b-red'}">${p.status}</span></td></tr>`).join('')||'<tr><td colspan="3" style="text-align:center;padding:16px;color:rgba(148,163,184,0.6);">No payments.</td></tr>';
+}
+
+async function loadStudents(){
+  const res=await fetch('/api/admin/students',H);allStu=await res.json();renderStu(allStu);
+}
+function filterStu(){const q=document.getElementById('stuSearch').value.toLowerCase();renderStu(allStu.filter(s=>s.full_name.toLowerCase().includes(q)||s.email.toLowerCase().includes(q)));}
+function renderStu(students){
+  let bio={};
+  document.getElementById('stuTbl').innerHTML=students.length?students.map(s=>{
+    try{bio=JSON.parse(s.bio||'{}');}catch{}
+    return`<tr>
+      <td><div style="width:34px;height:34px;border-radius:50%;overflow:hidden;background:rgba(37,99,235,0.15);display:flex;align-items:center;justify-content:center;">${s.avatar_url?`<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;"/>`:'👤'}</div></td>
+      <td style="color:#fff;font-weight:600;">${s.full_name}</td>
+      <td style="font-size:0.8rem;">${s.email}</td>
+      <td style="font-size:0.78rem;">${bio.country||'—'}</td>
+      <td style="font-size:0.8rem;">${bio.occupation||s.track||'—'}</td>
+      <td style="font-size:0.77rem;">${new Date(s.created_at).toLocaleDateString()}</td>
+      <td><span class="badge ${s.is_active?'b-green':'b-red'}">${s.is_active?'Active':'Suspended'}</span></td>
+      <td><div style="display:flex;gap:5px;">
+        <button class="btn btn-ghost btn-sm" onclick="viewStu(${s.id})">View</button>
+        <button class="btn btn-danger btn-sm" onclick="toggleUsr(${s.id},${s.is_active})">${s.is_active?'Suspend':'Restore'}</button>
+      </div></td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="8" style="text-align:center;padding:18px;color:rgba(148,163,184,0.6);">No students found.</td></tr>';
+}
+
+async function viewStu(id){
+  const res=await fetch(`/api/admin/students/${id}`,H);const s=await res.json();
+  let bio={};try{bio=JSON.parse(s.bio||'{}');}catch{}
+  document.getElementById('stuDetail').innerHTML=`
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+      <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;background:rgba(37,99,235,0.15);border:3px solid #3b82f6;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${s.avatar_url?`<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;"/>`:'👤'}</div>
+      <div><div style="font-weight:800;color:#fff;font-size:1.05rem;">${s.full_name}</div><div style="font-size:0.8rem;color:rgba(148,163,184,0.8);">${s.email} · ${s.phone||'No phone'}</div><div style="font-size:0.73rem;color:rgba(148,163,184,0.6);margin-top:2px;">Joined ${new Date(s.created_at).toLocaleDateString()} · ID: ${s.unique_id||'—'}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;">
+      ${bio.occupation?`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:9px;"><div style="font-size:0.66rem;color:rgba(148,163,184,0.6);margin-bottom:2px;">OCCUPATION</div><div style="font-size:0.84rem;color:#fff;">${bio.occupation}</div></div>`:''}
+      ${bio.country?`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:9px;"><div style="font-size:0.66rem;color:rgba(148,163,184,0.6);margin-bottom:2px;">COUNTRY</div><div style="font-size:0.84rem;color:#fff;">${bio.country}</div></div>`:''}
+    </div>
+    ${bio.reason?`<div style="margin-bottom:10px;"><div style="font-size:0.66rem;color:#f0a500;margin-bottom:4px;">WHY THEY ENROLLED</div><div style="font-size:0.84rem;color:rgba(203,213,225,0.85);background:rgba(6,14,30,0.5);padding:10px;border-radius:9px;">${bio.reason}</div></div>`:''}
+    ${bio.goal?`<div style="margin-bottom:14px;"><div style="font-size:0.66rem;color:#f0a500;margin-bottom:4px;">CAREER GOAL</div><div style="font-size:0.84rem;color:rgba(203,213,225,0.85);background:rgba(6,14,30,0.5);padding:10px;border-radius:9px;">${bio.goal}</div></div>`:''}
+    <h4 style="color:#fff;margin-bottom:10px;font-size:0.9rem;">Enrolled Courses</h4>
+    ${(s.enrollments||[]).map(e=>{const pct=e.total>0?Math.round(e.completed/e.total*100):0;return`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:11px;margin-bottom:7px;"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:0.84rem;color:#fff;">${e.thumbnail} ${e.title}</span><span style="font-size:0.73rem;color:rgba(148,163,184,0.6);">${pct}%</span></div><div class="pbar"><div class="pfill" style="width:${pct}%;"></div></div></div>`;}).join('')||'<div style="color:rgba(148,163,184,0.6);font-size:0.84rem;">No courses enrolled.</div>'}
+  `;
+  document.getElementById('stuMo').classList.add('open');
+}
+
+async function toggleUsr(id,current){
+  if(!confirm(current?'Suspend this user?':'Restore this user?'))return;
+  await fetch(`/api/admin/students/${id}/toggle`,{method:'POST',...H});
+  loadStudents();
+}
+
+async function loadInstructors(){
+  const [pendRes,actRes]=await Promise.all([fetch('/api/admin/instructors/pending',H),fetch('/api/admin/instructors/active',H)]);
+  const pending=await pendRes.json();const active=await actRes.json();
+  document.getElementById('pendInstr').innerHTML=pending.length?pending.map(i=>{
+    let bio={};try{bio=JSON.parse(i.bio||'{}');}catch{}
+    return`<div class="pi-card">
+      <div class="pi-av">${i.avatar_url?`<img src="${i.avatar_url}"/>`:'👨‍🏫'}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:700;color:#fff;font-size:0.875rem;">${i.full_name}</div>
+        <div style="font-size:0.73rem;color:rgba(148,163,184,0.7);">${i.email} · ${bio.title||'Instructor'}</div>
+        <div style="font-size:0.73rem;color:#f0a500;margin-top:2px;">${bio.skills||'—'}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;">
+        <button class="btn btn-ghost btn-sm" onclick="viewInstr(${JSON.stringify(i).replace(/"/g,'&quot;')})">View</button>
+        <button class="btn btn-success btn-sm" onclick="approveInstr(${i.id},true)">✓ Approve</button>
+        <button class="btn btn-danger btn-sm" onclick="approveInstr(${i.id},false)">✕ Reject</button>
+      </div>
+    </div>`;
+  }).join(''):'<div style="color:rgba(148,163,184,0.6);font-size:0.875rem;">No pending applications.</div>';
+  document.getElementById('instrTbl').innerHTML=active.length?active.map(i=>{
+    let bio={};try{bio=JSON.parse(i.bio||'{}');}catch{}
+    return`<tr>
+      <td><div style="width:34px;height:34px;border-radius:50%;overflow:hidden;background:rgba(240,165,0,0.15);display:flex;align-items:center;justify-content:center;">${i.avatar_url?`<img src="${i.avatar_url}" style="width:100%;height:100%;object-fit:cover;"/>`:'👨‍🏫'}</div></td>
+      <td style="color:#fff;font-weight:600;">${i.full_name}</td>
+      <td style="font-size:0.8rem;">${i.email}</td>
+      <td style="font-size:0.8rem;">${bio.skills||'—'}</td>
+      <td style="font-size:0.8rem;">${bio.bank||'—'} ${bio.account?'·'+bio.account:''}</td>
+      <td><span class="badge b-green">Active</span></td>
+      <td><button class="btn btn-danger btn-sm" onclick="toggleInstr(${i.id},1)">Suspend</button></td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="7" style="text-align:center;padding:18px;color:rgba(148,163,184,0.6);">No active instructors.</td></tr>';
+}
+
+function viewInstr(i){
+  let bio={};try{bio=JSON.parse(i.bio||'{}');}catch{}
+  document.getElementById('instrDetail').innerHTML=`
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+      <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;background:rgba(240,165,0,0.15);border:3px solid #f0a500;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${i.avatar_url?`<img src="${i.avatar_url}" style="width:100%;height:100%;object-fit:cover;"/>`:'👨‍🏫'}</div>
+      <div><div style="font-weight:800;color:#fff;font-size:1.05rem;">${i.full_name}</div><div style="font-size:0.8rem;color:rgba(148,163,184,0.8);">${i.email}</div><div style="font-size:0.73rem;color:#f0a500;margin-top:2px;">${bio.title||'Instructor'}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px;">
+      ${bio.exp?`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:9px;"><div style="font-size:0.66rem;color:rgba(148,163,184,0.6);margin-bottom:2px;">EXPERIENCE</div><div style="font-size:0.84rem;color:#fff;">${bio.exp}</div></div>`:''}
+      ${bio.certs?`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:9px;"><div style="font-size:0.66rem;color:rgba(148,163,184,0.6);margin-bottom:2px;">CERTIFICATIONS</div><div style="font-size:0.84rem;color:#fff;">${bio.certs}</div></div>`:''}
+      ${bio.bank?`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:9px;"><div style="font-size:0.66rem;color:rgba(148,163,184,0.6);margin-bottom:2px;">BANK</div><div style="font-size:0.84rem;color:#fff;">${bio.bank}</div></div>`:''}
+      ${bio.account?`<div style="background:rgba(6,14,30,0.5);border-radius:9px;padding:9px;"><div style="font-size:0.66rem;color:rgba(148,163,184,0.6);margin-bottom:2px;">ACCOUNT</div><div style="font-size:0.84rem;color:#fff;">${bio.acctname||''} · ${bio.account}</div></div>`:''}
+    </div>
+    ${bio.skills?`<div style="margin-bottom:10px;"><div style="font-size:0.66rem;color:#f0a500;margin-bottom:4px;">SKILLS</div><div style="font-size:0.84rem;color:rgba(203,213,225,0.85);background:rgba(6,14,30,0.5);padding:10px;border-radius:9px;">${bio.skills}</div></div>`:''}
+    ${bio.why?`<div><div style="font-size:0.66rem;color:#f0a500;margin-bottom:4px;">WHY THEY WANT TO TEACH</div><div style="font-size:0.84rem;color:rgba(203,213,225,0.85);background:rgba(6,14,30,0.5);padding:10px;border-radius:9px;">${bio.why}</div></div>`:''}
+  `;
+  document.getElementById('instrMo').classList.add('open');
+}
+
+async function approveInstr(id,approve){
+  await fetch(`/api/admin/instructors/${id}/approve`,{method:'POST',...H,body:JSON.stringify({approve})});
+  loadInstructors();loadOverview();
+}
+async function toggleInstr(id,current){
+  if(!confirm(current?'Suspend this instructor?':'Restore?'))return;
+  await fetch(`/api/admin/instructors/${id}/toggle`,{method:'POST',...H});
+  loadInstructors();
+}
+
+async function loadCourses(){
+  const res=await fetch('/api/admin/courses',H);const courses=await res.json();
+  document.getElementById('coursesTbl').innerHTML=courses.map(c=>`<tr><td style="color:#fff;font-weight:600;">${c.thumbnail} ${c.title}</td><td style="font-size:0.8rem;">${c.category}</td><td style="font-size:0.8rem;">${c.duration}</td><td style="color:#f0a500;font-weight:600;">₦${Number(c.price).toLocaleString()}</td><td><span class="badge b-blue">${c.enrollments||0}</span></td></tr>`).join('');
+}
+
+async function loadPayments(){
+  const res=await fetch('/api/admin/payments',H);const pays=await res.json();
+  const total=pays.filter(p=>p.status==='success').reduce((s,p)=>s+p.amount,0);
+  document.getElementById('totRev').textContent='₦'+Number(total).toLocaleString();
+  document.getElementById('payTbl').innerHTML=pays.length?pays.map(p=>`<tr><td style="color:#fff;font-weight:600;">${p.full_name}</td><td style="font-size:0.79rem;">${p.email}</td><td style="font-size:0.8rem;">${p.course_title||'—'}</td><td style="color:#f0a500;font-weight:600;">₦${Number(p.amount).toLocaleString()}</td><td style="font-size:0.69rem;color:rgba(148,163,184,0.6);">${p.reference||'—'}</td><td><span class="badge ${p.status==='success'?'b-green':'b-red'}">${p.status}</span></td><td style="font-size:0.78rem;">${new Date(p.created_at).toLocaleDateString()}</td></tr>`).join(''):'<tr><td colspan="7" style="text-align:center;padding:18px;color:rgba(148,163,184,0.6);">No payments yet.</td></tr>';
+}
+
+async function loadPricing(){
+  const res=await fetch('/api/admin/courses',H);const courses=await res.json();
+  document.getElementById('priceList').innerHTML=courses.map(c=>`
+    <div class="price-row">
+      <div style="flex:1;min-width:0;"><div style="font-weight:600;color:#fff;font-size:0.875rem;">${c.thumbnail} ${c.title}</div><div style="font-size:0.73rem;color:rgba(148,163,184,0.6);">${c.duration} · Current: <strong style="color:#f0a500;">₦${Number(c.price).toLocaleString()}</strong></div></div>
+      <input type="number" class="fi" id="np_${c.id}" value="${c.price}" style="width:130px;padding:7px 10px;font-size:0.84rem;"/>
+      <button class="btn btn-gold btn-sm" onclick="updatePrice(${c.id})">Update</button>
+    </div>`).join('');
+}
+
+async function updatePrice(id){
+  const price=parseInt(document.getElementById('np_'+id).value);
+  if(!price||price<0)return alert('Enter a valid price.');
+  const res=await fetch('/api/admin/courses/'+id+'/price',{method:'POST',...H,body:JSON.stringify({price})});
+  if(res.ok){alert('✓ Price updated!');loadPricing();}
+  else{const d=await res.json();alert(d.error||'Failed.');}
+}
+
+function initCohort(){
+  const now=new Date();
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cohName').value=months[now.getMonth()]+' '+now.getFullYear()+' Cohort';
+  const next=new Date(now.getFullYear(),now.getMonth()+1,1);
+  document.getElementById('cohStart').value=next.toISOString().split('T')[0];
+  const dead=new Date(next);dead.setDate(dead.getDate()-7);
+  document.getElementById('cohDead').value=dead.toISOString().split('T')[0];
+  document.getElementById('cohSeats').value='20';
+  document.getElementById('cohMsg').value=months[next.getMonth()]+' '+next.getFullYear()+' Cohort is now open — limited seats available!';
+}
+
+function saveCohort(){
+  const name=document.getElementById('cohName').value.trim();
+  if(!name)return;
+  document.getElementById('cohortPill').textContent=name;
+  const ok=document.getElementById('cohOk');ok.textContent='✓ Cohort settings saved!';ok.style.display='block';
+  setTimeout(()=>ok.style.display='none',3000);
+}
+
+async function postAnn(){
+  const title=document.getElementById('annTitle').value.trim(),body=document.getElementById('annBody').value.trim();
+  const err=document.getElementById('annErr'),ok=document.getElementById('annOk');
+  err.style.display='none';ok.style.display='none';
+  if(!title||!body)return(err.textContent='Fill in all fields.',err.style.display='block');
+  const res=await fetch('/api/admin/announcements',{method:'POST',...H,body:JSON.stringify({title,body,is_global:true})});
+  if(res.ok){ok.textContent='✓ Announcement posted to all students!';ok.style.display='block';document.getElementById('annTitle').value='';document.getElementById('annBody').value='';}
+  else{const d=await res.json();err.textContent=d.error;err.style.display='block';}
+}
+
+async function issueCert(){
+  const user_id=document.getElementById('certUsr').value,course_id=document.getElementById('certCrs').value;
+  const err=document.getElementById('certErr'),ok=document.getElementById('certOk');
+  err.style.display='none';ok.style.display='none';
+  if(!user_id||!course_id)return(err.textContent='Both fields required.',err.style.display='block');
+  const res=await fetch('/api/admin/certificates',{method:'POST',...H,body:JSON.stringify({user_id,course_id})});
+  const d=await res.json();
+  if(res.ok){ok.textContent='✓ Certificate issued! Code: '+d.cert_code;ok.style.display='block';}
+  else{err.textContent=d.error;err.style.display='block';}
+}
+
+function savePromo(){
+  const code=document.getElementById('pCode').value.trim().toUpperCase();
+  const disc=document.getElementById('pDisc').value;
+  if(!code||!disc)return alert('Code and discount required.');
+  alert('Promo code "'+code+'" ('+disc+'% off) created!');
+  closeMo();
+}
+
+loadOverview();
+</script>
+</body>
+</html>
