@@ -10,7 +10,13 @@ app.use('/api/classes', (req, res, next) => {
   req.url = '/classes' + (req.url === '/' ? '' : req.url);
   adminRoutes(req, res, next);
 });
-
+// ===== AUTH MIDDLEWARE =====
+function requireAuth(req, res, next) {
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  next();
+}
 app.get('/api/classes', require('./middleware/auth').requireAuth, (req, res) => {
   // proxy to admin route
 });
