@@ -24,7 +24,10 @@ p{line-height:1.75;color:#94a3b8;}
   --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
   --text:#94a3b8;--text2:#cbd5e1;--white:#fff;
 }
-
+.cc-link { display: block; width: 100%; }
+.cc-title { transition: color 0.2s; }
+.cc-title:hover { color: var(--gold); }
+  
 /* NAVBAR */
 .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;display:flex;align-items:center;padding:0 24px;background:rgba(6,14,30,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
 .nav-inner{max-width:1200px;width:100%;margin:0 auto;display:flex;align-items:center;gap:24px;}
@@ -393,24 +396,44 @@ function applyFilterSort() {
 function render() {
   const grid = document.getElementById('coursesGrid');
   document.getElementById('countBar').innerHTML = '<strong>' + filtered.length + '</strong> programme' + (filtered.length!==1?'s':'') + ' found' + (activeFilter!=='all'?' in '+activeFilter:'');
+  
   if (!filtered.length) {
     grid.innerHTML = '<div class="empty" style="grid-column:1/-1;"><div class="empty-icon">🔍</div><div style="font-weight:700;color:#fff;margin-bottom:8px;">No courses in this category</div><button class="btn btn-gold btn-sm" onclick="setFilter(\'all\',document.querySelector(\'.filter-chip\'))">View All</button></div>';
     return;
   }
+
   grid.innerHTML = filtered.map(c => {
     const isSelfPaced = (c.weeks||0) <= 6;
-    return '<div class="cc">' +
-      '<div class="cc-img"><img src="' + (c.image_url||'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=70') + '" alt="' + c.title + '" loading="lazy"/>' +
-      '<div class="cc-img-ov"><span style="font-size:0.68rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">' + c.category + '</span></div></div>' +
-      '<div class="cc-body">' +
-      '<div class="cc-cat">' + (c.thumbnail||'📋') + ' ' + c.category + '</div>' +
-      '<div class="cc-title">' + c.title + '</div>' +
-      '<div class="cc-desc">' + (c.description||'Expert-led programme with live instruction, real projects, and career guidance.') + '</div>' +
-      '<div class="cc-meta"><span class="cc-stars">★★★★★</span><span>4.9</span><span>·</span><span>' + c.duration + '</span><span>·</span><span>' + (c.level||'Beginner') + '</span></div>' +
-      '<div class="cc-tags"><span class="tag tag-cert">Certificate</span><span class="tag ' + (isSelfPaced?'tag-self':'tag-live') + '">' + (isSelfPaced?'Self-Paced':'Live Cohort') + '</span></div>' +
-      '<div class="cc-foot"><div class="cc-price">₦' + Number(c.price).toLocaleString() + '</div>' +
-      '<button class="btn btn-gold btn-sm" onclick=\'enrollNow(' + JSON.stringify(c).replace(/'/g,"&apos;") + ')\'>Enroll Now</button></div>' +
-      '</div></div>';
+    // We create a detail URL using the course ID
+    const detailUrl = `course-detail.html?id=${c.id}`;
+
+    return `
+      <div class="cc">
+        <a href="${detailUrl}" class="cc-link">
+          <div class="cc-img">
+            <img src="${c.image_url || 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=70'}" alt="${c.title}" loading="lazy"/>
+            <div class="cc-img-ov">
+              <span style="font-size:0.68rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">${c.category}</span>
+            </div>
+          </div>
+        </a>
+        <div class="cc-body">
+          <div class="cc-cat">${c.thumbnail || '📋'} ${c.category}</div>
+          <a href="${detailUrl}"><div class="cc-title">${c.title}</div></a>
+          <div class="cc-desc">${c.description || 'Expert-led programme with live instruction, real projects, and career guidance.'}</div>
+          <div class="cc-meta">
+            <span class="cc-stars">★★★★★</span><span>4.9</span><span>·</span><span>${c.duration}</span><span>·</span><span>${c.level || 'Beginner'}</span>
+          </div>
+          <div class="cc-tags">
+            <span class="tag tag-cert">Certificate</span>
+            <span class="tag ${isSelfPaced ? 'tag-self' : 'tag-live'}">${isSelfPaced ? 'Self-Paced' : 'Live Cohort'}</span>
+          </div>
+          <div class="cc-foot">
+            <div class="cc-price">₦${Number(c.price).toLocaleString()}</div>
+            <a href="${detailUrl}" class="btn btn-gold btn-sm">View Details</a>
+          </div>
+        </div>
+      </div>`;
   }).join('');
 }
 
