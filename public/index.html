@@ -8,6 +8,7 @@
     <meta property="og:image" content="https://i.ibb.co/hFC9RPhY/Transparent.png"/>
     <title>NextForge Academy — Launch Your Tech Career From Anywhere</title>
     
+    <link rel="stylesheet" href="/styles.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     
@@ -16,6 +17,8 @@
         :root {
             --bg: #060e1e;
             --bg-card: #0b1729;
+            --navy-2: #091224;
+            --navy-3: #040a16;
             --gold: #f0a500;
             --gold-glow: rgba(240, 165, 0, 0.2);
             --text: #94a3b8;
@@ -26,204 +29,202 @@
             --radius-lg: 18px;
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { 
-            background: var(--bg) !important; 
-            color: var(--text-light); 
-            font-family: 'Inter', sans-serif; 
-            overflow-x: hidden;
-            padding-top: 80px;
-        }
+        body { padding-top: 70px; background: var(--bg); font-family: 'Inter', sans-serif; color: var(--text-light); }
 
-        /* ── NAVIGATION ── */
-        nav {
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            background: rgba(6, 14, 30, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 18px 0;
-        }
-        .nav-container {
-            max-width: 1300px; margin: 0 auto; padding: 0 40px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo img { height: 32px; }
-        .nav-links { display: flex; gap: 32px; align-items: center; }
-        .nav-links a { color: var(--text-light); text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: 0.3s; }
-        .nav-links a:hover { color: var(--gold); }
-
-        /* ── HERO ── */
+        /* HERO SECTION - Exact Structure from index-1.html */
         .hero {
-            min-height: 80vh; display: flex; align-items: center; text-align: center;
-            background: radial-gradient(circle at center, rgba(240, 165, 0, 0.03) 0%, transparent 70%);
-            padding: 100px 40px;
+            background: linear-gradient(145deg, #060e1e 0%, #0f1e3a 55%, #060e1e 100%);
+            min-height: 92vh; display: flex; align-items: center; position: relative; overflow: hidden;
         }
-        .hero-content { max-width: 1000px; margin: 0 auto; }
-        .hero h1 {
-            font-family: 'Syne', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800; color: var(--white); line-height: 1.1; margin-bottom: 24px;
+        .hero-grid {
+            display: grid; grid-template-columns: 1fr 430px; gap: 64px; align-items: center;
+            max-width: 1300px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2;
         }
-        .hero p { font-size: 1.25rem; color: var(--text); max-width: 700px; margin: 0 auto 40px; }
-
-        /* ── BUTTONS ── */
-        .btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            padding: 16px 36px; border-radius: 12px; font-weight: 700;
-            text-decoration: none; transition: 0.3s; cursor: pointer; border: none;
-        }
-        .btn-gold { background: var(--gold); color: #000; }
-        .btn-gold:hover { transform: scale(1.02); box-shadow: 0 10px 30px var(--gold-glow); }
-        .btn-outline { border: 1px solid var(--border); color: var(--white); background: transparent; }
-
-        /* ── STATS SECTION ── */
-        .stats-bar {
-            background: var(--bg-card); border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border); padding: 50px 0;
-        }
-        .stats-container {
-            max-width: 1300px; margin: 0 auto; display: flex;
-            justify-content: space-around; flex-wrap: wrap; gap: 40px;
-        }
-        .stat-item { text-align: center; }
-        .stat-item h3 { font-family: 'Syne'; font-size: 2.5rem; color: #fff; margin-bottom: 5px; }
-        .stat-item p { color: var(--gold); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
-
-        /* ── COURSES SECTION (DYNAMIC) ── */
-        .section { padding: 100px 40px; max-width: 1300px; margin: 0 auto; }
-        .section-header h2 { font-family: 'Syne', sans-serif; font-size: 2.8rem; color: var(--white); margin-bottom: 40px; }
-        .cg { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+        .hero h1 { font-family: 'Syne'; font-size: clamp(2.5rem, 5vw, 4.5rem); color: var(--white); line-height: 1.1; margin-bottom: 18px; }
+        .hero h1 em { font-style: normal; color: var(--gold); }
         
-        .course-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 18px; overflow: hidden; transition: 0.4s;
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px;
+            border-radius: 20px; background: rgba(240, 165, 0, 0.12); border: 1px solid rgba(240, 165, 0, 0.28);
+            font-size: 0.74rem; color: var(--gold); font-weight: 700; text-transform: uppercase; margin-bottom: 20px;
         }
-        .course-card:hover { transform: translateY(-10px); border-color: var(--gold); }
 
-        /* ── FOOTER ── */
-        footer { padding: 80px 40px 40px; border-top: 1px solid var(--border); background: #030811; }
-        .footer-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; }
+        /* HERO PANEL (RIGHT SIDE) */
+        .hero-panel { background: rgba(255, 255, 255, 0.96); border-radius: 24px; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+        .hp-head { padding: 13px 17px; background: #0b1729; }
+        .hp-head-title { font-size: 0.71rem; color: rgba(255,255,255,0.55); text-transform: uppercase; font-weight: 600; }
+        .hp-courses { padding: 10px 12px; }
+        .hp-course { 
+            display: flex; align-items: center; gap: 11px; padding: 10px 11px; border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.08); margin-bottom: 7px; text-decoration: none; background: #fff; 
+        }
+        .hp-name { font-size: 0.84rem; font-weight: 600; color: #111; }
+        .hp-price { font-size: 0.84rem; font-weight: 700; color: var(--gold); margin-left: auto; }
 
-        @media (max-width: 900px) { .nav-links { display: none; } .footer-grid { grid-template-columns: 1fr; } }
+        /* PROCESS STEPS */
+        .ps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; position: relative; margin-top: 40px; }
+        .ps { text-align: center; position: relative; }
+        .ps-num { 
+            width: 46px; height: 46px; border-radius: 50%; background: var(--gold); color: #000;
+            display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 14px;
+        }
+
+        /* INSTRUCTOR SECTION */
+        .instr-grid { display: grid; grid-template-columns: 320px 1fr; gap: 60px; align-items: center; padding: 100px 0; }
+        .instr-img { width: 100%; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+
+        /* AI CHATBOX */
+        .chat-box { background: var(--navy-3); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; }
+        .chat-msgs { height: 260px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .cm { padding: 10px 14px; border-radius: 12px; font-size: 0.875rem; max-width: 85%; }
+        .cm.ai { background: var(--bg-card); align-self: flex-start; }
+        .cm.user { background: var(--gold); color: #000; align-self: flex-end; }
+
+        @media(max-width:1024px){ .hero-grid, .instr-grid { grid-template-columns: 1fr; } .hero-panel { display: none; } }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-container">
-            <a href="/" class="logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge"></a>
-            <div class="nav-links">
-                <a href="#courses">Programmes</a>
-                <a href="/about.html">Our Story</a>
-                <a href="/login.html">Sign In</a>
-                <a href="/register.html" class="btn btn-gold" style="padding: 10px 20px;">Get Started</a>
+<nav class="navbar" id="navbar">
+    <div class="inner" style="max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px;">
+        <a href="/" class="logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge" style="height: 32px;"></a>
+        <ul class="nav-links" style="display: flex; gap: 24px; list-style: none;">
+            <li><a href="/courses.html">Courses</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a href="#advisor">AI Advisor</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a href="/login.html" class="btn btn-ghost" style="margin-right: 15px;">Log In</a>
+            <a href="/register.html" class="btn btn-gold">Enroll Now</a>
+        </div>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-grid">
+        <div class="hero-text-area">
+            <div class="hero-tag"><div class="live-dot"></div>April 2026 Cohort — Enrolling Now</div>
+            <h1>Launch Your<br/><em>Tech Career</em><br/>From Anywhere.</h1>
+            <p style="font-size: 1.1rem; color: var(--text); margin-bottom: 34px; line-height: 1.8;">NextForge Academy delivers expert-led, project-based training in the most in-demand tech skills — accessible to ambitious professionals worldwide.</p>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <a href="/courses.html" class="btn btn-gold btn-2xl">Explore Programmes →</a>
+                <a href="https://wa.me/2349060914286" class="btn btn-outline">💬 Speak With Advisor</a>
             </div>
         </div>
-    </nav>
 
-    <header class="hero">
-        <div class="hero-content">
-            <div style="color: var(--gold); font-weight: 800; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 16px; text-transform: uppercase;">Next Generation Academy</div>
-            <h1>Forge Your Future with <span style="color:var(--gold);">Expert-Led</span> Cohorts</h1>
-            <p>Master Project Management, Data Analysis, and Product Operations through immersive, cohort-based learning.</p>
-            <div style="display:flex; gap:16px; justify-content:center;">
-                <a href="#courses" class="btn btn-gold">Browse Courses</a>
-                <a href="https://wa.me/2349060914286" class="btn btn-outline">Contact Admissions</a>
+        <div class="hero-panel">
+            <div class="hp-head"><div class="hp-head-title">Our Programmes — April 2026</div></div>
+            <div class="hp-courses">
+                <a href="/courses.html" class="hp-course"><div class="hp-icon">📋</div><div><div class="hp-name">Project Management</div><div style="font-size:0.7rem; color:#6b7280;">12 weeks · Cohort</div></div><div class="hp-price">₦250k</div></a>
+                <a href="/courses.html" class="hp-course"><div class="hp-icon">📊</div><div><div class="hp-name">Data Analysis</div><div style="font-size:0.7rem; color:#6b7280;">12 weeks · Cohort</div></div><div class="hp-price">₦300k</div></a>
+                <a href="/courses.html" class="hp-course"><div class="hp-icon">🗂</div><div><div class="hp-name">Notion Mastery</div><div style="font-size:0.7rem; color:#6b7280;">6 weeks · Self-paced</div></div><div class="hp-price">₦160k</div></a>
+                <a href="/courses.html" class="hp-course"><div class="hp-icon">💡</div><div><div class="hp-name">Business Comm.</div><div style="font-size:0.7rem; color:#6b7280;">8 weeks · Cohort</div></div><div class="hp-price">₦200k</div></a>
+            </div>
+            <div style="padding: 12px; background: #f8f9fc;">
+                <a href="/register.html" class="btn btn-gold" style="width:100%; justify-content:center;">Create Free Account →</a>
+                <div style="font-size:0.78rem; color:#374151; margin-top:10px; text-align:center;">Next cohort: <strong>April 7, 2026</strong> — 12 seats left</div>
             </div>
         </div>
-    </header>
+    </div>
+</section>
 
-    <section class="stats-bar">
-        <div class="stats-container">
-            <div class="stat-item">
-                <h3>94%</h3>
-                <p>Completion Rate</p>
-            </div>
-            <div class="stat-item">
-                <h3>2k+</h3>
-                <p>Global Scholars</p>
-            </div>
-            <div class="stat-item">
-                <h3>NGN 5M+</h3>
-                <p>Alumni Salary Inc.</p>
-            </div>
-        </div>
-    </section>
+<section class="section" style="padding: 100px 40px; max-width: 1300px; margin: 0 auto;">
+    <div style="text-align:center; margin-bottom: 60px;">
+        <h2 style="font-family:'Syne'; font-size: 2.5rem; color:#fff;">From Enrollment to Career</h2>
+    </div>
+    <div class="ps-grid">
+        <div class="ps"><div class="ps-num">1</div><h4>Enroll & Pay</h4><p style="font-size:0.85rem; color:var(--text);">Choose your programme and get instant LMS access.</p></div>
+        <div class="ps"><div class="ps-num">2</div><h4>Attend Live Classes</h4><p style="font-size:0.85rem; color:var(--text);">Weekly sessions recorded and available 24/7.</p></div>
+        <div class="ps"><div class="ps-num">3</div><h4>Build Real Projects</h4><p style="font-size:0.85rem; color:var(--text);">Real-world briefs with expert instructor feedback.</p></div>
+        <div class="ps"><div class="ps-num">4</div><h4>Graduate & Hired</h4><p style="font-size:0.85rem; color:var(--text);">Verified certificate and career coaching support.</p></div>
+    </div>
+</section>
 
-    <section class="section" id="courses">
-        <div class="section-header">
-            <h2>Our Programmes</h2>
-            <p style="color:var(--text); max-width: 600px;">Handpicked cohorts designed to turn beginners into professionals through project-led training.</p>
-        </div>
-        <div id="homeCourses" class="cg">
-            <div style="text-align:center; grid-column:1/-1; padding:40px; color:var(--text);">Syncing library...</div>
-        </div>
-    </section>
-
-    <section class="section">
-        <div style="background: linear-gradient(90deg, #0b1729, #111f38); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 80px 40px; text-align: center;">
-            <h2 style="font-family:'Syne'; font-size:2.5rem; color:#fff; margin-bottom:20px;">Start Your Journey Today</h2>
-            <p style="color:var(--text); margin-bottom:40px; max-width:600px; margin-inline:auto;">Join the next cohort of forward-thinking professionals. Flexible payment plans available.</p>
-            <a href="/register.html" class="btn btn-gold">Secure Your Spot</a>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-grid">
+<section class="section" style="background: var(--navy-3); padding: 0 40px;">
+    <div class="container" style="max-width: 1300px; margin: 0 auto;">
+        <div class="instr-grid">
+            <img src="https://i.ibb.co/fVWq6FNP/1759002518772.png" alt="Shedrack Ebete" class="instr-img">
             <div>
-                <img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge" style="height:24px; margin-bottom:20px;">
-                <p style="max-width:300px; font-size:0.9rem; color:var(--text);">The premium academy for tech-driven career acceleration. Built for the ambitious.</p>
-            </div>
-            <div>
-                <h4 style="color:#fff; margin-bottom:20px; font-family:'Syne';">Academy</h4>
-                <a href="/courses.html" style="display:block; color:var(--text); margin-bottom:10px; text-decoration:none;">All Courses</a>
-                <a href="/register.html" style="display:block; color:var(--text); margin-bottom:10px; text-decoration:none;">Admissions</a>
-            </div>
-            <div>
-                <h4 style="color:#fff; margin-bottom:20px; font-family:'Syne';">Contact</h4>
-                <a href="mailto:info@nextforgeacademy.online" style="display:block; color:var(--text); margin-bottom:10px; text-decoration:none;">Email Us</a>
-                <a href="https://wa.me/2349060914286" style="display:block; color:var(--text); margin-bottom:10px; text-decoration:none;">WhatsApp</a>
+                <h2 style="font-family:'Syne'; font-size: 2.5rem; color:#fff; margin-bottom: 20px;">Real-World Experience.<br/>Not Just Theory.</h2>
+                <p style="margin-bottom: 20px; line-height: 1.8;">Shedrack Ebete is an Operations Officer and PM Instructor based in Lagos. He has led live cohorts training hundreds of professionals across Africa.</p>
+                <div style="display:flex; gap: 40px;">
+                    <div><div style="color:var(--gold); font-weight:800; font-size:1.5rem;">1,200+</div><div style="font-size:0.8rem; color:var(--text);">Students</div></div>
+                    <div><div style="color:var(--gold); font-weight:800; font-size:1.5rem;">12+</div><div style="font-size:0.8rem; color:var(--text);">Countries</div></div>
+                    <div><div style="color:var(--gold); font-weight:800; font-size:1.5rem;">4.9★</div><div style="font-size:0.8rem; color:var(--text);">Rating</div></div>
+                </div>
             </div>
         </div>
-        <div style="text-align:center; margin-top:60px; font-size:0.8rem; color:rgba(255,255,255,0.2);">
-            © 2024 NextForge Academy. All Rights Reserved.
-        </div>
-    </footer>
+    </div>
+</section>
 
-    <script>
-    async function loadHomeCourses() {
-      try {
-        const r = await fetch('/api/courses/home');
-        const d = await r.json();
-        const container = document.getElementById('homeCourses');
-        
-        if(!d.courses || d.courses.length === 0) {
-            container.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text);">New cohorts arriving soon...</p>';
-            return;
+<section class="section" id="advisor" style="padding: 100px 40px; max-width: 1300px; margin: 0 auto;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+        <div>
+            <h2 style="font-family:'Syne'; font-size: 2.5rem; color:#fff; margin-bottom: 20px;">Not Sure Which Course?</h2>
+            <p style="margin-bottom: 20px;">Tell our AI Advisor your background and goals for a personalised recommendation.</p>
+            <a href="https://wa.me/2349060914286" class="btn btn-gold">💬 Speak With Admissions</a>
+        </div>
+        <div class="chat-box">
+            <div style="padding: 15px 20px; border-bottom: 1px solid var(--border); font-weight: 700;">NextForge AI Advisor</div>
+            <div class="chat-msgs" id="chatMsgs">
+                <div class="cm ai">👋 Hello! Tell me your background and what tech career you want to build.</div>
+            </div>
+            <div style="padding: 15px; display: flex; gap: 10px; background: var(--bg-card);">
+                <input type="text" id="chatIn" placeholder="Type your goals..." style="flex:1; background: var(--bg); border: 1px solid var(--border); padding: 10px; color: #fff; border-radius: 8px;">
+                <button class="btn btn-gold" onclick="sendMsg()">Send</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer style="padding: 80px 40px; border-top: 1px solid var(--border); background: var(--navy-3);">
+    <div style="max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;">
+        <div>
+            <img src="https://i.ibb.co/hFC9RPhY/Transparent.png" style="height: 24px; margin-bottom: 20px;">
+            <p style="font-size: 0.9rem; color: var(--text);">Expert-led tech training for ambitious professionals worldwide.</p>
+        </div>
+        <div>
+            <h4 style="color:#fff; margin-bottom: 20px;">Programmes</h4>
+            <ul style="list-style: none; font-size: 0.9rem; color: var(--text);">
+                <li>Project Management</li>
+                <li>Data Analysis</li>
+            </ul>
+        </div>
+        <div>
+            <h4 style="color:#fff; margin-bottom: 20px;">Contact</h4>
+            <p style="font-size: 0.9rem; color: var(--text);">info@nextforgeacademy.online</p>
+            <p style="font-size: 0.9rem; color: var(--text);">+234 906 091 4286</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // LiveChat Widget
+    window.__lc = window.__lc || {}; window.__lc.organizationId = "c87e343c-6096-4b49-a57e-d41deec20b1f";
+    (function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice));
+
+    // AI Chat Logic
+    const aiH = [];
+    async function sendMsg() {
+        const inp = document.getElementById('chatIn'), msgs = document.getElementById('chatMsgs'), txt = inp.value.trim();
+        if(!txt) return;
+        msgs.innerHTML += `<div class="cm user">${txt}</div>`;
+        inp.value = '';
+        msgs.scrollTop = msgs.scrollHeight;
+        msgs.innerHTML += `<div class="cm ai" id="thinking">✦ Thinking...</div>`;
+        aiH.push({role: 'user', content: txt});
+        try {
+            const r = await fetch('/api/ai/advisor', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message: txt, history: aiH})});
+            const d = await r.json(); document.getElementById('thinking')?.remove();
+            aiH.push({role: 'assistant', content: d.reply || ''});
+            msgs.innerHTML += `<div class="cm ai">${d.reply || 'Try again or WhatsApp us.'}</div>`;
+        } catch(e) { 
+            document.getElementById('thinking')?.remove();
+            msgs.innerHTML += `<div class="cm ai">Advisor unavailable. <a href="https://wa.me/2349060914286" style="color:var(--gold)">WhatsApp us →</a></div>`;
         }
-
-        container.innerHTML = d.courses.map(c => `
-          <div class="course-card">
-            <img src="${c.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600'}" style="width:100%; height:200px; object-fit:cover;">
-            <div style="padding:28px;">
-              <h3 style="color:#fff; font-family:'Syne'; font-size:1.4rem; margin-bottom:12px;">${c.title}</h3>
-              <p style="color:var(--text); font-size:0.85rem; margin-bottom:24px; line-height:1.6;">${c.short_description || 'Master this skill through our intensive expert-led training.'}</p>
-              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:20px; border-top:1px solid var(--border);">
-                <span style="color:var(--gold); font-weight:800; font-size:1.1rem;">₦${Number(c.price).toLocaleString()}</span>
-                <a href="/course-detail.html?id=${c.id}" style="color:#fff; font-weight:600; font-size:0.9rem; text-decoration:none;">View Details →</a>
-              </div>
-            </div>
-          </div>
-        `).join('');
-      } catch(e) {
-        document.getElementById('homeCourses').innerHTML = `
-            <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text);">
-                Unable to load live data. <a href="/courses.html" style="color:var(--gold); font-weight:700;">View All Catalog →</a>
-            </div>`;
-      }
+        msgs.scrollTop = msgs.scrollHeight;
     }
-
-    window.onload = loadHomeCourses;
-    </script>
+</script>
 </body>
 </html>
