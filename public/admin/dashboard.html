@@ -1,880 +1,801 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Admin Panel — NextForge Academy</title>
-<style>
-/*
- * NEXTFORGE PORTAL CSS — SELF-CONTAINED
- * Import this with <style> tag content inside each portal page
- * DO NOT link styles.css in any portal page
- */
-
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
-
-/* ── HARD RESET — DARK BACKGROUND GUARANTEED ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; }
-html, body {
-  background: #060e1e !important;
-  color: #cbd5e1 !important;
-  font-family: 'Inter', -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-a { text-decoration: none; color: inherit; }
-button { font-family: inherit; }
-img { display: block; max-width: 100%; }
-ul { list-style: none; }
-
-:root {
-  --bg: #060e1e;
-  --bg2: #0b1729;
-  --bg3: #111f38;
-  --bg4: #182d4e;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --text: #94a3b8;
-  --text2: #cbd5e1;
-  --white: #fff;
-  --gold: #f0a500;
-  --gold2: #fbbf24;
-  --blue: #2563eb;
-  --blue2: #3b82f6;
-  --green: #059669;
-  --green2: #10b981;
-  --red: #ef4444;
-  --purple: #7c3aed;
-}
-
-/* ── LAYOUT ── */
-.portal { display: grid; grid-template-columns: 252px 1fr; min-height: 100vh; background: var(--bg); }
-
-/* ── SIDEBAR ── */
-.sb {
-  background: linear-gradient(180deg, #111f38 0%, #0b1729 55%, #060e1e 100%);
-  border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  position: sticky; top: 0; height: 100vh; overflow-y: auto;
-  box-shadow: 3px 0 24px rgba(0,0,0,0.45);
-  z-index: 100;
-}
-.sb::-webkit-scrollbar { width: 3px; }
-.sb::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
-
-.sb-top { padding: 18px 14px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.sb-logo { display: block; margin-bottom: 14px; }
-.sb-logo img { height: 36px; width: auto; object-fit: contain; }
-.sb-role-tag {
-  display: inline-flex; align-items: center; padding: 3px 10px;
-  border-radius: 20px; font-size: 0.64rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.07em; margin-bottom: 12px;
-}
-.sb-role-tag.student { background: rgba(37,99,235,0.15); color: #60a5fa; border: 1px solid rgba(37,99,235,0.25); }
-.sb-role-tag.instructor { background: rgba(240,165,0,0.12); color: var(--gold); border: 1px solid rgba(240,165,0,0.22); }
-.sb-role-tag.admin { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.22); }
-
-.sb-user {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 11px; background: rgba(255,255,255,0.05);
-  border-radius: 12px; border: 1px solid rgba(255,255,255,0.09);
-}
-.sb-av {
-  width: 36px; height: 36px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem; flex-shrink: 0; overflow: hidden;
-}
-.sb-av img { width: 100%; height: 100%; object-fit: cover; }
-.sb-av.student { background: rgba(37,99,235,0.25); border: 2px solid var(--blue2); }
-.sb-av.instructor { background: rgba(240,165,0,0.2); border: 2px solid var(--gold); }
-.sb-av.admin { background: rgba(239,68,68,0.2); border: 2px solid var(--red); }
-.sb-uname { font-weight: 600; color: var(--white); font-size: 0.84rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sb-urole { font-size: 0.67rem; color: var(--text); margin-top: 1px; }
-
-.sb-nav { padding: 10px 9px; flex: 1; }
-.sb-sec { font-size: 0.62rem; color: rgba(148,163,184,0.4); text-transform: uppercase; letter-spacing: 0.11em; padding: 12px 8px 4px; font-weight: 700; }
-
-.ni {
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 10px; border-radius: 8px;
-  font-size: 0.875rem; font-weight: 500; color: rgba(148,163,184,0.8);
-  transition: all 0.18s; margin-bottom: 1px;
-  text-decoration: none; cursor: pointer; border: none; background: none; width: 100%; text-align: left;
-}
-.ni:hover { background: rgba(255,255,255,0.07); color: var(--white); }
-.ni.active { padding-left: 8px; }
-.ni.active.student { background: rgba(37,99,235,0.18); color: #60a5fa; border-left: 2px solid var(--blue2); }
-.ni.active.instructor { background: rgba(240,165,0,0.12); color: var(--gold2); border-left: 2px solid var(--gold); }
-.ni.active.admin { background: rgba(239,68,68,0.12); color: #fca5a5; border-left: 2px solid var(--red); }
-.ni-icon { width: 18px; text-align: center; flex-shrink: 0; font-size: 0.9rem; }
-.ni-badge { margin-left: auto; background: var(--gold); color: #000; border-radius: 10px; padding: 1px 7px; font-size: 0.63rem; font-weight: 700; }
-.ni-badge.red { background: var(--red); color: #fff; }
-
-.sb-bot { padding: 9px 9px 15px; border-top: 1px solid var(--border); margin-top: auto; }
-
-/* ── MAIN AREA ── */
-.pm {
-  background: linear-gradient(160deg, #0b1729 0%, #060e1e 40%, #0b1a35 100%);
-  display: flex; flex-direction: column; min-height: 100vh; position: relative;
-}
-.pm::before {
-  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background-image: radial-gradient(rgba(37,99,235,0.04) 1.5px, transparent 1.5px);
-  background-size: 40px 40px;
-}
-.pm-inner { position: relative; z-index: 1; display: flex; flex-direction: column; flex: 1; }
-
-/* ── TOPBAR ── */
-.topbar {
-  position: sticky; top: 0; z-index: 50;
-  background: rgba(6,14,30,0.95); backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  padding: 13px 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
-}
-.tb-title { font-weight: 700; color: var(--white); font-size: 1rem; font-family: 'Syne', sans-serif; }
-.tb-sub { font-size: 0.73rem; color: var(--text); margin-top: 1px; }
-
-.pc { padding: 22px 24px; flex: 1; }
-.page { display: none; }
-.page.on { display: block; }
-
-/* ── PROFILE BANNER ── */
-.pb {
-  background: linear-gradient(135deg, #182d4e 0%, #111f38 60%, #0e1a30 100%);
-  border: 1px solid var(--border2); border-radius: 20px;
-  padding: 20px 24px; margin-bottom: 20px;
-  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  position: relative; overflow: hidden;
-}
-.pb::after { content: ''; position: absolute; right: -30px; top: -30px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(240,165,0,0.09), transparent 70%); pointer-events: none; }
-.pb-av { width: 62px; height: 62px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; overflow: hidden; position: relative; z-index: 1; }
-.pb-av img { width: 100%; height: 100%; object-fit: cover; }
-.pb-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
-.pb-name { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--white); }
-.pb-email { font-size: 0.78rem; color: var(--text); margin-top: 2px; }
-.pb-id { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 20px; background: rgba(240,165,0,0.1); border: 1px solid rgba(240,165,0,0.22); font-size: 0.67rem; color: var(--gold); font-weight: 700; margin-top: 5px; }
-
-/* ── COLORFUL STAT CARDS ── */
-.sg { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px; margin-bottom: 20px; }
-.sc { border-radius: 16px; padding: 18px 19px; position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
-.sc:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
-.sc::after { content: ''; position: absolute; top: -12px; right: -12px; width: 65px; height: 65px; border-radius: 50%; background: rgba(255,255,255,0.08); }
-.sc.blue { background: linear-gradient(135deg,#1e3a8a,#2563eb); border: 1px solid rgba(37,99,235,0.45); }
-.sc.gold { background: linear-gradient(135deg,#6b3a00,#c47f00); border: 1px solid rgba(196,127,0,0.45); }
-.sc.green { background: linear-gradient(135deg,#064e3b,#059669); border: 1px solid rgba(5,150,105,0.45); }
-.sc.purple { background: linear-gradient(135deg,#3b0764,#7c3aed); border: 1px solid rgba(124,58,237,0.45); }
-.sc.red { background: linear-gradient(135deg,#7f1d1d,#ef4444); border: 1px solid rgba(239,68,68,0.45); }
-.sc.teal { background: linear-gradient(135deg,#0e4c5a,#0891b2); border: 1px solid rgba(8,145,178,0.45); }
-.sc-icon { font-size: 1.5rem; margin-bottom: 8px; position: relative; z-index: 1; }
-.sc-num { font-size: 1.75rem; font-weight: 800; color: #fff; line-height: 1; font-family: 'Syne', sans-serif; position: relative; z-index: 1; }
-.sc-lbl { font-size: 0.74rem; color: rgba(255,255,255,0.75); margin-top: 4px; position: relative; z-index: 1; }
-
-/* ── COLORFUL BUTTONS ── */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 9px 20px; border-radius: 10px; font-size: 0.875rem; font-weight: 600;
-  border: none; transition: all 0.18s; white-space: nowrap;
-  cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: none;
-}
-.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
-.btn-blue { background: linear-gradient(135deg,#1d4ed8,#3b82f6); color: #fff; box-shadow: 0 4px 14px rgba(37,99,235,0.35); }
-.btn-blue:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.5); }
-.btn-gold { background: linear-gradient(135deg,#b45309,#f0a500); color: #000; font-weight: 700; box-shadow: 0 4px 14px rgba(240,165,0,0.3); }
-.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(240,165,0,0.45); }
-.btn-green { background: linear-gradient(135deg,#047857,#10b981); color: #fff; box-shadow: 0 4px 14px rgba(5,150,105,0.3); }
-.btn-green:hover { transform: translateY(-1px); }
-.btn-red { background: linear-gradient(135deg,#b91c1c,#ef4444); color: #fff; box-shadow: 0 4px 14px rgba(239,68,68,0.3); }
-.btn-red:hover { transform: translateY(-1px); }
-.btn-purple { background: linear-gradient(135deg,#5b21b6,#7c3aed); color: #fff; }
-.btn-purple:hover { transform: translateY(-1px); }
-.btn-ghost { background: rgba(255,255,255,0.06); color: var(--text2); border: 1px solid var(--border2); }
-.btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--white); }
-.btn-danger { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.22); }
-.btn-danger:hover { background: rgba(239,68,68,0.22); }
-.btn-success { background: rgba(5,150,105,0.12); color: #34d399; border: 1px solid rgba(5,150,105,0.22); }
-.btn-success:hover { background: rgba(5,150,105,0.22); }
-.btn-sm { padding: 6px 14px; font-size: 0.8rem; border-radius: 8px; }
-.btn-lg { padding: 12px 28px; font-size: 0.95rem; border-radius: 12px; }
-.btn-full { width: 100%; justify-content: center; }
-
-/* ── CARDS ── */
-.card { background: rgba(17,31,56,0.88); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
-.card h3, .card h4 { color: var(--white); }
-
-/* ── SECTION CARD ── */
-.sec-card { background: rgba(17,31,56,0.88); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
-.sec-hdr { padding: 13px 17px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: rgba(6,14,30,0.4); }
-.sec-hdr h4 { color: var(--white); font-size: 0.9rem; }
-.sec-body { padding: 17px; }
-
-/* ── TABLE ── */
-.tw { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; min-width: 480px; }
-th { text-align: left; padding: 10px 14px; font-size: 0.69rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); background: rgba(6,14,30,0.3); font-weight: 600; white-space: nowrap; }
-td { padding: 11px 14px; font-size: 0.85rem; color: var(--text2); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: rgba(255,255,255,0.02); }
-
-/* ── PROGRESS BAR ── */
-.pbar { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
-.pfill { height: 100%; background: linear-gradient(90deg,var(--blue),var(--blue2)); border-radius: 3px; transition: width 0.8s; }
-.pfill.gold { background: linear-gradient(90deg,var(--gold),var(--gold2)); }
-.pfill.green { background: linear-gradient(90deg,var(--green),var(--green2)); }
-
-/* ── BADGES ── */
-.badge { display: inline-flex; align-items: center; padding: 2px 9px; border-radius: 20px; font-size: 0.67rem; font-weight: 700; text-transform: uppercase; }
-.b-blue { background: rgba(37,99,235,0.15); color: #60a5fa; border: 1px solid rgba(37,99,235,0.25); }
-.b-gold { background: rgba(240,165,0,0.12); color: var(--gold); border: 1px solid rgba(240,165,0,0.22); }
-.b-green { background: rgba(5,150,105,0.12); color: #34d399; border: 1px solid rgba(5,150,105,0.22); }
-.b-red { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.22); }
-.b-purple { background: rgba(124,58,237,0.12); color: #a78bfa; border: 1px solid rgba(124,58,237,0.22); }
-
-/* ── ALERTS ── */
-.al-err { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.22); color: #fca5a5; padding: 10px 13px; border-radius: 8px; font-size: 0.84rem; margin-bottom: 12px; display: none; }
-.al-ok { background: rgba(5,150,105,0.1); border: 1px solid rgba(5,150,105,0.22); color: #6ee7b7; padding: 10px 13px; border-radius: 8px; font-size: 0.84rem; margin-bottom: 12px; display: none; }
-.al-info { background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.22); color: #93c5fd; padding: 10px 13px; border-radius: 8px; font-size: 0.84rem; margin-bottom: 12px; }
-
-/* ── FORM ── */
-.fg { margin-bottom: 14px; }
-.fl { display: block; font-size: 0.79rem; color: var(--text2); margin-bottom: 5px; font-weight: 600; }
-.fi { width: 100%; background: rgba(17,31,56,0.9); border: 1.5px solid var(--border2); border-radius: 10px; padding: 10px 13px; color: var(--white); font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
-.fi:focus { border-color: var(--blue2); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
-.fi::placeholder { color: rgba(148,163,184,0.35); }
-select.fi option { background: var(--bg2); color: var(--white); }
-textarea.fi { resize: vertical; min-height: 80px; line-height: 1.6; }
-.g2f { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-/* ── ID CARD ── */
-.id-card { background: linear-gradient(135deg,#182d4e,#111f38); border: 1.5px solid var(--border2); border-radius: 14px; padding: 16px; text-align: center; position: relative; overflow: hidden; }
-.id-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg,var(--gold),var(--blue2)); }
-.id-num { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--gold); letter-spacing: 0.1em; margin: 8px 0; }
-
-/* ── MODAL ── */
-.mo { position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.82); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-.mo.open { opacity: 1; pointer-events: all; }
-.mo-box { background: #0b1729; border: 1px solid var(--border2); border-radius: 20px; padding: 26px; width: 100%; max-width: 560px; position: relative; transform: scale(0.96) translateY(6px); transition: transform 0.2s; max-height: 90vh; overflow-y: auto; }
-.mo.open .mo-box { transform: scale(1) translateY(0); }
-.mo-x { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.07); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); font-size: 0.85rem; }
-.mo-x:hover { background: rgba(239,68,68,0.2); color: #fca5a5; }
-
-/* ── MOBILE TOP BAR ── */
-.mob-top {
-  display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 300;
-  height: 56px; background: rgba(6,14,30,0.98); border-bottom: 1px solid var(--border);
-  padding: 0 14px; align-items: center; justify-content: space-between;
-  backdrop-filter: blur(16px);
-}
-.mob-logo img { height: 30px; width: auto; object-fit: contain; }
-.mob-ham { background: none; border: none; color: var(--white); font-size: 1.4rem; cursor: pointer; padding: 4px; border-radius: 7px; line-height: 1; }
-.mob-ov { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.78); z-index: 195; }
-.mob-ov.open { display: block; }
-.sb.mob-open { display: flex !important; position: fixed; z-index: 200; height: 100vh; box-shadow: 4px 0 40px rgba(0,0,0,0.7); }
-
-/* ── COURSE TILE ── */
-.ct { background: rgba(17,31,56,0.9); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: all 0.2s; }
-.ct:hover { border-color: rgba(37,99,235,0.35); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
-.ct-thumb { height: 88px; overflow: hidden; position: relative; }
-.ct-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.65; }
-.ct-thumb-ov { position: absolute; inset: 0; background: linear-gradient(to top,rgba(6,14,30,0.88),transparent); display: flex; align-items: flex-end; padding: 7px 11px; }
-.ct-body { padding: 12px 13px; }
-.ct-title { font-weight: 700; color: var(--white); font-size: 0.85rem; margin-bottom: 3px; line-height: 1.3; }
-.ct-meta { font-size: 0.72rem; color: var(--text); margin-bottom: 8px; }
-
-/* ── CURRICULUM ITEM ── */
-.cur-item { display: flex; align-items: center; gap: 11px; padding: 11px 12px; background: rgba(6,14,30,0.5); border-radius: 10px; border: 1px solid var(--border); margin-bottom: 7px; transition: border-color 0.18s; }
-.cur-item:hover { border-color: rgba(37,99,235,0.3); }
-.cur-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(37,99,235,0.2); border: 1px solid rgba(37,99,235,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: var(--blue2); flex-shrink: 0; }
-.cur-title { font-size: 0.875rem; font-weight: 600; color: var(--white); }
-.cur-meta { font-size: 0.72rem; color: var(--text); margin-top: 1px; }
-
-/* ── GRID HELPERS ── */
-.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-.cg { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 13px; margin-bottom: 18px; }
-
-/* ── RESPONSIVE ── */
-@media(max-width:1024px) {
-  .portal { grid-template-columns: 1fr; }
-  .sb { display: none; }
-  .mob-top { display: flex; }
-  body { padding-top: 56px !important; }
-  .pm::before { top: 56px; }
-  .topbar { display: none; }
-  .pc { padding: 14px 13px; }
-  .sg { grid-template-columns: 1fr 1fr; }
-  .g2 { grid-template-columns: 1fr; }
-  .g2f { grid-template-columns: 1fr; }
-}
-@media(max-width:600px) {
-  .pb { padding: 14px; }
-  .pb-av { width: 50px; height: 50px; font-size: 1.2rem; }
-  .pb-name { font-size: 1rem; }
-  .pc { padding: 10px; }
-  .sg { grid-template-columns: 1fr 1fr; }
-  .sc { padding: 14px; }
-  .sc-num { font-size: 1.5rem; }
-  .mo-box { padding: 18px; }
-}
-
-html,body{background:#060e1e!important;}
-.sb{background:linear-gradient(180deg,#1a0814 0%,#0f0610 55%,#060e1e 100%);}
-.pending-card{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(6,14,30,0.5);border-radius:10px;border:1px solid var(--border);margin-bottom:8px;flex-wrap:wrap;}
-.pending-av{width:40px;height:40px;border-radius:50%;background:rgba(240,165,0,0.15);border:2px solid rgba(240,165,0,0.3);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;overflow:hidden;}
-.pending-av img{width:100%;height:100%;object-fit:cover;}
-.price-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;}
-.price-row:last-child{border-bottom:none;}
-.promo-tag{font-family:monospace;background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.2);color:var(--gold);padding:2px 8px;border-radius:6px;font-size:0.85rem;font-weight:700;letter-spacing:0.06em;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — NextForge Academy</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { height: 40px; }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #1e293b;
+            color: white;
+            padding: 2rem 0;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        .sidebar-header {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid #334155;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+        .nav-section {
+            padding: 1.5rem 0;
+        }
+        .nav-title {
+            padding: 0 1.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 0.75rem;
+        }
+        .nav-item {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .nav-item:hover {
+            background: #334155;
+        }
+        .nav-item.active {
+            background: #2563eb;
+            border-right: 3px solid #60a5fa;
+        }
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
+        .btn-secondary { background: #64748b; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e293b;
+        }
+        .stat-label {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+        }
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .section { display: none; }
+        .section.active { display: block; }
+    </style>
 </head>
 <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge" class="logo" style="filter: brightness(0) invert(1);">
+        </div>
+        
+        <div class="user-info" style="padding: 0 1.5rem;">
+            <div class="avatar">A</div>
+            <div>
+                <div style="font-weight: 600;">Admin</div>
+                <div style="font-size: 0.875rem; color: #94a3b8;">Administrator</div>
+            </div>
+        </div>
 
-<div class="mob-top" id="mobTop">
-  <a href="#" onclick="return false;" class="mob-logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
-  <button class="mob-ham" onclick="toggleSB()">&#9776;</button>
-</div>
-<div class="mob-ov" id="mobOv" onclick="toggleSB()"></div>
-
-<div class="portal">
-
-<aside class="sb" id="sb">
-  <div class="sb-top">
-    <a href="#" onclick="return false;" class="sb-logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
-    <div class="sb-role-tag admin">Admin Panel</div>
-    <div class="sb-user" style="margin-top:8px;">
-      <div class="sb-av admin" id="sbAv">A</div>
-      <div style="min-width:0;"><div class="sb-uname" id="sbName">Admin</div><div class="sb-urole" style="color:#fca5a5;">Administrator</div></div>
-    </div>
-  </div>
-  <div class="sb-nav">
-    <div class="sb-sec">Main</div>
-    <button class="ni active admin" onclick="sp('overview',this)"><span class="ni-icon">📊</span>Overview</button>
-    <div class="sb-sec">People</div>
-    <button class="ni" onclick="sp('students',this)"><span class="ni-icon">👥</span>All Students</button>
-    <button class="ni" onclick="sp('instructors',this)"><span class="ni-icon">👨‍🏫</span>Instructors<span class="ni-badge red" id="pendBadge" style="display:none;">0</span></button>
-    <div class="sb-sec">Content</div>
-    <button class="ni" onclick="sp('courses',this)"><span class="ni-icon">📚</span>Manage Courses</button>
-    <button class="ni" onclick="sp('addcourse',this)"><span class="ni-icon">➕</span>Add New Course</button>
-    <button class="ni" onclick="sp('certs',this)"><span class="ni-icon">🎓</span>Certificates</button>
-    <div class="sb-sec">Finance</div>
-    <button class="ni" onclick="sp('payments',this)"><span class="ni-icon">💳</span>Payments</button>
-    <button class="ni" onclick="sp('pricing',this)"><span class="ni-icon">💰</span>Pricing</button>
-    <button class="ni" onclick="sp('promos',this)"><span class="ni-icon">🏷️</span>Promo Codes</button>
-    <div class="sb-sec">Comms</div>
-    <button class="ni" onclick="sp('announce',this)"><span class="ni-icon">📢</span>Announcements</button>
-    <div class="sb-sec">Settings</div>
-    <button class="ni" onclick="sp('cohort',this)"><span class="ni-icon">📅</span>Cohort Settings</button>
-  </div>
-  <div class="sb-bot">
-    <button class="ni" onclick="logout()" style="color:#fca5a5;"><span class="ni-icon">🚪</span>Sign Out</button>
-  </div>
-</aside>
-
-<div class="pm">
-  <div class="pm-inner">
-    <div class="topbar">
-      <div><div class="tb-title" id="pageTitle">Admin Overview</div><div class="tb-sub" id="pageSub"></div></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn btn-ghost btn-sm" onclick="sp('announce',null)">📢 Announce</button>
-        <button class="btn btn-red btn-sm" onclick="sp('students',null)">👥 Students</button>
-      </div>
+        <nav class="nav-section">
+            <div class="nav-title">Main</div>
+            <div class="nav-item active" onclick="showSection('overview')">📊 Overview</div>
+            
+            <div class="nav-title">People</div>
+            <div class="nav-item" onclick="showSection('students'); loadStudents();">👥 All Students</div>
+            <div class="nav-item" onclick="showSection('instructors'); loadInstructors();">👨‍🏫 Instructors</div>
+            
+            <div class="nav-title">Content</div>
+            <div class="nav-item" onclick="showSection('courses'); loadCourses();">📚 Manage Courses</div>
+            <div class="nav-item" onclick="showSection('courses');">➕ Add New Course</div>
+            <div class="nav-item" onclick="showSection('certificates');">🎓 Certificates</div>
+            
+            <div class="nav-title">Finance</div>
+            <div class="nav-item" onclick="showSection('payments'); loadPayments();">💳 Payments</div>
+            <div class="nav-item" onclick="showSection('pricing');">💰 Pricing</div>
+            <div class="nav-item" onclick="showSection('promocodes'); loadPromoCodes();">🏷️ Promo Codes</div>
+            
+            <div class="nav-title">Comms</div>
+            <div class="nav-item" onclick="showSection('announcements');">📢 Announcements</div>
+            
+            <div class="nav-title">Settings</div>
+            <div class="nav-item" onclick="showSection('settings');">📅 Cohort Settings</div>
+            
+            <div style="margin-top: 2rem; padding: 0 1.5rem;">
+                <button onclick="logout()" class="btn btn-danger" style="width: 100%;">🚪 Sign Out</button>
+            </div>
+        </nav>
     </div>
 
-    <div class="pc">
-
-      <div class="page on" id="page-overview">
-        <div id="apiStatus" style="display:none;" class="al-info" style="margin-bottom:14px;"></div>
-        <div style="background:linear-gradient(135deg,#182d4e,#1a0814);border:1px solid var(--border2);border-radius:16px;padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-          <div><span id="cohortPill" style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:0.7rem;font-weight:700;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;">April 2026 Cohort</span>
-          <div style="font-size:0.78rem;color:var(--text);margin-top:5px;"><span id="seatsDisplay">20 seats available</span></div></div>
-          <button class="btn btn-ghost btn-sm" onclick="sp('cohort',null)" style="margin-left:auto;">Edit Cohort</button>
-        </div>
-        <div class="sg">
-          <div class="sc blue"><div class="sc-icon">👥</div><div class="sc-num" id="kS">—</div><div class="sc-lbl">Total Students</div></div>
-          <div class="sc gold"><div class="sc-icon">₦</div><div class="sc-num" id="kR">—</div><div class="sc-lbl">Total Revenue</div></div>
-          <div class="sc green"><div class="sc-icon">📋</div><div class="sc-num" id="kE">—</div><div class="sc-lbl">Enrollments</div></div>
-          <div class="sc red"><div class="sc-icon">⏳</div><div class="sc-num" id="kP">0</div><div class="sc-lbl">Pending Approvals</div></div>
-        </div>
-        <div class="g2">
-          <div class="sec-card">
-            <div class="sec-hdr"><h4>Recent Enrollments</h4><button class="btn btn-ghost btn-sm" onclick="sp('students',null)">View All</button></div>
-            <div class="tw"><table><thead><tr><th>Student</th><th>Course</th><th>Date</th></tr></thead>
-            <tbody id="recEnroll"><tr><td colspan="3" style="text-align:center;padding:20px;color:var(--text);">Loading...</td></tr></tbody></table></div>
-          </div>
-          <div class="sec-card">
-            <div class="sec-hdr"><h4>Recent Payments</h4><button class="btn btn-ghost btn-sm" onclick="sp('payments',null)">View All</button></div>
-            <div class="tw"><table><thead><tr><th>Student</th><th>Amount</th><th>Status</th></tr></thead>
-            <tbody id="recPay"><tr><td colspan="3" style="text-align:center;padding:20px;color:var(--text);">Loading...</td></tr></tbody></table></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="page" id="page-students">
-        <div class="sec-card">
-          <div class="sec-hdr">
-            <h4>All Students</h4>
-            <input type="text" class="fi" id="stuSearch" placeholder="Search name or email..." oninput="filterStu()" style="max-width:220px;padding:6px 11px;font-size:0.84rem;"/>
-          </div>
-          <div class="tw"><table>
-            <thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Country</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody id="stuTbl"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text);">Click to load students</td></tr></tbody>
-          </table></div>
-        </div>
-      </div>
-
-      <div class="page" id="page-instructors">
-        <div class="sec-card" style="margin-bottom:16px;">
-          <div class="sec-hdr"><h4>Pending Applications</h4><span class="badge b-gold" id="pendCount">0 pending</span></div>
-          <div class="sec-body" id="pendInstr"><div style="color:var(--text);font-size:0.875rem;text-align:center;padding:14px;">Loading pending applications...</div></div>
-        </div>
-        <div class="sec-card">
-          <div class="sec-hdr"><h4>Active Instructors</h4></div>
-          <div class="tw"><table>
-            <thead><tr><th>Photo</th><th>Name</th><th>Email</th><th>Course</th><th>Skills</th><th>Bank</th><th>Action</th></tr></thead>
-            <tbody id="instrTbl"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text);">Loading instructors...</td></tr></tbody>
-          </table></div>
-        </div>
-      </div>
-
-      <div class="page" id="page-courses">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-          <h3 style="color:var(--white);font-size:1rem;">Course Management</h3>
-          <button class="btn btn-gold btn-sm" onclick="sp('addcourse',null)">+ Add New Course</button>
-        </div>
-        <div id="coursesList"><div style="color:var(--text);text-align:center;padding:24px;">Loading courses...</div></div>
-      </div>
-
-      <div class="page" id="page-addcourse">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
-          <button class="btn btn-ghost btn-sm" onclick="sp('courses',null)">← Back</button>
-          <h3 style="color:var(--white);font-size:1rem;" id="addCourseTitle">Add New Course</h3>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 310px;gap:18px;align-items:start;" id="addCourseGrid">
-          <div class="card">
-            <h4 style="margin-bottom:14px;font-size:0.9rem;">Course Details</h4>
-            <div class="g2f">
-              <div class="fg"><label class="fl">Course Title *</label><input class="fi" id="c_title" placeholder="e.g. Project Management Foundations"/></div>
-              <div class="fg"><label class="fl">Category *</label><select class="fi" id="c_cat"><option value="">Select...</option><option>Project Management</option><option>Product Management</option><option>Data Analysis</option><option>Operations</option><option>Business Communication</option><option>Productivity</option></select></div>
-              <div class="fg"><label class="fl">Duration</label><input class="fi" id="c_dur" placeholder="e.g. 12 weeks"/></div>
-              <div class="fg"><label class="fl">Level</label><select class="fi" id="c_level"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div>
-              <div class="fg"><label class="fl">Price (₦) *</label><input class="fi" type="number" id="c_price" placeholder="e.g. 250000"/></div>
-              <div class="fg"><label class="fl">Weeks</label><input class="fi" type="number" id="c_weeks" placeholder="e.g. 12"/></div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Overview Section -->
+        <div id="overview" class="section active">
+            <h1 style="margin-bottom: 2rem;">Admin Overview</h1>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <button onclick="showSection('announcements');" class="btn btn-primary" style="padding: 1.5rem;">📢 Announce</button>
+                <button onclick="showSection('students'); loadStudents();" class="btn btn-secondary" style="padding: 1.5rem;">👥 Students</button>
             </div>
-            <div class="fg"><label class="fl">Short Description</label><textarea class="fi" id="c_desc" rows="3" placeholder="What will students learn?"></textarea></div>
-            <div class="fg"><label class="fl">Who Is This For?</label><textarea class="fi" id="c_who" rows="2" placeholder="e.g. Working professionals, graduates, career switchers worldwide"></textarea></div>
-            <div class="fg"><label class="fl">Prerequisites</label><textarea class="fi" id="c_pre" rows="2" placeholder="e.g. No prior experience required."></textarea></div>
-            <div class="fg"><label class="fl">Thumbnail Icon (emoji)</label><input class="fi" id="c_thumb" placeholder="e.g. 📋"/></div>
-            <div class="fg"><label class="fl">Image URL</label><input class="fi" id="c_img" placeholder="https://images.unsplash.com/..."/></div>
-            <div class="al-err" id="cErr"></div>
-            <div class="al-ok" id="cOk"></div>
-            <div style="display:flex;gap:9px;flex-wrap:wrap;">
-              <button class="btn btn-gold" onclick="saveCourse()" id="saveCourseBtn">Save Course</button>
-              <button class="btn btn-ghost" onclick="sp('courses',null)">Cancel</button>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" id="totalStudents">—</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">₦</div>
+                    <div class="stat-value" id="totalRevenue">—</div>
+                    <div class="stat-label">Total Revenue</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-value" id="totalEnrollments">—</div>
+                    <div class="stat-label">Enrollments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Pending Approvals</div>
+                </div>
             </div>
-          </div>
-          <div>
-            <div class="card" style="margin-bottom:13px;">
-              <h4 style="margin-bottom:12px;font-size:0.88rem;">Curriculum Builder</h4>
-              <div id="curriculumList" style="margin-bottom:11px;max-height:260px;overflow-y:auto;"></div>
-              <input class="fi" id="lessonTitle" placeholder="Lesson title..." style="margin-bottom:7px;"/>
-              <div class="g2f" style="margin-bottom:7px;">
-                <select class="fi" id="lessonType"><option value="video">Video</option><option value="live">Live Session</option><option value="reading">Reading</option><option value="quiz">Quiz</option><option value="assignment">Assignment</option></select>
-                <input class="fi" type="number" id="lessonDur" placeholder="Duration (mins)" value="45"/>
-              </div>
-              <button class="btn btn-blue btn-sm btn-full" onclick="addLesson()">+ Add Lesson</button>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Enrollments</h3>
+                        <button onclick="showSection('students');" class="btn btn-sm btn-secondary">View All</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>Student</th><th>Course</th><th>Date</th></tr>
+                        </thead>
+                        <tbody id="recentEnrollmentsTable">
+                            <tr><td colspan="3" style="text-align:center; padding: 2rem;"><div class="spinner"></div> Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Payments</h3>
+                        <button onclick="showSection('payments');" class="btn btn-sm btn-secondary">View All</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>Student</th><th>Amount</th><th>Status</th></tr>
+                        </thead>
+                        <tbody id="recentPaymentsTable">
+                            <tr><td colspan="3" style="text-align:center; padding: 2rem;"><div class="spinner"></div> Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </div>
+
+        <!-- Students Section -->
+        <div id="students" class="section">
             <div class="card">
-              <h4 style="margin-bottom:11px;font-size:0.88rem;">Upload Materials</h4>
-              <div onclick="document.getElementById('matFile').click()" style="border:2px dashed var(--border2);border-radius:10px;padding:18px;text-align:center;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--blue2)'" onmouseout="this.style.borderColor='var(--border2)'">
-                <div style="font-size:1.5rem;margin-bottom:5px;">📁</div>
-                <div style="font-size:0.82rem;color:var(--text2);">Click to upload materials</div>
-                <div style="font-size:0.7rem;color:var(--text);">PDF, PPTX, DOCX, MP4</div>
-                <input type="file" id="matFile" style="display:none;" multiple accept=".pdf,.pptx,.docx,.mp4" onchange="handleUpload(this)"/>
-              </div>
-              <div id="uploadedFiles" style="margin-top:8px;"></div>
+                <div class="card-header">
+                    <h2>All Students</h2>
+                    <button onclick="loadStudents();" class="btn btn-primary">🔄 Refresh</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Track</th>
+                            <th>Joined</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        <tr><td colspan="7" style="text-align:center; padding: 2rem; color: #64748b;">Click "Refresh" or select from sidebar to load students</td></tr>
+                    </tbody>
+                </table>
             </div>
-          </div>
         </div>
-      </div>
 
-      <div class="page" id="page-certs">
-        <div class="sec-card">
-          <div class="sec-hdr"><h4>Issue Certificate Manually</h4></div>
-          <div class="sec-body">
-            <div class="g2f">
-              <div class="fg"><label class="fl">Student User ID</label><input class="fi" type="number" id="certUsr" placeholder="User ID"/></div>
-              <div class="fg"><label class="fl">Course ID</label><input class="fi" type="number" id="certCrs" placeholder="Course ID"/></div>
+        <!-- Instructors Section -->
+        <div id="instructors" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Active Instructors</h2>
+                    <button onclick="loadInstructors();" class="btn btn-primary">🔄 Refresh</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Course</th>
+                            <th>Skills</th>
+                            <th>Bank</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="instructorsTableBody">
+                        <tr><td colspan="7" style="text-align:center; padding: 2rem; color: #64748b;">Loading instructors...</td></tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="al-err" id="certErr"></div>
-            <div class="al-ok" id="certOk"></div>
-            <button class="btn btn-gold" onclick="issueCert()">Issue Certificate</button>
-          </div>
         </div>
-      </div>
 
-      <div class="page" id="page-payments">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap;gap:8px;">
-          <div>
-            <h3 style="color:var(--white);font-size:1rem;">Payment Records</h3>
-            <div style="font-size:0.84rem;color:var(--text);margin-top:3px;">Total confirmed revenue: <strong style="color:var(--gold);" id="totRev">Loading...</strong></div>
-          </div>
-        </div>
-        <div class="tw"><table>
-          <thead><tr><th>Student</th><th>Email</th><th>Course</th><th>Amount</th><th>Reference</th><th>Status</th><th>Date</th></tr></thead>
-          <tbody id="payTbl"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text);">Loading payments...</td></tr></tbody>
-        </table></div>
-      </div>
-
-      <div class="page" id="page-pricing">
-        <div class="sec-card">
-          <div class="sec-hdr"><h4>Update Course Prices</h4><span class="badge b-green">Changes apply immediately</span></div>
-          <div class="sec-body" id="priceList"><div style="color:var(--text);">Loading...</div></div>
-        </div>
-      </div>
-
-      <div class="page" id="page-promos">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-          <div>
-            <h3 style="color:var(--white);font-size:1rem;">Promo Codes</h3>
-            <p style="font-size:0.84rem;color:var(--text);margin-top:3px;">Create discount codes that students can apply at registration.</p>
-          </div>
-          <button class="btn btn-gold btn-sm" onclick="document.getElementById('promoMo').classList.add('open');loadCoursesForPromo();">+ Create Promo</button>
-        </div>
-        <div id="promoList"><div style="color:var(--text);text-align:center;padding:24px;">No promo codes yet. Create one above.</div></div>
-        <div class="al-info" id="promoNote" style="margin-top:14px;display:none;"></div>
-      </div>
-
-      <div class="page" id="page-announce">
-        <div class="sec-card">
-          <div class="sec-hdr"><h4>Post Announcement</h4></div>
-          <div class="sec-body">
-            <div class="fg"><label class="fl">Audience</label><select class="fi" id="annScope"><option value="global">All Students</option></select></div>
-            <div class="fg"><label class="fl">Title</label><input class="fi" id="annTitle" placeholder="Announcement title..."/></div>
-            <div class="fg"><label class="fl">Message</label><textarea class="fi" id="annBody" rows="5" placeholder="Write your announcement here..."></textarea></div>
-            <div class="al-err" id="annErr"></div>
-            <div class="al-ok" id="annOk"></div>
-            <button class="btn btn-red" onclick="postAnn()">Post to All Students</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="page" id="page-cohort">
-        <div class="sec-card">
-          <div class="sec-hdr"><h4>Cohort Settings</h4></div>
-          <div class="sec-body">
-            <div class="al-info" style="margin-bottom:14px;">Changes to cohort name and seats reflect on the live website immediately.</div>
-            <div class="g2f">
-              <div class="fg"><label class="fl">Cohort Name</label><input class="fi" id="cohName" placeholder="e.g. May 2026 Cohort"/></div>
-              <div class="fg"><label class="fl">Start Date</label><input class="fi" type="date" id="cohStart"/></div>
-              <div class="fg"><label class="fl">Registration Deadline</label><input class="fi" type="date" id="cohDead"/></div>
-              <div class="fg"><label class="fl">Max Seats</label><input class="fi" type="number" id="cohSeats" placeholder="e.g. 20"/></div>
+        <!-- Courses Section -->
+        <div id="courses" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Course Management</h2>
+                    <button onclick="document.getElementById('createCourseModal').style.display='flex'" class="btn btn-primary">+ Add New Course</button>
+                </div>
+                <div id="coursesContainer">
+                    <p style="text-align:center; padding: 2rem; color: #64748b;"><div class="spinner"></div> Loading courses...</p>
+                </div>
             </div>
-            <div class="al-ok" id="cohOk"></div>
-            <button class="btn btn-red" onclick="saveCohort()">Save Settings</button>
-          </div>
         </div>
-      </div>
 
+        <!-- Promo Codes Section -->
+        <div id="promocodes" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>🏷️ Promo Codes</h2>
+                    <button onclick="document.getElementById('createPromoModal').style.display='flex'" class="btn btn-primary">+ Create Promo</button>
+                </div>
+                <p style="color: #64748b; margin-bottom: 1rem;">Create discount codes that students can apply at registration.</p>
+                
+                <div id="promoCodesList">
+                    <p style="text-align: center; padding: 2rem; color: #64748b;">Loading promo codes...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div id="payments" class="section">
+            <div class="card">
+                <div class="card-header"><h2>Payment Records</h2></div>
+                <p>Total confirmed revenue: <strong id="totalRevenueDetail">Loading...</strong></p>
+                <table style="margin-top: 1rem;">
+                    <thead>
+                        <tr><th>Student</th><th>Email</th><th>Course</th><th>Amount</th><th>Reference</th><th>Status</th><th>Date</th></tr>
+                    </thead>
+                    <tbody id="paymentsTableBody">
+                        <tr><td colspan="7" style="text-align:center; padding: 2rem;">Loading payments...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Other sections placeholder -->
+        <div id="certificates" class="section"><div class="card"><h2>Certificates Management</h2><p>Coming soon...</p></div></div>
+        <div id="announcements" class="section"><div class="card"><h2>Create Announcement</h2><p>Coming soon...</p></div></div>
+        <div id="settings" class="section"><div class="card"><h2>Cohort Settings</h2><p>Coming soon...</p></div></div>
+        <div id="pricing" class="section"><div class="card"><h2>Pricing Management</h2><p>Coming soon...</p></div></div>
     </div>
-  </div>
-</div>
 
-</div><div class="mo" id="stuMo">
-  <div class="mo-box" style="max-width:600px;">
-    <div class="mo-x" onclick="closeMo()">x</div>
-    <div id="stuDetail"></div>
-  </div>
-</div>
-
-<div class="mo" id="instrMo">
-  <div class="mo-box" style="max-width:600px;">
-    <div class="mo-x" onclick="closeMo()">x</div>
-    <div id="instrDetail"></div>
-  </div>
-</div>
-
-<div class="mo" id="promoMo">
-  <div class="mo-box" style="max-width:440px;">
-    <div class="mo-x" onclick="closeMo()">x</div>
-    <h3 style="color:var(--white);margin-bottom:14px;">Create Promo Code</h3>
-    <div class="fg"><label class="fl">Promo Code (e.g. LAUNCH50)</label><input class="fi" id="pCode" placeholder="LAUNCH50" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"/></div>
-    <div class="fg"><label class="fl">Discount Percentage</label><input class="fi" type="number" id="pDisc" placeholder="e.g. 20" min="1" max="99"/></div>
-    <div class="fg"><label class="fl">Max Uses (0 = unlimited)</label><input class="fi" type="number" id="pUses" placeholder="0"/></div>
-    <div class="fg"><label class="fl">Expiry Date (optional)</label><input class="fi" type="date" id="pExp"/></div>
-    <div class="fg"><label class="fl">Apply to Course</label><select class="fi" id="pCourse"><option value="">All Courses</option></select></div>
-    <div class="al-err" id="promoErr"></div>
-    <div class="al-ok" id="promoOk"></div>
-    <button class="btn btn-gold btn-full" onclick="savePromo()">Create Promo Code</button>
-  </div>
-</div>
-
-<div class="mo" id="lessonMo">
-  <div class="mo-box" style="max-width:520px;">
-    <div class="mo-x" onclick="closeMo()">x</div>
-    <h3 style="color:var(--white);margin-bottom:4px;" id="lessonMoTitle">Manage Lessons</h3>
-    <p style="color:var(--text);font-size:0.84rem;margin-bottom:14px;" id="lessonMoCourse"></p>
-    <div id="lessonMoList" style="max-height:280px;overflow-y:auto;margin-bottom:12px;"></div>
-    <div style="display:flex;gap:7px;margin-bottom:9px;">
-      <input class="fi" id="newLT" placeholder="New lesson title..." style="flex:1;"/>
-      <select class="fi" id="newLType" style="width:110px;"><option value="video">Video</option><option value="live">Live</option><option value="reading">Reading</option><option value="quiz">Quiz</option><option value="assignment">Assignment</option></select>
+    <!-- Create Promo Modal -->
+    <div id="createPromoModal" class="modal">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                <h2>🏷️ Create Promo Code</h2>
+                <button onclick="this.closest('.modal').style.display='none'" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <form id="createPromoForm" onsubmit="createPromoCode(event)">
+                <div class="form-group">
+                    <label>Promo Code (e.g. LAUNCH50)</label>
+                    <input type="text" name="code" required placeholder="Enter code">
+                </div>
+                <div class="form-group">
+                    <label>Discount Percentage (%)</label>
+                    <input type="number" name="discount_percent" required min="1" max="100" value="10">
+                </div>
+                <div class="form-group">
+                    <label>Max Uses (0 = unlimited)</label>
+                    <input type="number" name="max_uses" value="0" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Expiry Date (optional)</label>
+                    <input type="date" name="expires_at">
+                </div>
+                <div class="form-group">
+                    <label>Apply to Course (optional)</label>
+                    <select name="course_id">
+                        <option value="">All Courses</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">Create Promo Code</button>
+            </form>
+        </div>
     </div>
-    <div style="display:flex;gap:8px;">
-      <button class="btn btn-blue btn-sm" onclick="addModalLesson()">+ Add</button>
-      <button class="btn btn-gold btn-sm" onclick="saveModalLessons()">Save All</button>
-    </div>
-  </div>
-</div>
 
-<script>
-// ── DEMO OVERRIDE: Mock Data (Makes UI work without a real backend)
-const isDemo = true; // Set to false when your APIs are ready!
+    <script>
+        // API Configuration
+        const API_BASE = window.location.origin + '/api';
 
-// ── AUTH ──
-const token = localStorage.getItem('nf_token') || (isDemo ? 'demo-token' : null);
-const role = localStorage.getItem('nf_role') || (isDemo ? 'admin' : null);
-if (!token && !isDemo) { window.location.href = '/login.html'; }
+        // Auth Helper
+        function getAuthHeaders() {
+            const token = document.cookie.match(/token=([^;]+)/)?.[1];
+            return {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            };
+        }
 
-document.getElementById('sbName').textContent = localStorage.getItem('nf_name') || 'Admin';
-document.getElementById('pageSub').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+        // Universal Fetch Wrapper
+        async function apiFetch(endpoint, options = {}) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    ...options,
+                    headers: { ...getAuthHeaders(), ...options.headers }
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ error: 'Request failed' }));
+                    throw new Error(errorData.error || `HTTP ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error(`API Error [${endpoint}]:`, error);
+                throw error;
+            }
+        }
 
-// ── SET COHORT LABEL ──
-const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const now = new Date();
-document.getElementById('cohortPill').textContent = months[now.getMonth()] + ' ' + now.getFullYear() + ' Cohort';
+        // Show Alert
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert`;
+            alertDiv.style.cssText = `
+                position: fixed; top: 20px; right: 20px; padding: 1rem 1.5rem;
+                border-radius: 8px; color: white; z-index: 9999;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            alertDiv.textContent = message;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
 
-const H = { credentials: 'include', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' } };
+        // Section Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
 
-// ── STATE ──
-let allStu = [], allCourses = [], promos = [], lessons = [], modalCourseId = null, modalLessons = [], currentCourseId = null;
+        // Load Dashboard Stats
+        async function loadDashboardStats() {
+            try {
+                const stats = await apiFetch('/admin/stats');
+                document.getElementById('totalStudents').textContent = stats.totalStudents || 0;
+                document.getElementById('totalRevenue').textContent = `₦${(stats.totalRevenue || 0).toLocaleString()}`;
+                document.getElementById('totalEnrollments').textContent = stats.totalEnrollments || 0;
 
-// ── HELPERS ──
-function toggleSB() { document.getElementById('sb').classList.toggle('mob-open'); document.getElementById('mobOv').classList.toggle('open'); }
-function logout() { localStorage.clear(); window.location.href = 'https://nextforgeacademy.online'; }
-function closeMo() { document.querySelectorAll('.mo').forEach(m => m.classList.remove('open')); }
-document.querySelectorAll('.mo').forEach(m => m.addEventListener('click', e => { if(e.target===m) closeMo(); }));
+                // Recent Enrollments
+                if (stats.recentEnrollments && stats.recentEnrollments.length > 0) {
+                    document.getElementById('recentEnrollmentsTable').innerHTML = 
+                        stats.recentEnrollments.slice(0, 5).map(e => `
+                            <tr>
+                                <td>${e.full_name}</td>
+                                <td>${e.track || 'N/A'}</td>
+                                <td>${new Date(e.created_at).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('');
+                } else {
+                    document.getElementById('recentEnrollmentsTable').innerHTML = '<tr><td colspan="3" style="text-align:center; color:#94a3b8;">No recent enrollments</td></tr>';
+                }
 
-async function api(url, opts) {
-  try {
-    const res = await fetch(url, { ...H, ...opts });
-    if (!res.ok) throw new Error('API error ' + res.status);
-    return await res.json();
-  } catch(e) {
-    if(isDemo) {
-      console.warn("Backend not found, using Mock Data for:", url);
-      return getMockData(url); // Feeds visual UI with dummy arrays
-    }
-    throw e;
-  }
-}
+                // Recent Payments
+                if (stats.recentPayments && stats.recentPayments.length > 0) {
+                    document.getElementById('recentPaymentsTable').innerHTML =
+                        stats.recentPayments.slice(0, 5).map(p => `
+                            <tr>
+                                <td>${p.full_name}</td>
+                                <td>₦${p.amount?.toLocaleString()}</td>
+                                <td><span class="badge ${p.status === 'success' ? 'badge-success' : 'badge-warning'}">${p.status}</span></td>
+                            </tr>
+                        `).join('');
+                } else {
+                    document.getElementById('recentPaymentsTable').innerHTML = '<tr><td colspan="3" style="text-align:center; color:#94a3b8;">No recent payments</td></tr>';
+                }
 
-// Dummy data for testing templates visually
-function getMockData(url) {
-  if(url.includes('stats')) return { totalStudents: 142, totalEnrollments: 185, totalRevenue: 4200000, recentStudents: [{full_name: 'John Doe', course: 'Project Management', created_at: new Date()}] };
-  if(url.includes('students')) return [{id:1, full_name:'Shedrack Ebete', email:'test@nextforge.com', created_at:new Date(), is_active:true}];
-  if(url.includes('courses')) return [{id:1, title:'Project Management', category:'Management', duration:'12 weeks', price:250000, enrollments:45, thumbnail:'📋'}];
-  if(url.includes('payments')) return [{full_name: 'Jane Smith', email:'jane@test.com', amount: 250000, status: 'success', created_at: new Date()}];
-  if(url.includes('pending')) return [{id: 2, full_name: 'Alex Morgan', email: 'alex@example.com'}];
-  if(url.includes('active')) return [{id: 3, full_name: 'Dr. Sarah', email: 'sarah@example.com'}];
-  return [];
-}
+                console.log('✅ Dashboard stats loaded');
+            } catch (error) {
+                console.error('❌ Failed to load stats:', error.message);
+                showAlert('error', 'Failed to load dashboard statistics');
+            }
+        }
 
-// ── PAGE SWITCHING ──
-function sp(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
-  document.getElementById('page-' + id)?.classList.add('on');
-  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active', 'admin'));
-  if (el) { el.classList.add('active', 'admin'); }
-  const titles = { overview:'Admin Overview', students:'All Students', instructors:'Instructor Management', courses:'Manage Courses', addcourse:'Add New Course', certs:'Certificates', payments:'Payment Records', pricing:'Update Pricing', promos:'Promo Codes', announce:'Announcements', cohort:'Cohort Settings' };
-  document.getElementById('pageTitle').textContent = titles[id] || id;
-  document.getElementById('sb')?.classList.remove('mob-open');
-  document.getElementById('mobOv')?.classList.remove('open');
-  // Lazy load
-  const loaders = { students: loadStudents, instructors: loadInstructors, courses: loadCourses, payments: loadPayments, pricing: loadPricing, promos: renderPromos, cohort: initCohort };
-  if (loaders[id]) loaders[id]();
-  if (id === 'addcourse') { currentCourseId = null; document.getElementById('addCourseTitle').textContent = 'Add New Course'; resetForm(); }
-}
+        // Load Students
+        async function loadStudents() {
+            const tbody = document.getElementById('studentsTableBody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 2rem;"><div class="spinner"></div> Loading students...</td></tr>';
 
-// ── OVERVIEW ──
-async function loadOverview() {
-  let statsLoaded = false;
-  try {
-    const stats = await api('/api/admin/stats');
-    document.getElementById('kS').textContent = stats.totalStudents ?? stats.students ?? '—';
-    document.getElementById('kE').textContent = stats.totalEnrollments ?? stats.enrollments ?? '—';
-    document.getElementById('kR').textContent = '₦' + Number((stats.totalRevenue ?? stats.revenue ?? 0)/1000).toFixed(0) + 'k';
-    
-    if (stats.recentStudents?.length) {
-      document.getElementById('recEnroll').innerHTML = stats.recentStudents.slice(0,5).map(s =>
-        '<tr><td style="color:var(--white);font-weight:600;">' + s.full_name + '</td><td style="font-size:0.8rem;">' + (s.course||s.track||'—') + '</td><td style="font-size:0.77rem;">' + new Date(s.created_at).toLocaleDateString() + '</td></tr>'
-      ).join('');
-    }
-    statsLoaded = true;
-  } catch(e) { /* Handler */ }
+            try {
+                const students = await apiFetch('/admin/students');
+                
+                if (!students || students.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#94a3b8;">No students found</td></tr>';
+                    return;
+                }
 
-  try {
-    const pays = await api('/api/admin/payments');
-    document.getElementById('recPay').innerHTML = pays.slice(0,5).map(p =>
-      '<tr><td style="color:var(--white);font-weight:600;">' + p.full_name + '</td><td style="color:var(--gold);font-weight:600;">₦' + Number(p.amount).toLocaleString() + '</td><td><span class="badge ' + (p.status==='success'?'b-green':'b-red') + '">' + p.status + '</span></td></tr>'
-    ).join('');
-  } catch(e) { /* Handler */ }
+                tbody.innerHTML = students.map(s => `
+                    <tr>
+                        <td><img src="${s.avatar_url || 'https://via.placeholder.com/40'}" alt="${s.full_name}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;"></td>
+                        <td><strong>${s.full_name}</strong></td>
+                        <td>${s.email}</td>
+                        <td>${s.track || 'N/A'}</td>
+                        <td>${new Date(s.created_at).toLocaleDateString()}</td>
+                        <td><span class="badge ${s.is_active ? 'badge-success' : 'badge-danger'}">${s.is_active ? 'Active' : 'Inactive'}</span></td>
+                        <td>
+                            <button onclick="viewStudent(${s.id})" class="btn btn-primary btn-sm">View</button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                console.log(`✅ Loaded ${students.length} students`);
+            } catch (error) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#ef4444;">❌ Error: ${error.message}<br><button onclick="loadStudents()" class="btn btn-sm btn-primary" style="margin-top:0.5rem;">Retry</button></td></tr>`;
+            }
+        }
 
-  try {
-    const pend = await api('/api/admin/instructors/pending');
-    document.getElementById('kP').textContent = pend.length;
-    if (pend.length > 0) { const b = document.getElementById('pendBadge'); b.textContent = pend.length; b.style.display = 'inline'; }
-  } catch(e) { document.getElementById('kP').textContent = '—'; }
+        // Load Instructors
+        async function loadInstructors() {
+            const tbody = document.getElementById('instructorsTableBody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 2rem;"><div class="spinner"></div> Loading instructors...</td></tr>';
 
-  if (!statsLoaded && !isDemo) {
-    const s = document.getElementById('apiStatus');
-    s.textContent = 'Some APIs missing on server. UI will populate when connected.';
-    s.style.display = 'block';
-  }
-}
+            try {
+                const instructors = await apiFetch('/admin/instructors');
+                
+                if (!instructors || instructors.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#94a3b8;">No instructors found</td></tr>';
+                    return;
+                }
 
-// ── STUDENTS ──
-async function loadStudents() {
-  document.getElementById('stuTbl').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text);">Loading...</td></tr>';
-  try {
-    allStu = await api('/api/admin/students');
-    renderStu(allStu);
-  } catch(e) {
-    document.getElementById('stuTbl').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text);">Error: ' + e.message + '</td></tr>';
-  }
-}
-function filterStu() { const q = document.getElementById('stuSearch').value.toLowerCase(); renderStu(allStu.filter(s => s.full_name?.toLowerCase().includes(q) || s.email?.toLowerCase().includes(q))); }
-function renderStu(students) {
-  document.getElementById('stuTbl').innerHTML = students.length ? students.map(s => {
-    let bio = {}; try { bio = JSON.parse(s.bio||'{}'); } catch {}
-    return '<tr><td><div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:rgba(37,99,235,0.15);display:flex;align-items:center;justify-content:center;">' +
-      (s.avatar_url ? '<img src="'+s.avatar_url+'" style="width:100%;height:100%;object-fit:cover;"/>' : '👤') + '</div></td>' +
-      '<td style="color:var(--white);font-weight:600;">' + s.full_name + '</td>' +
-      '<td style="font-size:0.8rem;">' + s.email + '</td>' +
-      '<td style="font-size:0.78rem;">' + (bio.country||'—') + '</td>' +
-      '<td style="font-size:0.77rem;">' + new Date(s.created_at).toLocaleDateString() + '</td>' +
-      '<td><span class="badge ' + (s.is_active!==false?'b-green':'b-red') + '">' + (s.is_active!==false?'Active':'Suspended') + '</span></td>' +
-      '<td><div style="display:flex;gap:5px;">' +
-        '<button class="btn btn-ghost btn-sm" onclick="viewStu(' + s.id + ')">View</button>' +
-        '<button class="btn btn-danger btn-sm" onclick="toggleStu(' + s.id + ',' + s.is_active + ')">' + (s.is_active!==false?'Suspend':'Restore') + '</button>' +
-      '</div></td></tr>';
-  }).join('') : '<tr><td colspan="7" style="text-align:center;padding:18px;color:var(--text);">No students found.</td></tr>';
-}
+                tbody.innerHTML = instructors.map(i => `
+                    <tr>
+                        <td><img src="${i.avatar_url || 'https://via.placeholder.com/40'}" style="width:40px;height:40px;border-radius:50%;"></td>
+                        <td><strong>${i.full_name}</strong></td>
+                        <td>${i.email}</td>
+                        <td>${i.course_title || 'N/A'}</td>
+                        <td>${i.skills || 'N/A'}</td>
+                        <td>${'****' + (i.bank_account || '').slice(-4)}</td>
+                        <td><button onclick="viewInstructor(${i.id})" class="btn btn-primary btn-sm">View</button></td>
+                    </tr>
+                `).join('');
+                
+                console.log(`✅ Loaded ${instructors.length} instructors`);
+            } catch (error) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#ef4444;">❌ Error: ${error.message}<br><button onclick="loadInstructors()" class="btn btn-sm btn-primary" style="margin-top:0.5rem;">Retry</button></td></tr>`;
+            }
+        }
 
-// ── INSTRUCTORS ──
-async function loadInstructors() {
-  try {
-    const [pending, active] = await Promise.all([
-      api('/api/admin/instructors/pending'),
-      api('/api/admin/instructors/active')
-    ]);
-    document.getElementById('pendCount').textContent = pending.length + ' pending';
-    document.getElementById('pendInstr').innerHTML = pending.length ? pending.map(i => {
-      return '<div class="pending-card">' +
-        '<div class="pending-av">' + (i.avatar_url ? '<img src="'+i.avatar_url+'"/>' : '👨‍🏫') + '</div>' +
-        '<div style="flex:1;min-width:0;"><div style="font-weight:700;color:var(--white);font-size:0.875rem;">' + i.full_name + '</div>' +
-        '<div style="font-size:0.73rem;color:var(--text);">' + i.email + '</div></div>' +
-        '<div style="display:flex;gap:6px;flex-shrink:0;">' +
-          '<button class="btn btn-success btn-sm">Approve</button>' +
-          '<button class="btn btn-danger btn-sm">Reject</button>' +
-        '</div></div>';
-    }).join('') : '<div style="color:var(--text);font-size:0.875rem;padding:12px;">No pending applications.</div>';
+        // Load Courses
+        async function loadCourses() {
+            const container = document.getElementById('coursesContainer');
+            container.innerHTML = '<p style="text-align:center; padding: 2rem;"><div class="spinner"></div> Loading courses...</p>';
 
-    document.getElementById('instrTbl').innerHTML = active.length ? active.map(i => {
-      return '<tr>' +
-        '<td><div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:rgba(240,165,0,0.15);display:flex;align-items:center;justify-content:center;">👨‍🏫</div></td>' +
-        '<td style="color:var(--white);font-weight:600;">' + i.full_name + '</td>' +
-        '<td style="font-size:0.8rem;">' + i.email + '</td>' +
-        '<td colspan="4" style="font-size:0.79rem;color:var(--text);">Details hidden in demo mode</td>' +
-      '</tr>';
-    }).join('') : '<tr><td colspan="7" style="text-align:center;padding:18px;color:var(--text);">No active instructors.</td></tr>';
-  } catch(e) {}
-}
+            try {
+                const courses = await apiFetch('/admin/courses');
+                
+                if (!courses || courses.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:2rem;">No courses found. Create your first course!</p>';
+                    return;
+                }
 
-// ── COURSES ──
-async function loadCourses() {
-  try {
-    allCourses = await api('/api/admin/courses');
-    document.getElementById('coursesList').innerHTML = allCourses.length ? allCourses.map(c =>
-      '<div style="display:flex;align-items:center;gap:13px;padding:13px;background:rgba(17,31,56,0.85);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;flex-wrap:wrap;">' +
-      '<div style="width:46px;height:46px;border-radius:10px;overflow:hidden;background:rgba(37,99,235,0.1);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">' + (c.thumbnail||'📋') + '</div>' +
-      '<div style="flex:1;min-width:0;"><div style="font-weight:700;color:var(--white);font-size:0.9rem;">' + c.title + '</div>' +
-      '<div style="font-size:0.73rem;color:var(--text);">' + c.category + ' · ' + c.duration + ' · ' + (c.enrollments||0) + ' students enrolled</div>' +
-      '<div style="font-size:0.73rem;color:var(--gold);">₦' + Number(c.price).toLocaleString() + '</div></div>' +
-      '<div style="display:flex;gap:7px;flex-shrink:0;flex-wrap:wrap;">' +
-        '<button class="btn btn-blue btn-sm" onclick="editCourse(' + c.id + ')">Edit</button>' +
-        // FIXED SYNTAX ESCAPE HERE
-        '<button class="btn btn-ghost btn-sm" onclick="openLessonMo(' + c.id + ',\'' + c.title.replace(/'/g, "\\'") + '\')">Lessons</button>' + 
-        '<button class="btn btn-danger btn-sm" onclick="deleteCourse(' + c.id + ')">Delete</button>' +
-      '</div></div>'
-    ).join('') : '<div style="text-align:center;padding:36px;color:var(--text);">No courses yet. <button class="btn btn-gold btn-sm" onclick="sp(\'addcourse\',null)">Add First Course</button></div>'; // FIXED SYNTAX ERROR HERE
-  } catch(e) { }
-}
-function editCourse(id) { sp('addcourse', null); }
-function saveCourse() { showOk('cOk', 'Course Saved! (Demo)'); setTimeout(() => sp('courses', null), 1000); }
-function resetForm() {}
+                container.innerHTML = courses.map(c => `
+                    <div style="background:white; padding:1.5rem; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.08); margin-bottom:1rem; border-left:4px solid #2563eb;">
+                        <h3>${c.thumbnail || '📚'} ${c.title}</h3>
+                        <p><strong>Category:</strong> ${c.category || 'General'}</p>
+                        <p><strong>Price:</strong> ₦${(c.price || 0).toLocaleString()}</p>
+                        <p><strong>Enrollments:</strong> ${c.enrollments || 0} students</p>
+                        <p><strong>Instructor:</strong> ${c.instructor_name || 'Not assigned'}</p>
+                        <div style="margin-top:1rem; display:flex; gap:0.5rem;">
+                            <button onclick="manageCourse(${c.id})" class="btn btn-primary btn-sm">Manage</button>
+                            <button onclick="editPrice(${c.id})" class="btn btn-secondary btn-sm">Edit Price</button>
+                        </div>
+                    </div>
+                `).join('');
 
-// ── PAYMENTS ──
-async function loadPayments() {
-  try {
-    const pays = await api('/api/admin/payments');
-    const total = pays.filter(p => p.status === 'success').reduce((s,p) => s + (p.amount||0), 0);
-    document.getElementById('totRev').textContent = '₦' + Number(total).toLocaleString();
-    document.getElementById('payTbl').innerHTML = pays.length ? pays.map(p =>
-      '<tr><td style="color:var(--white);font-weight:600;">' + p.full_name + '</td>' +
-      '<td style="font-size:0.79rem;">' + p.email + '</td>' +
-      '<td style="font-size:0.8rem;">' + (p.course_title||'—') + '</td>' +
-      '<td style="color:var(--gold);font-weight:600;">₦' + Number(p.amount).toLocaleString() + '</td>' +
-      '<td style="font-size:0.69rem;color:var(--text);">' + (p.reference||'—') + '</td>' +
-      '<td><span class="badge ' + (p.status==='success'?'b-green':'b-red') + '">' + p.status + '</span></td>' +
-      '<td style="font-size:0.78rem;">' + new Date(p.created_at).toLocaleDateString() + '</td></tr>'
-    ).join('') : '<tr><td colspan="7" style="text-align:center;padding:18px;color:var(--text);">No payments yet.</td></tr>';
-  } catch(e) { }
-}
+                console.log(`✅ Loaded ${courses.length} courses`);
+            } catch (error) {
+                container.innerHTML = `<p style="text-align:center; color:#ef4444; padding:2rem;">❌ Error: ${error.message}<br><button onclick="loadCourses()" class="btn btn-primary" style="margin-top:0.5rem;">Retry</button></p>`;
+            }
+        }
 
-// ── PRICING ──
-async function loadPricing() {
-  try {
-    if (!allCourses.length) allCourses = await api('/api/admin/courses');
-    document.getElementById('priceList').innerHTML = allCourses.map(c =>
-      '<div class="price-row">' +
-      '<div style="flex:1;min-width:0;"><div style="font-weight:600;color:var(--white);font-size:0.875rem;">' + (c.thumbnail||'📋') + ' ' + c.title + '</div>' +
-      '<div style="font-size:0.73rem;color:var(--text);">Current: <strong style="color:var(--gold);">₦' + Number(c.price).toLocaleString() + '</strong></div></div>' +
-      '<input type="number" class="fi" id="np_' + c.id + '" value="' + c.price + '" style="width:130px;padding:7px 10px;font-size:0.84rem;"/>' +
-      '<button class="btn btn-gold btn-sm" onclick="updatePrice(' + c.id + ')">Update</button>' +
-      '</div>'
-    ).join('');
-  } catch(e) {}
-}
+        // Load Promo Codes
+        async function loadPromoCodes() {
+            const container = document.getElementById('promoCodesList');
+            container.innerHTML = '<p style="text-align:center; padding: 2rem;"><div class="spinner"></div> Loading promo codes...</p>';
 
-// ── PROMOS ──
-function renderPromos() {
-  const list = document.getElementById('promoList');
-  if (!list) return;
-  if (!promos.length) { list.innerHTML = '<div style="color:var(--text);text-align:center;padding:24px;">No promo codes yet. Create one above.</div>'; return; }
-  
-  // FIXED SYNTAX ERROR HERE ("your server's" -> "your server\'s")
-  const note = document.getElementById('promoNote');
-  if (note) { note.textContent = 'Students enter promo codes during registration. To apply a promo at checkout, your server\'s /api/payments/initialize route must validate the code before processing payment.'; note.style.display='block'; }
-}
+            try {
+                const promoCodes = await apiFetch('/admin/promo-codes');
 
-async function loadCoursesForPromo() {
-  if (!allCourses.length) { try { allCourses = await api('/api/admin/courses'); } catch {} }
-  const sel = document.getElementById('pCourse');
-  if (sel) sel.innerHTML = '<option value="">All Courses</option>' + allCourses.map(c => '<option value="' + c.title + '">' + c.title + '</option>').join('');
-}
+                if (!promoCodes || promoCodes.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:2rem;">No promo codes yet. Create one above!</p>';
+                    return;
+                }
 
-function savePromo() {
-    const ok = document.getElementById('promoOk');
-    ok.textContent = 'Promo Created (Demo)'; ok.style.display='block';
-    setTimeout(() => closeMo(), 1000);
-}
+                container.innerHTML = `
+                    <table style="width:100%; border-collapse:collapse; margin-top:1rem;">
+                        <thead>
+                            <tr style="background:#f8fafc;">
+                                <th style="padding:0.75rem; text-align:left;">Code</th>
+                                <th style="padding:0.75rem; text-align:left;">Discount</th>
+                                <th style="padding:0.75rem; text-align:left;">Usage</th>
+                                <th style="padding:0.75rem; text-align:left;">Expires</th>
+                                <th style="padding:0.75rem; text-align:left;">Course</th>
+                                <th style="padding:0.75rem; text-align:left;">Status</th>
+                                <th style="padding:0.75rem; text-align:left;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${promoCodes.map(p => `
+                                <tr style="border-bottom:1px solid #e2e8f0;">
+                                    <td style="padding:0.75rem;"><code style="background:#f1f5f9; padding:0.25rem 0.5rem; border-radius:4px;">${p.code}</code></td>
+                                    <td style="padding:0.75rem;"><strong>${p.discount_percent}%</strong></td>
+                                    <td style="padding:0.75rem;">${p.used_count}/${p.max_uses === 0 ? '∞' : p.max_uses}</td>
+                                    <td style="padding:0.75rem;">${p.expires_at ? new Date(p.expires_at).toLocaleDateString() : 'Never'}</td>
+                                    <td style="padding:0.75rem;">${p.course_title || 'All Courses'}</td>
+                                    <td style="padding:0.75rem;"><span class="badge ${p.is_active ? 'badge-success' : 'badge-danger'}">${p.is_active ? 'Active' : 'Inactive'}</span></td>
+                                    <td style="padding:0.75rem;">
+                                        <button onclick="togglePromoCode(${p.id})" class="btn btn-warning btn-sm">Toggle</button>
+                                        <button onclick="deletePromoCode(${p.id})" class="btn btn-danger btn-sm">Delete</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                console.log(`✅ Loaded ${promoCodes.length} promo codes`);
+            } catch (error) {
+                container.innerHTML = `<p style="text-align:center; color:#ef4444; padding:2rem;">❌ Error loading promo codes: ${error.message}</p>`;
+            }
+        }
 
-// ── UTILS ──
-function showErr(id, msg) { const el=document.getElementById(id); if(el){el.textContent=msg; el.style.display='block';} }
-function showOk(id, msg) { const el=document.getElementById(id); if(el){el.textContent=msg; el.style.display='block'; setTimeout(()=>el.style.display='none',4000);} }
+        // Create Promo Code
+        async function createPromoCode(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = {
+                code: form.code.value.trim(),
+                discount_percent: parseInt(form.discount_percent.value),
+                max_uses: parseInt(form.max_uses.value) || 0,
+                expires_at: form.expires_at.value || null,
+                course_id: form.course_id.value || null
+            };
 
-// ── INIT ──
-loadOverview();
-</script>
+            try {
+                const result = await apiFetch('/admin/promo-codes', {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
+                
+                showAlert('success', result.message || 'Promo code created successfully!');
+                document.getElementById('createPromoModal').style.display = 'none';
+                form.reset();
+                await loadPromoCodes();
+            } catch (error) {
+                showAlert('error', error.message || 'Failed to create promo code');
+            }
+        }
+
+        // Delete Promo Code
+        async function deletePromoCode(id) {
+            if (!confirm('Delete this promo code?')) return;
+            
+            try {
+                await apiFetch(`/admin/promo-codes/${id}`, { method: 'DELETE' });
+                showAlert('success', 'Promo code deleted!');
+                await loadPromoCodes();
+            } catch (error) {
+                showAlert('error', error.message);
+            }
+        }
+
+        // Toggle Promo Code
+        async function togglePromoCode(id) {
+            try {
+                const promos = await apiFetch('/admin/promo-codes');
+                const promo = promos.find(p => p.id === id);
+                if (promo) {
+                    await apiFetch(`/admin/promo-codes/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ is_active: !promo.is_active })
+                    });
+                    showAlert('success', `Promo code ${!promo.is_active ? 'activated' : 'deactivated'}`);
+                    await loadPromoCodes();
+                }
+            } catch (error) {
+                showAlert('error', error.message);
+            }
+        }
+
+        // Placeholder functions
+        function viewStudent(id) { console.log('View student:', id); }
+        function viewInstructor(id) { console.log('View instructor:', id); }
+        function manageCourse(id) { console.log('Manage course:', id); }
+        function editPrice(id) { console.log('Edit price:', id); }
+        function logout() {
+            if (confirm('Sign out?')) window.location.href = '/login.html';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Initializing admin dashboard...');
+            loadDashboardStats();
+        });
+    </script>
 </body>
 </html>
