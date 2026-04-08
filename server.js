@@ -102,6 +102,76 @@ app.get('/api/verify-certificate/:code', (req, res) => {
 });
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+// ================= ADMIN DASHBOARD APIs =================
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`✅ NextForge Academy running on port ${PORT}`));
+// GET STUDENTS
+app.get('/api/students', requireAuth, (req, res) => {
+  try {
+    const students = db.prepare(`
+      SELECT id, full_name, email, created_at
+      FROM users
+      WHERE role='student'
+      ORDER BY id DESC
+    `).all();
+    res.json(students);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch students' });
+  }
+});
+
+// GET INSTRUCTORS
+app.get('/api/instructors', requireAuth, (req, res) => {
+  try {
+    const instructors = db.prepare(`
+      SELECT id, full_name, email, created_at
+      FROM users
+      WHERE role='instructor'
+      ORDER BY id DESC
+    `).all();
+    res.json(instructors);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch instructors' });
+  }
+});
+
+// GET COURSES
+app.get('/api/courses', requireAuth, (req, res) => {
+  try {
+    const courses = db.prepare(`SELECT * FROM courses ORDER BY id DESC`).all();
+    res.json(courses);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch courses' });
+  }
+});
+
+// GET PROMO CODES
+app.get('/api/promocodes', requireAuth, (req, res) => {
+  try {
+    const codes = db.prepare(`SELECT * FROM promo_codes ORDER BY id DESC`).all();
+    res.json(codes);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch promo codes' });
+  }
+});
+
+// STUDENT ENROLL COURSE (fix pay-later redirect bug)
+app.post('/api/enroll', requireAuth, (req, res) => {
+  const { course_id } = req.body;
+  const user_id = req.session.user.id;
+
+  try {
+    db.prepare(`
+      INSERT INTO enrollments (user_id, course_id, status)
+      VALUES (?, ?, 'pending')
+    `).run(user_id, course_id);
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Enrollment failed' });
+  }
+});
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
