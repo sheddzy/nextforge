@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-    <meta name="description" content="NextForge Academy — Professional cohort-based learning in Project Management, Data, and Operations."/>
-    <title>NextForge Academy — Forge Your Future</title>
+    <meta name="description" content="NextForge Academy — Launch your tech career from anywhere. Expert-led cohorts in Project Management, Data Analysis, Product Management and more."/>
+    <meta property="og:title" content="NextForge Academy — Launch Your Tech Career"/>
+    <meta property="og:image" content="https://i.ibb.co/hFC9RPhY/Transparent.png"/>
+    <title>NextForge Academy — Launch Your Tech Career From Anywhere</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     
     <style>
-        /* ── UI VARIABLES ── */
+        /* ── NEXTFORGE CORE STYLES ── */
         :root {
             --bg: #060e1e;
             --bg-card: #0b1729;
             --gold: #f0a500;
-            --gold-glow: rgba(240, 165, 0, 0.3);
+            --gold-glow: rgba(240, 165, 0, 0.2);
             --text: #94a3b8;
             --text-light: #cbd5e1;
             --white: #ffffff;
@@ -24,21 +26,20 @@
             --radius-lg: 18px;
         }
 
-        /* ── RESET ── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body { 
-            background-color: var(--bg); 
+            background: var(--bg) !important; 
             color: var(--text-light); 
             font-family: 'Inter', sans-serif; 
-            line-height: 1.6;
             overflow-x: hidden;
+            padding-top: 80px;
         }
 
         /* ── NAVIGATION ── */
         nav {
             position: fixed; top: 0; width: 100%; z-index: 1000;
-            background: rgba(6, 14, 30, 0.8);
+            background: rgba(6, 14, 30, 0.85);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             padding: 18px 0;
@@ -49,108 +50,61 @@
         }
         .logo img { height: 32px; }
         .nav-links { display: flex; gap: 32px; align-items: center; }
-        .nav-links a { 
-            color: var(--text-light); text-decoration: none; 
-            font-weight: 500; font-size: 0.95rem; transition: 0.3s;
-        }
+        .nav-links a { color: var(--text-light); text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: 0.3s; }
         .nav-links a:hover { color: var(--gold); }
-        .btn-nav {
-            background: var(--gold); color: #000; padding: 10px 24px;
-            border-radius: 10px; font-weight: 700; transition: 0.3s;
-        }
 
-        /* ── HERO SECTION ── */
+        /* ── HERO ── */
         .hero {
-            padding: 180px 0 100px;
-            background: radial-gradient(circle at 70% 30%, rgba(240, 165, 0, 0.05), transparent),
-                        radial-gradient(circle at 20% 70%, rgba(37, 99, 235, 0.05), transparent);
-            text-align: center;
-            position: relative;
+            min-height: 80vh; display: flex; align-items: center; text-align: center;
+            background: radial-gradient(circle at center, rgba(240, 165, 0, 0.03) 0%, transparent 70%);
+            padding: 100px 40px;
         }
-        .hero-badge {
-            display: inline-block; padding: 8px 16px; background: var(--bg-card);
-            border: 1px solid var(--border); border-radius: 40px;
-            color: var(--gold); font-size: 0.8rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 24px;
-        }
+        .hero-content { max-width: 1000px; margin: 0 auto; }
         .hero h1 {
-            font-family: 'Syne', sans-serif; font-size: clamp(2.5rem, 6vw, 5rem);
-            font-weight: 800; color: var(--white); line-height: 1.1;
-            margin-bottom: 24px; max-width: 1000px; margin-inline: auto;
+            font-family: 'Syne', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800; color: var(--white); line-height: 1.1; margin-bottom: 24px;
         }
-        .hero p {
-            font-size: 1.25rem; color: var(--text); max-width: 700px;
-            margin: 0 auto 40px;
-        }
-
-        /* ── FEATURED GRID ── */
-        .section { padding: 100px 0; max-width: 1300px; margin: 0 auto; padding-inline: 40px; }
-        .section-header { margin-bottom: 60px; }
-        .section-header h2 { 
-            font-family: 'Syne', sans-serif; font-size: 2.5rem; 
-            color: var(--white); margin-bottom: 12px;
-        }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 32px; }
-        .course-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: var(--radius-lg); overflow: hidden;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .course-card:hover { transform: translateY(-10px); border-color: var(--gold); }
-        .cc-img { width: 100%; height: 220px; object-fit: cover; }
-        .cc-body { padding: 32px; }
-        .cc-body h3 { font-family: 'Syne', sans-serif; margin-bottom: 12px; font-size: 1.5rem; }
-        .cc-footer { 
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);
-        }
-        
-        /* ── CTA AREA ── */
-        .cta-banner {
-            background: linear-gradient(90deg, #0b1729, #111f38);
-            border-radius: var(--radius-xl); padding: 80px;
-            text-align: center; border: 1px solid var(--border);
-            position: relative; overflow: hidden;
-        }
-        .cta-banner::after {
-            content: ''; position: absolute; top: -50%; left: -50%;
-            width: 200%; height: 200%; background: radial-gradient(circle, var(--gold-glow) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        /* ── FOOTER ── */
-        footer { 
-            background: #030811; padding: 80px 0 40px; border-top: 1px solid var(--border); 
-            margin-top: 100px;
-        }
-        .footer-grid {
-            max-width: 1300px; margin: 0 auto; padding: 0 40px;
-            display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 60px;
-        }
-        .footer-logo { margin-bottom: 24px; }
-        .footer-col h4 { color: var(--white); margin-bottom: 24px; font-family: 'Syne'; }
-        .footer-col a { 
-            display: block; color: var(--text); text-decoration: none; 
-            margin-bottom: 12px; transition: 0.2s;
-        }
-        .footer-col a:hover { color: var(--gold); }
+        .hero p { font-size: 1.25rem; color: var(--text); max-width: 700px; margin: 0 auto 40px; }
 
         /* ── BUTTONS ── */
         .btn {
             display: inline-flex; align-items: center; justify-content: center;
             padding: 16px 36px; border-radius: 12px; font-weight: 700;
-            text-decoration: none; transition: 0.3s;
+            text-decoration: none; transition: 0.3s; cursor: pointer; border: none;
         }
         .btn-gold { background: var(--gold); color: #000; }
-        .btn-gold:hover { box-shadow: 0 10px 25px var(--gold-glow); transform: scale(1.02); }
-        .btn-outline { border: 1px solid var(--gold); color: var(--gold); }
+        .btn-gold:hover { transform: scale(1.02); box-shadow: 0 10px 30px var(--gold-glow); }
+        .btn-outline { border: 1px solid var(--border); color: var(--white); background: transparent; }
 
-        @media (max-width: 800px) {
-            .footer-grid { grid-template-columns: 1fr; text-align: center; }
-            .hero h1 { font-size: 3rem; }
-            .nav-links { display: none; }
+        /* ── STATS SECTION ── */
+        .stats-bar {
+            background: var(--bg-card); border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border); padding: 50px 0;
         }
+        .stats-container {
+            max-width: 1300px; margin: 0 auto; display: flex;
+            justify-content: space-around; flex-wrap: wrap; gap: 40px;
+        }
+        .stat-item { text-align: center; }
+        .stat-item h3 { font-family: 'Syne'; font-size: 2.5rem; color: #fff; margin-bottom: 5px; }
+        .stat-item p { color: var(--gold); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; }
+
+        /* ── COURSES SECTION (DYNAMIC) ── */
+        .section { padding: 100px 40px; max-width: 1300px; margin: 0 auto; }
+        .section-header h2 { font-family: 'Syne', sans-serif; font-size: 2.8rem; color: var(--white); margin-bottom: 40px; }
+        .cg { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+        
+        .course-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 18px; overflow: hidden; transition: 0.4s;
+        }
+        .course-card:hover { transform: translateY(-10px); border-color: var(--gold); }
+
+        /* ── FOOTER ── */
+        footer { padding: 80px 40px 40px; border-top: 1px solid var(--border); background: #030811; }
+        .footer-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; }
+
+        @media (max-width: 900px) { .nav-links { display: none; } .footer-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -162,125 +116,114 @@
                 <a href="#courses">Programmes</a>
                 <a href="/about.html">Our Story</a>
                 <a href="/login.html">Sign In</a>
-                <a href="/register.html" class="btn-nav">Get Started</a>
+                <a href="/register.html" class="btn btn-gold" style="padding: 10px 20px;">Get Started</a>
             </div>
         </div>
     </nav>
 
     <header class="hero">
-        <div class="hero-badge">Next Generation Academy</div>
-        <h1>Elevate Your Career with <span style="color:var(--gold);">Expert-Led</span> Cohorts</h1>
-        <p>Master the world's most in-demand technical and operational skills through immersive, project-based learning.</p>
-        <div style="display:flex; gap:16px; justify-content:center;">
-            <a href="#courses" class="btn btn-gold">Explore Programmes</a>
-            <a href="/advisor.html" class="btn btn-outline">Talk to AI Advisor</a>
+        <div class="hero-content">
+            <div style="color: var(--gold); font-weight: 800; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 16px; text-transform: uppercase;">Next Generation Academy</div>
+            <h1>Forge Your Future with <span style="color:var(--gold);">Expert-Led</span> Cohorts</h1>
+            <p>Master Project Management, Data Analysis, and Product Operations through immersive, cohort-based learning.</p>
+            <div style="display:flex; gap:16px; justify-content:center;">
+                <a href="#courses" class="btn btn-gold">Browse Courses</a>
+                <a href="https://wa.me/2349060914286" class="btn btn-outline">Contact Admissions</a>
+            </div>
         </div>
     </header>
 
-    <section style="background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 40px 0;">
-        <div class="section" style="padding:0; display:flex; justify-content:space-around; flex-wrap:wrap; gap:40px;">
-            <div style="text-align:center;">
-                <div style="font-family:'Syne'; font-size:2.5rem; color:#fff;">94%</div>
-                <div style="color:var(--gold); font-weight:700; font-size:0.8rem; text-transform:uppercase;">Completion Rate</div>
+    <section class="stats-bar">
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3>94%</h3>
+                <p>Completion Rate</p>
             </div>
-            <div style="text-align:center;">
-                <div style="font-family:'Syne'; font-size:2.5rem; color:#fff;">2k+</div>
-                <div style="color:var(--gold); font-weight:700; font-size:0.8rem; text-transform:uppercase;">Global Scholars</div>
+            <div class="stat-item">
+                <h3>2k+</h3>
+                <p>Global Scholars</p>
             </div>
-            <div style="text-align:center;">
-                <div style="font-family:'Syne'; font-size:2.5rem; color:#fff;">NGN 5M+</div>
-                <div style="color:var(--gold); font-weight:700; font-size:0.8rem; text-transform:uppercase;">Alumni Salary Inc.</div>
+            <div class="stat-item">
+                <h3>NGN 5M+</h3>
+                <p>Alumni Salary Inc.</p>
             </div>
         </div>
     </section>
 
     <section class="section" id="courses">
         <div class="section-header">
-            <h2>Available Programmes</h2>
-            <p style="color:var(--text);">Handpicked cohorts designed to turn beginners into professionals.</p>
+            <h2>Our Programmes</h2>
+            <p style="color:var(--text); max-width: 600px;">Handpicked cohorts designed to turn beginners into professionals through project-led training.</p>
         </div>
-        
-        <div class="grid" id="courseGrid">
-            <div class="course-card">
-                <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=600" class="cc-img" alt="PM">
-                <div class="cc-body">
-                    <div style="color:var(--gold); font-weight:800; font-size:0.75rem; margin-bottom:10px; text-transform:uppercase;">Cohort Active</div>
-                    <h3>Project Management Professional</h3>
-                    <p style="color:var(--text); font-size:0.9rem;">Master Agile, Waterfall, and project governance to lead high-performing teams.</p>
-                    <div class="cc-footer">
-                        <div style="font-weight:700; color:#fff;">₦250,000</div>
-                        <a href="/course-detail.html?id=1" style="color:var(--gold); font-weight:700; text-decoration:none;">View Details →</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="course-card">
-                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600" class="cc-img" alt="Data">
-                <div class="cc-body">
-                    <div style="color:var(--gold); font-weight:800; font-size:0.75rem; margin-bottom:10px; text-transform:uppercase;">New Batch</div>
-                    <h3>Data Analysis & Visualization</h3>
-                    <p style="color:var(--text); font-size:0.9rem;">Uncover insights using SQL, Python, and PowerBI. Data-driven decision making.</p>
-                    <div class="cc-footer">
-                        <div style="font-weight:700; color:#fff;">₦300,000</div>
-                        <a href="/course-detail.html?id=2" style="color:var(--gold); font-weight:700; text-decoration:none;">View Details →</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="course-card">
-                <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600" class="cc-img" alt="Product">
-                <div class="cc-body">
-                    <div style="color:var(--gold); font-weight:800; font-size:0.75rem; margin-bottom:10px; text-transform:uppercase;">Enrolling Now</div>
-                    <h3>Product Management Mastery</h3>
-                    <p style="color:var(--text); font-size:0.9rem;">From discovery to launch. Learn the framework used by top tech companies.</p>
-                    <div class="cc-footer">
-                        <div style="font-weight:700; color:#fff;">₦250,000</div>
-                        <a href="/course-detail.html?id=3" style="color:var(--gold); font-weight:700; text-decoration:none;">View Details →</a>
-                    </div>
-                </div>
-            </div>
+        <div id="homeCourses" class="cg">
+            <div style="text-align:center; grid-column:1/-1; padding:40px; color:var(--text);">Syncing library...</div>
         </div>
     </section>
 
     <section class="section">
-        <div class="cta-banner">
-            <h2 style="font-family:'Syne'; font-size:3rem; color:#fff; margin-bottom:24px;">Start Your Journey Today</h2>
-            <p style="color:var(--text-light); font-size:1.1rem; margin-bottom:40px; max-width:600px; margin-inline:auto;">
-                Join the next cohort of forward-thinking professionals. Flexible payment plans available.
-            </p>
+        <div style="background: linear-gradient(90deg, #0b1729, #111f38); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 80px 40px; text-align: center;">
+            <h2 style="font-family:'Syne'; font-size:2.5rem; color:#fff; margin-bottom:20px;">Start Your Journey Today</h2>
+            <p style="color:var(--text); margin-bottom:40px; max-width:600px; margin-inline:auto;">Join the next cohort of forward-thinking professionals. Flexible payment plans available.</p>
             <a href="/register.html" class="btn btn-gold">Secure Your Spot</a>
         </div>
     </section>
 
     <footer>
         <div class="footer-grid">
-            <div class="footer-col">
-                <img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="Logo" class="footer-logo" style="height:28px;">
-                <p style="font-size:0.9rem; color:var(--text);">The premium academy for tech-driven career acceleration. Built for the ambitious.</p>
+            <div>
+                <img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge" style="height:24px; margin-bottom:20px;">
+                <p style="max-width:300px; font-size:0.9rem; color:var(--text);">The premium academy for tech-driven career acceleration. Built for the ambitious.</p>
             </div>
-            <div class="footer-col">
-                <h4>Academy</h4>
-                <a href="#courses">All Programmes</a>
-                <a href="/admissions.html">Admissions</a>
-                <a href="/scholarships.html">Scholarships</a>
+            <div>
+                <h4 style="color:#fff; margin-bottom:20px; font-family:'Syne';">Academy</h4>
+                <a href="/courses.html" style="display:block; color:var(--text); margin-bottom:10px; text-decoration:none;">All Courses</a>
+                <a href="/register.html" style="display:block; color:var(--text); margin-bottom:10px; text-decoration:none;">Admissions</a>
             </div>
-            <div class="footer-col">
-                <h4>Support</h4>
-                <a href="/faq.html">FAQs</a>
-                <a href="/contact.html">Contact Us</a>
-                <a href="/terms.html">Privacy Policy</a>
-            </div>
-            <div class="footer-col">
-                <h4>Social</h4>
-                <a href="#">LinkedIn</a>
-                <a href="#">Instagram</a>
-                <a href="#">X (Twitter)</a>
+            <div>
+                <h4 style="color:#fff; margin-bottom:20px; font-family:'Syne';">Contact</h4>
+                <a href="mailto:info@nextforgeacademy.online" style="display:block; color:var(--text); margin-bottom:10px; text-decoration:none;">Email Us</a>
+                <a href="https://wa.me/2349060914286" style="display:block; color:var(--text); margin-bottom:10px; text-decoration:none;">WhatsApp</a>
             </div>
         </div>
-        <div style="text-align:center; padding-top:60px; font-size:0.8rem; color:var(--text);">
+        <div style="text-align:center; margin-top:60px; font-size:0.8rem; color:rgba(255,255,255,0.2);">
             © 2024 NextForge Academy. All Rights Reserved.
         </div>
     </footer>
 
+    <script>
+    async function loadHomeCourses() {
+      try {
+        const r = await fetch('/api/courses/home');
+        const d = await r.json();
+        const container = document.getElementById('homeCourses');
+        
+        if(!d.courses || d.courses.length === 0) {
+            container.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text);">New cohorts arriving soon...</p>';
+            return;
+        }
+
+        container.innerHTML = d.courses.map(c => `
+          <div class="course-card">
+            <img src="${c.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600'}" style="width:100%; height:200px; object-fit:cover;">
+            <div style="padding:28px;">
+              <h3 style="color:#fff; font-family:'Syne'; font-size:1.4rem; margin-bottom:12px;">${c.title}</h3>
+              <p style="color:var(--text); font-size:0.85rem; margin-bottom:24px; line-height:1.6;">${c.short_description || 'Master this skill through our intensive expert-led training.'}</p>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding-top:20px; border-top:1px solid var(--border);">
+                <span style="color:var(--gold); font-weight:800; font-size:1.1rem;">₦${Number(c.price).toLocaleString()}</span>
+                <a href="/course-detail.html?id=${c.id}" style="color:#fff; font-weight:600; font-size:0.9rem; text-decoration:none;">View Details →</a>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch(e) {
+        document.getElementById('homeCourses').innerHTML = `
+            <div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text);">
+                Unable to load live data. <a href="/courses.html" style="color:var(--gold); font-weight:700;">View All Catalog →</a>
+            </div>`;
+      }
+    }
+
+    window.onload = loadHomeCourses;
+    </script>
 </body>
 </html>
