@@ -180,6 +180,18 @@ db.exec(`
     otp TEXT NOT NULL,
     expires_at INTEGER NOT NULL
   );
+    CREATE TABLE IF NOT EXISTS promo_codes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    code TEXT UNIQUE NOT NULL,
+    discount_percent INTEGER NOT NULL DEFAULT 0,
+    max_uses INTEGER DEFAULT 0,
+    used_count INTEGER DEFAULT 0,
+    expires_at TEXT,
+    course_id INTEGER,
+    is_active INTEGER DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id)
+  );
   CREATE TABLE IF NOT EXISTS password_resets (
     email TEXT PRIMARY KEY,
     token TEXT NOT NULL,
