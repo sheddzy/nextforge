@@ -202,6 +202,89 @@ router.put('/profile', requireAuth, (req, res) => {
 
   res.json({ success: true, user });
 });
+// ===================== Student Enrollment (from dashboard) =====================
+router.post('/student/enroll', requireAuth, async (req, res) => {
+  const { course_id, payment_option, amount, promo_code, discount } = req.body;
+  
+  if (!course_id) {
+    return res.status(400).json({ error: 'Course ID is required' });
+  }
+  
+  if (req.user.role !== 'student') {
+    return res.status(403).json({ error: 'Only students can enroll in courses' });
+  }
+  
+  try {
+    const course = db.prepare('SELECT * FROM courses WHERE id = ? AND is_active = 1').get(course_id);
+    if (!course) {
+      return res.status(404).json({ error: 'Course not found' });
+    }
+    
+    const existingEnrollment = db.prepare('SELECT * FROM enrollments WHERE user_id = ? AND course_id = ?').get(req.user.id, course_id);
+    if (existingEnrollment) {
+      return res.status(409).json({ error: 'You are already enrolled in this course' });
+    }
+    
+    let finalAmount = amount || course.price;
+    
+    if (promo_code) {
+      const promo = db.prepare('SELECT * FROM promo_codes WHERE code = ? AND is_active = 1').get(promo_code.toUpperCase());
+      if (!promo) {
+        return res.status(400).json({ error: 'Invalid promo code' });
+      }
+      if (promo.expires_at && new Date(promo.expires_at) < new Date()) {
+        return res.status(400).json({ error: 'Promo code has expired' });
+      }
+      const discountAmount = Math.floor(course.price * promo.discount_percent / 100);
+      finalAmount = course.price - discountAmount;
+      db.prepare('UPDATE promo_codes SET used_count = used_count + 1 WHERE id = ?').run(promo.id);
+    }
+    
+    const enrollmentStatus = payment_option === 'later' ? 'pending_payment' : 'active';
+    const reference = `NF-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    
+    db.prepare(`
+      INSERT INTO enrollments (user_id, course_id, status, payment_reference)
+      VALUES (?, ?, ?, ?)
+    `).run(req.user.id, course_id, enrollmentStatus, reference);
+    
+    const enrollmentId = db.prepare('SELECT last_insert_rowid() as id').get().id;
+    
+    res.json({
+      success: true,
+      message: payment_option === 'later' 
+        ? 'Enrollment successful! You can complete payment later.'
+        : 'Enrollment successful! Please complete payment.',
+      enrollment_id: enrollmentId,
+      status: enrollmentStatus,
+      course_title: course.title,
+      amount_paid: finalAmount
+    });
+    
+  } catch (error) {
+    console.error('Enrollment error:', error.message);
+    res.status(500).json({ error: 'Failed to process enrollment' });
+  }
+});
+
+// Get student enrollments
+router.get('/student/enrollments', requireAuth, (req, res) => {
+  try {
+    const enrollments = db.prepare(`
+      SELECT e.*, c.title as course_title, c.thumbnail, c.slug, c.price
+      FROM enrollments e
+      JOIN courses c ON e.course_id = c.id
+      WHERE e.user_id = ?
+      ORDER BY e.enrolled_at DESC
+    `).all(req.user.id);
+    
+    res.json(enrollments);
+  } catch (error) {
+    console.error('Error fetching enrollments:', error.message);
+    res.status(500).json({ error: 'Failed to fetch enrollments' });
+  }
+});
+
 // Check if email exists
 router.post('/check-email', (req, res) => {
   const { email } = req.body;
