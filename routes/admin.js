@@ -161,6 +161,96 @@ router.post('/announcements', requireStaff, (req, res) => {
   }
   res.json({ success: true });
 });
+// Promo Codes CRUD
+router.get('/promo-codes', requireStaff, (req, res) => {
+  try {
+    const promoCodes = db.prepare(`
+      SELECT pc.*, c.title as course_title
+      FROM promo_codes pc
+      LEFT JOIN courses c ON pc.course_id = c.id
+      ORDER BY pc.created_at DESC
+    `).all();
+    res.json(promoCodes);
+  } catch(e) {
+    console.error('Error fetching promo codes:', e.message);
+    res.status(500).json({ error: 'Failed to fetch promo codes' });
+  }
+});
+
+router.post('/promo-codes', requireAdmin, (req, res) => {
+  const { code, discount_percent, max_uses, expires_at, course_id } = req.body;
+  
+  if (!code || !discount_percent) {
+    return res.status(400).json({ error: 'Code and discount percentage are required' });
+  }
+  
+  if (discount_percent < 1 || discount_percent > 100) {
+    return res.status(400).json({ error: 'Discount must be between 1 and 100' });
+  }
+  
+  try {
+    const existing = db.prepare('SELECT id FROM promo_codes WHERE code = ?').get(code.toUpperCase());
+    if (existing) {
+      return res.status(409).json({ error: 'Promo code already exists' });
+    }
+    
+    const result = db.prepare(`
+      INSERT INTO promo_codes (code, discount_percent, max_uses, expires_at, course_id)
+      VALUES (?, ?, ?, ?, ?)
+    `).run(
+      code.toUpperCase(),
+      parseInt(discount_percent),
+      parseInt(max_uses) || 0,
+      expires_at || null,
+      course_id || null
+    );
+    
+    res.json({ 
+      success: true, 
+      id: result.lastInsertRowid,
+      message: 'Promo code created successfully'
+    });
+  } catch(e) {
+    console.error('Error creating promo code:', e.message);
+    res.status(500).json({ error: 'Failed to create promo code' });
+  }
+});
+
+// Public endpoint for validating promo codes (no auth required)
+router.get('/promo-codes/validate/:code', (req, res) => {
+  const { code } = req.params;
+  
+  try {
+    const promo = db.prepare(`
+      SELECT * FROM promo_codes 
+      WHERE code = ? AND is_active = 1
+    `).get(code.toUpperCase());
+    
+    if (!promo) {
+      return res.json({ valid: false, error: 'Invalid promo code' });
+    }
+    
+    // Check expiration
+    if (promo.expires_at && new Date(promo.expires_at) < new Date()) {
+      return res.json({ valid: false, error: 'Promo code has expired' });
+    }
+    
+    // Check usage limit
+    if (promo.max_uses > 0 && promo.used_count >= promo.max_uses) {
+      return res.json({ valid: false, error: 'Promo code has reached its usage limit' });
+    }
+    
+    res.json({
+      valid: true,
+      discount_percent: promo.discount_percent,
+      course_id: promo.course_id,
+      message: `${promo.discount_percent}% discount applied!`
+    });
+  } catch(e) {
+    console.error('Error validating promo code:', e.message);
+    res.status(500).json({ error: 'Failed to validate promo code' });
+  }
+});
 
 // Mark attendance
 router.post('/attendance', requireStaff, (req, res) => {
