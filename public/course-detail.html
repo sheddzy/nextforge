@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<meta name="description" content="All NextForge Academy programmes."/>
-<title>All Courses — NextForge Academy</title>
+<title>Course Details — NextForge Academy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
 /* CSS VARIABLES & RESET */
 :root {
@@ -19,46 +19,52 @@
 html{font-size:16px;}
 body{background:var(--navy)!important;color:var(--text2);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding-top:70px;}
 a{text-decoration:none;color:inherit;}
-h1,h2,h3,h4{color:#fff;font-family:'Syne',sans-serif;line-height:1.2;}
+h1,h2,h3,h4{color:#fff;font-family:'Syne',sans-serif;}
 .container{max-width:1200px;margin:0 auto;padding:0 24px;}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 20px;border-radius:10px;font-size:0.875rem;font-weight:600;border:none;transition:all 0.18s;cursor:pointer;text-decoration:none;font-family:'Inter',sans-serif;}
+.btn{display:inline-flex;width:100%;justify-content:center;padding:14px;border-radius:12px;font-weight:700;cursor:pointer;transition:0.2s;text-decoration:none;border:none;font-family:'Inter',sans-serif;}
 .btn-gold{background:linear-gradient(135deg,#b45309,var(--gold));color:#000;}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(240,165,0,0.45);}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(240,165,0,0.2);}
 .btn-ghost{background:rgba(255,255,255,0.06);color:var(--text2);border:1px solid var(--border2);}
-.btn-ghost:hover{background:rgba(255,255,255,0.1);color:#fff;}
-.btn-sm{padding:6px 14px;font-size:0.8rem;border-radius:8px;}
 
 /* NAVBAR */
 .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:70px;background:rgba(6,14,30,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;}
 .nav-inner{width:100%;display:flex;justify-content:space-between;align-items:center;}
 .logo img{height:38px;}
-.nav-links{display:flex;gap:20px;align-items:center;}
-.nav-links a{font-size:0.9rem;font-weight:500;color:var(--text2);transition:0.2s;}
-.nav-links a:hover{color:#fff;}
 
-/* HERO & FILTERS */
-.hero{padding:50px 0 40px;background:linear-gradient(145deg, var(--navy2) 0%, var(--navy) 100%);border-bottom:1px solid var(--border);}
-.filter-bar{background:var(--navy2);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:70px;z-index:100;}
-.filters{display:flex;gap:8px;flex-wrap:wrap;}
-.filter-chip{padding:6px 14px;border-radius:20px;font-size:0.8rem;font-weight:600;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all 0.18s;}
-.filter-chip.active{background:rgba(240,165,0,0.12);border-color:var(--gold);color:var(--gold);}
+/* HERO */
+.course-hero{padding:60px 0;background:linear-gradient(145deg, var(--navy2) 0%, var(--navy) 100%);border-bottom:1px solid var(--border);position:relative;}
+.cat-tag{color:var(--gold);text-transform:uppercase;font-size:0.75rem;font-weight:800;letter-spacing:1px;margin-bottom:12px;display:inline-block;padding:4px 10px;border:1px solid var(--gold);border-radius:20px;}
 
-/* COURSE GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));gap:24px;padding:40px 0 60px;}
-.cc{background:var(--navy2);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:0.3s;display:flex;flex-direction:column;}
-.cc:hover{transform:translateY(-5px);border-color:var(--gold);box-shadow:0 10px 30px rgba(0,0,0,0.4);}
-.cc-img{height:180px;width:100%;object-fit:cover;}
-.cc-body{padding:24px;flex:1;display:flex;flex-direction:column;}
-.cc-cat{font-size:0.7rem;color:var(--gold);text-transform:uppercase;font-weight:800;letter-spacing:1px;margin-bottom:10px;}
-.cc-title{font-size:1.3rem;margin-bottom:8px;transition:color 0.2s;}
-.cc-title:hover{color:var(--gold);}
-.cc-desc{font-size:0.85rem;color:var(--text);line-height:1.6;margin-bottom:16px;flex:1;}
-.cc-meta{display:flex;gap:10px;font-size:0.75rem;color:var(--text2);margin-bottom:16px;}
-.cc-foot{display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border);}
-.cc-price{font-size:1.1rem;font-weight:800;color:#fff;}
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:1fr 360px;gap:40px;padding:50px 0;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}}
 
-/* FOOTER */
-footer{background:var(--navy2);border-top:1px solid var(--border);padding:50px 0 30px;}
+/* MAIN CONTENT */
+.content-section{margin-bottom:40px;}
+.content-section h3{font-size:1.5rem;margin-bottom:20px;border-left:4px solid var(--gold);padding-left:15px;}
+.rich-text{line-height:1.8;color:var(--text);font-size:1.05rem;}
+.gain-list{list-style:none;margin:15px 0;}
+.gain-list li{margin-bottom:10px;display:flex;gap:10px;align-items:flex-start;}
+.gain-list li::before{content:'✓';color:var(--gold);font-weight:bold;}
+
+/* SYLLABUS */
+.module-card{background:var(--navy2);border:1px solid var(--border);border-radius:16px;margin-bottom:12px;overflow:hidden;}
+.module-head{padding:18px 24px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+.module-head:hover{background:rgba(255,255,255,0.02);}
+.lesson-list{padding:10px 24px 20px;border-top:1px solid var(--border);display:none;}
+.lesson-item{display:flex;align-items:center;gap:12px;padding:10px 0;font-size:0.9rem;border-bottom:1px solid rgba(255,255,255,0.03);}
+
+/* SIDEBAR CARD */
+.sticky-card{position:sticky;top:100px;background:var(--navy2);border:1px solid var(--border2);border-radius:24px;padding:30px;box-shadow:0 20px 40px rgba(0,0,0,0.4);}
+.price-tag{font-size:2.2rem;font-weight:800;color:#fff;margin:10px 0 20px;}
+
+/* MODAL */
+.mo{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:0.2s;}
+.mo.open{opacity:1;pointer-events:all;}
+.mo-box{background:var(--navy2);border:1px solid var(--border2);border-radius:24px;width:100%;max-width:500px;padding:32px;position:relative;}
+.mo-x{position:absolute;top:20px;right:20px;cursor:pointer;color:var(--text);font-size:1.2rem;}
+
+footer{background:var(--navy2);border-top:1px solid var(--border);padding:40px 0;text-align:center;font-size:0.85rem;color:var(--text);}
 </style>
 </head>
 <body>
@@ -66,111 +72,236 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:50px 0
 <nav class="navbar">
   <div class="container nav-inner">
     <a href="/" class="logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
-    <div class="nav-links">
-      <a href="/courses.html" style="color:var(--gold);">Courses</a>
-      <a href="/login.html" class="btn btn-ghost btn-sm">Log In</a>
+    <div>
+        <a href="/courses.html" style="color:var(--text2);margin-right:20px;">← Back to Courses</a>
+        <a href="/login.html" class="btn btn-ghost" style="width:auto;padding:8px 16px;">Log In</a>
     </div>
   </div>
 </nav>
 
-<div class="hero">
-  <div class="container">
-    <div style="font-size:0.75rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:10px;">All Programmes</div>
-    <h1 style="font-size:clamp(2rem,4vw,3rem);margin-bottom:12px;">Choose Your Path</h1>
-    <p style="color:var(--text);font-size:1rem;max-width:500px;line-height:1.6;">Every programme takes you from beginner to job-ready with expert live instruction and real-world projects.</p>
-  </div>
-</div>
-
-<div class="filter-bar">
-  <div class="container filters">
-    <button class="filter-chip active" onclick="setFilter('all', this)">All Courses</button>
-    <button class="filter-chip" onclick="setFilter('Project Management', this)">Project Management</button>
-    <button class="filter-chip" onclick="setFilter('Data Analysis', this)">Data Analysis</button>
-    <button class="filter-chip" onclick="setFilter('Product Management', this)">Product Management</button>
-    <button class="filter-chip" onclick="setFilter('Operations', this)">Operations</button>
-  </div>
+<div class="course-hero">
+    <div class="container">
+        <span class="cat-tag" id="domCat">Loading...</span>
+        <h1 id="domTitle" style="font-size:clamp(2rem, 5vw, 3.2rem);margin-bottom:15px;">Loading Course...</h1>
+        <div style="display:flex;gap:15px;color:var(--text2);font-size:0.95rem;">
+            <span id="domDur">⏱ -- weeks</span>
+            <span id="domLevel">📊 Level</span>
+        </div>
+    </div>
 </div>
 
 <div class="container">
-  <div class="grid" id="courseGrid"></div>
+    <div class="layout">
+        <div>
+            <div class="content-section">
+                <h3>About this Programme</h3>
+                <div class="rich-text" id="domAbout">Loading description...</div>
+            </div>
+
+            <div class="content-section">
+                <h3>What You Will Gain</h3>
+                <ul class="gain-list" id="domGains">
+                    </ul>
+            </div>
+
+            <div class="content-section">
+                <h3>Curriculum Overview</h3>
+                <div id="domSyllabus">
+                    </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="sticky-card">
+                <div style="font-size:0.85rem; color:var(--text); text-transform:uppercase;">Tuition Fee</div>
+                <div class="price-tag" id="domPrice">₦0</div>
+                <ul style="margin-bottom:25px; list-style:none; color:var(--text2);">
+                    <li style="margin-bottom:10px; font-size:0.9rem;">✅ Live instructor-led sessions</li>
+                    <li style="margin-bottom:10px; font-size:0.9rem;">✅ Lifetime access to recordings</li>
+                    <li style="margin-bottom:10px; font-size:0.9rem;">✅ Industry-recognized certificate</li>
+                    <li style="margin-bottom:10px; font-size:0.9rem;">✅ Career guidance & portfolio building</li>
+                </ul>
+                <button class="btn btn-gold" onclick="openEnrollModal()">Enroll Now 🔒</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mo" id="enrollMo">
+  <div class="mo-box">
+    <div class="mo-x" onclick="closeModal()">✕</div>
+    <h2 style="margin-bottom:10px;">Secure Enrollment</h2>
+    <p style="font-size:0.9rem; color:var(--text); margin-bottom:20px;">You are enrolling in <strong id="moCourseName" style="color:#fff;"></strong></p>
+    
+    <div style="background:rgba(6,14,30,0.5); padding:20px; border-radius:15px; margin-bottom:20px; border:1px solid var(--border2);">
+        <label style="font-size:0.8rem; color:var(--text2);">Promo Code (Optional)</label>
+        <div style="display:flex;gap:10px;margin-top:8px;">
+            <input type="text" id="promoCode" placeholder="ENTER CODE" style="flex:1; background:var(--navy3); border:1px solid var(--border2); border-radius:8px; color:#fff; padding:10px; outline:none;">
+            <button class="btn btn-ghost" style="width:auto;" onclick="applyPromo()">Apply</button>
+        </div>
+        <div id="promoMsg" style="color:#6ee7b7; font-size:0.8rem; margin-top:10px; display:none;"></div>
+    </div>
+
+    <button class="btn btn-gold" id="payBtn" onclick="initiatePayment()">Pay Now</button>
+    <p style="text-align:center; font-size:0.75rem; color:var(--text); margin-top:15px;">Secured by Paystack</p>
+  </div>
 </div>
 
 <footer>
-  <div class="container" style="text-align:center;color:var(--text);font-size:0.85rem;">
-    © 2026 NextForge Academy. All rights reserved.
-  </div>
+    <div class="container">© 2026 NextForge Academy. All rights reserved.</div>
 </footer>
 
 <script>
-// UNIFIED COURSE DATABASE
+// UNIFIED COURSE DATABASE (Must match courses.html exactly)
 const COURSES = [
   {
     id: 1, title: 'Project Management Professional', category: 'Project Management', duration: '12 weeks', level: 'Beginner to Pro', price: 250000,
-    img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600', thumbnail: '📋',
-    desc: 'Master PM fundamentals from initiation to closure. Build a full portfolio of real-world projects used in global tech industries.'
+    about: 'We move beyond the textbook to focus on the practical realities of project leadership. You will dive deep into Agile, Scrum, and Waterfall frameworks while learning to mitigate risks, manage budgets, and lead high-performing teams.',
+    gains: ['Hands-on experience with Jira and Trello', 'Master Gantt charts and Resource Leveling', 'A full PM portfolio built from real-world projects', 'Preparation for the PMP® exam'],
+    syllabus: [
+        { title: "Module 1: Foundations & Initiation", lessons: ["Project Lifecycle", "Stakeholder Mapping", "Creating the Project Charter"] },
+        { title: "Module 2: Agile & Scrum Mastery", lessons: ["Sprint Planning", "Backlog Refinement", "Kanban vs Scrum"] },
+        { title: "Module 3: Execution & Leadership", lessons: ["Risk Mitigation Strategies", "Budget Management", "Leading Cross-functional Teams"] }
+    ]
   },
   {
     id: 2, title: 'Data Analysis & Visualization', category: 'Data Analysis', duration: '12 weeks', level: 'Beginner', price: 300000,
-    img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600', thumbnail: '📊',
-    desc: 'Go from zero to insights using Excel, SQL, and Power BI. Build dashboards that drive major business decisions.'
+    about: 'Data is the new oil, and this course provides the drill. You will work with large datasets to perform complex SQL queries and build interactive dashboards that help C-suite executives understand business performance at a glance.',
+    gains: ['Advanced analytics mastery of Excel, SQL, and Power BI', 'Insight generation for business growth', 'Portfolio of three real-world capstone projects', 'Statistical analysis foundations'],
+    syllabus: [
+        { title: "Module 1: Advanced Excel", lessons: ["Data Cleaning & Formatting", "Pivot Tables & VLOOKUP", "Power Query Basics"] },
+        { title: "Module 2: SQL for Business", lessons: ["Relational Databases", "Complex JOINs & Aggregations", "Window Functions"] },
+        { title: "Module 3: Data Viz with Power BI", lessons: ["Connecting Data Sources", "DAX Formulas", "Building Executive Dashboards"] }
+    ]
   },
   {
     id: 3, title: 'Product Management', category: 'Product Management', duration: '13 weeks', level: 'Intermediate', price: 250000,
-    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600', thumbnail: '🧭',
-    desc: 'Learn discovery, roadmapping, and prioritisation. Transition into tech as a skilled Product Manager with expert-led live cohorts.'
+    about: 'Product Management is about solving the right problems. You will learn to conduct user discovery, define product roadmaps, and work effectively with engineers and stakeholders to ship products people love.',
+    gains: ['Skills in creating Agile roadmaps and PRDs', 'Expertise in user discovery and market research', 'Proficiency in product analytics tools like Mixpanel', 'Post-course Career Coaching for PM roles'],
+    syllabus: [
+        { title: "Module 1: Product Discovery", lessons: ["User Interviews & Empathy Maps", "Defining the MVP", "Competitor Analysis"] },
+        { title: "Module 2: Strategy & Roadmapping", lessons: ["Writing PRDs", "Prioritisation Frameworks (RICE, MoSCoW)", "Aligning Stakeholders"] },
+        { title: "Module 3: Launch & Growth", lessons: ["Go-to-Market Strategy", "Product Analytics (Mixpanel)", "A/B Testing Basics"] }
+    ]
   },
   {
     id: 4, title: 'Notion Mastery (Systems Design)', category: 'Productivity', duration: '6 weeks', level: 'Beginner', price: 160000,
-    img: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600', thumbnail: '🗂',
-    desc: 'Design custom business operating systems. Automate workflows and build team workspaces that improve efficiency by 40%.'
+    about: 'Stop using Notion as a basic note-taker and start using it as a high-performance business engine. We teach you the advanced architecture: Database Relations, Formulas 2.0, and how to build a "Second Brain" system.',
+    gains: ['Ability to build client portals and project managers', 'Knowledge of connecting Notion to Zapier/Make', 'Exclusive access to OS templates that save 10+ hours a week', 'Advanced database architecture'],
+    syllabus: [
+        { title: "Module 1: Architecture Basics", lessons: ["Pages vs Databases", "Properties & Views", "The PARA Method"] },
+        { title: "Module 2: Advanced Relational DBs", lessons: ["Rollups & Relations", "Building a CRM", "Task vs Project Tracking"] },
+        { title: "Module 3: Formulas & Automations", lessons: ["Formulas 2.0 Syntax", "Connecting Zapier", "Client Portal Design"] }
+    ]
   },
   {
     id: 5, title: 'Operations Systems Design', category: 'Operations', duration: '8 weeks', level: 'Intermediate', price: 200000,
-    img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600', thumbnail: '⚙️',
-    desc: 'The blueprint for scaling businesses through efficient processes, Standard Operating Procedures (SOPs), and automations.'
+    about: 'Operations is the backbone of every successful company. Designed for founders and operations leads, this course focuses on eliminating bottlenecks, documenting SOPs, and selecting the right tech stack for sustainable growth.',
+    gains: ['Design, implement, and audit business operations systems', 'Frameworks for monitoring team productivity', 'Ability to build scalable business infrastructure', 'SOP Documentation Mastery'],
+    syllabus: [
+        { title: "Module 1: Process Engineering", lessons: ["Mapping Workflows", "Identifying Bottlenecks", "Lean Operations"] },
+        { title: "Module 2: SOP Development", lessons: ["Writing Clear SOPs", "Version Control", "Training Teams on SOPs"] },
+        { title: "Module 3: The Tech Stack", lessons: ["Evaluating Tools (Lark, Monday, Asana)", "Vendor Management", "Automating Admin Tasks"] }
+    ]
   },
   {
     id: 6, title: 'Business Communication', category: 'Communication', duration: '8 weeks', level: 'Beginner', price: 200000,
-    img: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600', thumbnail: '💡',
-    desc: 'Elevate your professional presence. Master executive presentations, high-stakes emailing, and global business English.'
+    about: 'While technical skills get you the interview, communication skills get you the promotion. You will master executive presentations, high-stakes emailing, and the art of persuasion in a cross-cultural business environment.',
+    gains: ['Confidence in public speaking and workplace communication', 'Proven frameworks for negotiation and crisis management', 'Mastery of high-impact professional writing', 'Executive Presence building'],
+    syllabus: [
+        { title: "Module 1: Professional Writing", lessons: ["High-stakes Emailing", "Writing Executive Summaries", "Tone & Clarity"] },
+        { title: "Module 2: Spoken Communication", lessons: ["Public Speaking Confidence", "Running Effective Meetings", "Virtual Presentation Skills"] },
+        { title: "Module 3: Persuasion & Conflict", lessons: ["Negotiation Frameworks", "Handling Difficult Conversations", "Cross-cultural Communication"] }
+    ]
   }
 ];
 
-let filtered = [...COURSES];
+// --- DYNAMIC DATA LOADING ---
+// 1. Get the ID from the URL (e.g. course-detail.html?id=2)
+const urlParams = new URLSearchParams(window.location.search);
+const courseId = parseInt(urlParams.get('id')) || 1; // Default to Course 1 if no ID is provided
 
-function setFilter(cat, el) {
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  filtered = cat === 'all' ? [...COURSES] : COURSES.filter(c => c.category.includes(cat));
-  render();
-}
+// 2. Find the course in the database
+const selectedCourse = COURSES.find(c => c.id === courseId) || COURSES[0];
+let finalPrice = selectedCourse.price;
 
-function render() {
-  const grid = document.getElementById('courseGrid');
-  grid.innerHTML = filtered.map(c => `
-    <div class="cc">
-      <a href="course-detail.html?id=${c.id}" style="display:block;">
-        <img src="${c.img}" class="cc-img" alt="${c.title}">
-      </a>
-      <div class="cc-body">
-        <div class="cc-cat">${c.thumbnail} ${c.category}</div>
-        <a href="course-detail.html?id=${c.id}">
-          <h3 class="cc-title">${c.title}</h3>
-        </a>
-        <p class="cc-desc">${c.desc}</p>
-        <div class="cc-meta">
-          <span>⭐ 4.9</span><span>·</span><span>${c.duration}</span><span>·</span><span>${c.level}</span>
+// 3. Inject Data into the DOM
+document.title = `${selectedCourse.title} — NextForge Academy`;
+document.getElementById('domTitle').innerText = selectedCourse.title;
+document.getElementById('domCat').innerText = selectedCourse.category;
+document.getElementById('domDur').innerText = `⏱ ${selectedCourse.duration}`;
+document.getElementById('domLevel').innerText = `📊 ${selectedCourse.level}`;
+document.getElementById('domAbout').innerText = selectedCourse.about;
+
+// Inject Price
+const formattedPrice = '₦' + selectedCourse.price.toLocaleString();
+document.getElementById('domPrice').innerText = formattedPrice;
+
+// Inject Gains
+document.getElementById('domGains').innerHTML = selectedCourse.gains.map(g => `<li>${g}</li>`).join('');
+
+// Inject Syllabus
+document.getElementById('domSyllabus').innerHTML = selectedCourse.syllabus.map((mod, idx) => `
+    <div class="module-card">
+        <div class="module-head" onclick="toggleModule(${idx})">
+            <span style="font-weight:700;">${mod.title}</span>
+            <span style="color:var(--gold);">▼</span>
         </div>
-        <div class="cc-foot">
-          <div class="cc-price">₦${c.price.toLocaleString()}</div>
-          <a href="course-detail.html?id=${c.id}" class="btn btn-gold btn-sm">View Details</a>
+        <div class="lesson-list" id="mod-${idx}">
+            ${mod.lessons.map(lesson => `
+                <div class="lesson-item"><span style="color:var(--gold);">▶</span> ${lesson}</div>
+            `).join('')}
         </div>
-      </div>
     </div>
-  `).join('');
+`).join('');
+
+// --- INTERACTIVE LOGIC ---
+function toggleModule(idx) {
+    const el = document.getElementById(`mod-${idx}`);
+    el.style.display = (el.style.display === 'block') ? 'none' : 'block';
 }
 
-render();
+function openEnrollModal() {
+    document.getElementById('moCourseName').innerText = selectedCourse.title;
+    document.getElementById('payBtn').innerText = `Pay ${formattedPrice} 🔒`;
+    document.getElementById('enrollMo').classList.add('open');
+}
+
+function closeModal() {
+    document.getElementById('enrollMo').classList.remove('open');
+}
+
+function applyPromo() {
+    // Simple demo promo logic
+    const code = document.getElementById('promoCode').value.toUpperCase();
+    const msg = document.getElementById('promoMsg');
+    
+    if(code === 'NEXTFORGE20') {
+        finalPrice = selectedCourse.price * 0.8; // 20% off
+        msg.innerText = `Promo applied! 20% off.`;
+        msg.style.color = '#6ee7b7';
+        document.getElementById('payBtn').innerText = `Pay ₦${finalPrice.toLocaleString()} 🔒`;
+    } else {
+        msg.innerText = `Invalid code.`;
+        msg.style.color = '#fca5a5';
+        finalPrice = selectedCourse.price;
+        document.getElementById('payBtn').innerText = `Pay ₦${finalPrice.toLocaleString()} 🔒`;
+    }
+    msg.style.display = 'block';
+}
+
+function initiatePayment() {
+    // Check if user is logged in (Demo check via localStorage)
+    const token = localStorage.getItem('nf_token');
+    if (!token) {
+        alert("Please Log In or Register first to secure your spot.");
+        window.location.href = `/register.html?course=${selectedCourse.id}`;
+        return;
+    }
+    
+    alert(`Initializing Paystack Gateway for ${selectedCourse.title} at ₦${finalPrice.toLocaleString()}...`);
+    // Insert your PaystackInline setup here
+}
 </script>
 </body>
 </html>
