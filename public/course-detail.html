@@ -1,385 +1,215 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Course — NextForge Academy</title>
-<link rel="stylesheet" href="/styles.css"/>
+<title>Course Details — NextForge Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
-body{padding-top:70px}
-.course-hero{background:var(--navy-2);border-bottom:1px solid var(--border);padding:48px 0;position:relative;overflow:hidden}
-.course-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 400px at 70% 50%,rgba(26,86,219,0.06),transparent);pointer-events:none}
-.course-layout{display:grid;grid-template-columns:1fr 340px;gap:40px;padding:48px 0;align-items:start}
-.sticky-card{position:sticky;top:88px;background:var(--navy-2);border:1px solid var(--border-light);border-radius:var(--radius-xl);padding:24px;overflow:hidden}
-.sticky-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--blue-light))}
-.module-wrap{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden}
-.module-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:var(--navy-2);cursor:pointer;transition:background var(--transition)}
-.module-hdr:hover{background:var(--navy-3)}
-.lesson-row{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;border-top:1px solid var(--border);font-size:0.83rem;color:var(--text)}
-.outcome-item{display:flex;align-items:flex-start;gap:8px;font-size:0.84rem;color:var(--text);padding:10px 12px;background:var(--navy-2);border:1px solid var(--border);border-radius:var(--radius)}
-.outcome-item::before{content:'✦';color:var(--gold);flex-shrink:0;margin-top:1px}
-.breadcrumb{font-size:0.78rem;color:var(--text);margin-bottom:12px}
-.breadcrumb a{color:var(--gold)}
-.includes li{display:flex;align-items:center;gap:8px;font-size:0.83rem;color:var(--text);padding:5px 0}
-.includes li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
-@media(max-width:1024px){.course-layout{grid-template-columns:1fr}.sticky-card{position:static}}
-@media(max-width:768px){
-  .course-hero{padding:32px 0}
-  .course-layout{padding:28px 0;gap:24px}
+/* CSS VARIABLES & RESET - Matching courses.html */
+:root {
+  --navy: #060e1e; --navy2: #0b1729; --navy3: #111f38;
+  --gold: #f0a500; --gold2: #fbbf24; --blue: #2563eb;
+  --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+  --text: #94a3b8; --text2: #cbd5e1; --white: #fff;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy)!important;color:var(--text2);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding-top:70px;}
+h1,h2,h3,h4{color:#fff;font-family:'Syne',sans-serif;}
+.container{max-width:1200px;margin:0 auto;padding:0 24px;}
+
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:70px;background:rgba(6,14,30,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;}
+.nav-inner{width:100%;display:flex;justify-content:space-between;align-items:center;}
+.logo img{height:38px;}
+
+/* COURSE HERO */
+.course-hero{padding:60px 0;background:linear-gradient(145deg, var(--navy2) 0%, var(--navy) 100%);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.course-hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.03) 1px,transparent 1px);background-size:30px 30px;}
+.cat-tag{color:var(--gold);text-transform:uppercase;font-size:0.75rem;font-weight:800;letter-spacing:1px;margin-bottom:12px;display:block;}
+
+/* TWO-COLUMN LAYOUT */
+.layout{display:grid;grid-template-columns:1fr 360px;gap:40px;padding:50px 0;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}}
+
+/* LEFT COLUMN CONTENT */
+.content-section{margin-bottom:40px;}
+.content-section h3{font-size:1.5rem;margin-bottom:20px;border-left:4px solid var(--gold);padding-left:15px;}
+.rich-text{line-height:1.8;color:var(--text);font-size:1.05rem;}
+
+/* SYLLABUS ACCORDION */
+.module-card{background:var(--navy2);border:1px solid var(--border);border-radius:16px;margin-bottom:12px;overflow:hidden;}
+.module-head{padding:18px 24px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:rgba(255,255,255,0.02);}
+.module-head:hover{background:rgba(255,255,255,0.05);}
+.lesson-list{padding:10px 24px 20px;border-top:1px solid var(--border);display:none;}
+.lesson-item{display:flex;align-items:center;gap:12px;padding:10px 0;font-size:0.9rem;border-bottom:1px solid rgba(255,255,255,0.03);}
+.lesson-item span{color:var(--gold);}
+
+/* STICKY SIDEBAR CARD */
+.sticky-card{position:sticky;top:100px;background:var(--navy2);border:1px solid var(--border2);border-radius:24px;padding:30px;box-shadow:0 20px 40px rgba(0,0,0,0.4);}
+.price-tag{font-size:2rem;font-weight:800;color:#fff;margin:15px 0;}
+.btn{display:inline-flex;width:100%;justify-content:center;padding:16px;border-radius:12px;font-weight:700;cursor:pointer;transition:0.2s;text-decoration:none;border:none;font-family:'Inter',sans-serif;}
+.btn-gold{background:var(--gold);color:#000;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(240,165,0,0.2);}
+
+/* MODAL SYSTEM (From courses.html) */
+.mo{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.9);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:0.2s;}
+.mo.open{opacity:1;pointer-events:all;}
+.mo-box{background:var(--navy2);border:1px solid var(--border2);border-radius:24px;width:100%;max-width:500px;padding:32px;position:relative;}
+.mo-x{position:absolute;top:20px;right:20px;cursor:pointer;color:var(--text);font-size:1.2rem;}
+
+/* FOOTER */
+footer{background:var(--navy2);border-top:1px solid var(--border);padding:60px 0 30px;margin-top:80px;}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:40px;margin-bottom:40px;}
+.footer-link{display:block;color:var(--text);margin-bottom:10px;font-size:0.9rem;}
 </style>
 </head>
 <body>
 
-<nav class="navbar" id="navbar">
-  <div class="inner">
-    <a href="/" class="logo"><div class="logo-icon">N</div>Next<span>Forge</span></a>
-    <ul class="nav-links">
-      <li><a href="/courses.html">Courses</a></li>
-      <li><a href="/about.html">About</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-    </ul>
-    <div class="nav-actions">
-      <a href="/login.html" class="btn btn-ghost btn-sm">Log In</a>
-      <a href="/register.html" class="btn btn-gold btn-sm">Enroll Now</a>
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="/" class="logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
+    <div style="display:flex; gap:20px;">
+        <a href="/courses.html" style="color:var(--text2); font-size:0.9rem;">Back to Courses</a>
+        <a href="/login.html" style="color:#fff; font-size:0.9rem; font-weight:600;">Log In</a>
     </div>
   </div>
 </nav>
 
-<!-- HERO -->
 <div class="course-hero">
-  <div class="container">
-    <div class="breadcrumb">
-      <a href="/">Home</a> › <a href="/courses.html">Courses</a> › <span id="breadCat">Course</span>
+    <div class="container">
+        <span class="cat-tag" id="courseCat">...</span>
+        <h1 id="courseTitle" style="font-size:clamp(2rem, 5vw, 3.5rem); margin-bottom:15px;">Course Title</h1>
+        <p id="courseShortDesc" style="max-width:700px; font-size:1.1rem; opacity:0.8;">Loading course description...</p>
     </div>
-    <div style="display:flex;gap:7px;margin-bottom:12px" id="heroBadges"></div>
-    <h1 id="courseTitle" style="font-size:clamp(1.5rem,3.5vw,2.3rem);margin-bottom:10px">Loading...</h1>
-    <p id="courseDesc" style="color:var(--text-dark);max-width:600px;margin-bottom:16px;line-height:1.75;font-size:0.95rem"></p>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-      <span class="stars">★★★★★</span>
-      <span style="color:var(--gold);font-weight:700">4.9</span>
-      <span style="color:var(--text);font-size:0.82rem">(124 ratings)</span>
-    </div>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.83rem;color:var(--text)">
-      <span>👤 <strong style="color:var(--white)">Shedrack Ebete</strong></span>
-      <span id="heroDur"></span>
-      <span id="heroLvl"></span>
-      <span>🌍 English</span>
-      <span>📜 Certificate on completion</span>
-    </div>
-  </div>
 </div>
 
 <div class="container">
-  <div class="course-layout">
-
-    <!-- MAIN CONTENT -->
-    <div>
-      <!-- TABS -->
-      <div class="tabs">
-        <div class="tab active" onclick="showTab('overview',this)">Overview</div>
-        <div class="tab" onclick="showTab('curriculum',this)">Curriculum</div>
-        <div class="tab" onclick="showTab('instructor',this)">Instructor</div>
-      </div>
-
-      <!-- OVERVIEW -->
-      <div id="tab-overview">
-        <h3 style="margin-bottom:8px">About This Course</h3>
-        <p id="courseAbout" style="color:var(--text);line-height:1.8;font-size:0.9rem;margin-bottom:28px"></p>
-        <h3 style="margin-bottom:12px">What You Will Learn</h3>
-        <div id="outcomesGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:28px"></div>
-        <h3 style="margin-bottom:12px">Tools You Will Use</h3>
-        <div id="toolsList" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px"></div>
-        <h3 style="margin-bottom:12px">Who Is This Course For</h3>
-        <div style="display:flex;flex-direction:column;gap:9px">
-          <div style="display:flex;gap:10px;font-size:0.875rem;color:var(--text)"><span style="color:var(--gold)">✓</span> Complete beginners with no prior background</div>
-          <div style="display:flex;gap:10px;font-size:0.875rem;color:var(--text)"><span style="color:var(--gold)">✓</span> Recent graduates looking to break into tech</div>
-          <div style="display:flex;gap:10px;font-size:0.875rem;color:var(--text)"><span style="color:var(--gold)">✓</span> Working professionals wanting to upskill and advance</div>
-          <div style="display:flex;gap:10px;font-size:0.875rem;color:var(--text)"><span style="color:var(--gold)">✓</span> NYSC corps members building marketable skills</div>
-        </div>
-      </div>
-
-      <!-- CURRICULUM -->
-      <div id="tab-curriculum" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-          <h3>Course Curriculum</h3>
-          <span id="currMeta" style="font-size:0.82rem;color:var(--text)"></span>
-        </div>
-        <div id="modulesContainer"></div>
-      </div>
-
-      <!-- INSTRUCTOR -->
-      <div id="tab-instructor" style="display:none">
-        <div class="card">
-          <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
-            <img src="https://i.ibb.co/fVWq6FNP/1759002518772.png"
-                 onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80'"
-                 style="width:68px;height:68px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)"/>
-            <div>
-              <div style="font-weight:700;color:var(--white);font-size:1rem">Shedrack Ebete</div>
-              <div style="font-size:0.8rem;color:var(--gold);margin-top:3px">Founder & Lead Instructor</div>
-              <div style="display:flex;gap:14px;margin-top:8px">
-                <span style="font-size:0.75rem;color:var(--text)">⭐ 4.9 rating</span>
-                <span style="font-size:0.75rem;color:var(--text)">👥 1,200+ students</span>
-                <span style="font-size:0.75rem;color:var(--text)">📚 6 courses</span>
-              </div>
+    <div class="layout">
+        <div class="main-content">
+            <div class="content-section">
+                <h3>About this Programme</h3>
+                <div class="rich-text" id="courseAbout"></div>
             </div>
-          </div>
-          <p style="font-size:0.875rem;color:var(--text);line-height:1.8">Operations Officer, PM Instructor, and systems designer based in Lagos, Nigeria. Every course at NextForge is built from firsthand experience — not textbooks.</p>
+
+            <div class="content-section">
+                <h3>Curriculum</h3>
+                <div id="syllabusContainer"></div>
+            </div>
         </div>
-      </div>
+
+        <div class="sidebar">
+            <div class="sticky-card">
+                <div style="font-size:0.8rem; color:var(--text); text-transform:uppercase;">Tuition Fee</div>
+                <div class="price-tag" id="coursePrice">₦0.00</div>
+                <ul style="margin-bottom:25px; list-style:none;">
+                    <li style="margin-bottom:10px; font-size:0.9rem;">✅ Lifetime access to recordings</li>
+                    <li style="margin-bottom:10px; font-size:0.9rem;">✅ Industry-recognized certificate</li>
+                    <li style="margin-bottom:10px; font-size:0.9rem;">✅ 1-on-1 Career Mentorship</li>
+                </ul>
+                <button class="btn btn-gold" onclick="openEnrollModal()">Enroll Now</button>
+                <p style="text-align:center; font-size:0.75rem; color:var(--text); margin-top:15px;">Secure payment via Paystack</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mo" id="enrollMo">
+  <div class="mo-box">
+    <div class="mo-x" onclick="closeModal()">✕</div>
+    <h2 style="margin-bottom:10px;">Enrollment</h2>
+    <p style="font-size:0.9rem; margin-bottom:20px;">You are enrolling in <strong id="moCourseName"></strong></p>
+    
+    <div style="background:var(--navy3); padding:20px; border-radius:15px; margin-bottom:20px; border:1px solid var(--border2);">
+        <label style="font-size:0.8rem; color:var(--text);">Promo Code</label>
+        <input type="text" id="promoCode" placeholder="Enter code" style="width:100%; background:transparent; border:none; border-bottom:1px solid var(--border2); color:#fff; padding:10px 0; outline:none;">
     </div>
 
-    <!-- STICKY BUY CARD -->
-    <div>
-      <div class="sticky-card">
-        <div style="font-size:2rem;font-weight:800;color:var(--gold);margin-bottom:4px" id="cardPrice">₦—</div>
-        <div style="font-size:0.78rem;color:#f87171;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.15);border-radius:6px;padding:7px 11px;margin-bottom:14px">
-          ⏱ April cohort — Limited seats remaining
-        </div>
-        <button class="btn btn-gold btn-lg" style="width:100%;margin-bottom:9px" onclick="handleEnroll()" id="enrollBtn">
-          Enroll Now →
-        </button>
-        <a href="https://wa.me/2349060914286?text=Hi%2C%20I%27m%20interested%20in%20a%20course" target="_blank"
-           class="btn btn-ghost" style="width:100%;margin-bottom:18px">
-          💬 Ask a Question
-        </a>
-        <ul class="includes" style="list-style:none;display:flex;flex-direction:column;gap:1px">
-          <li id="inclDur">Duration loading...</li>
-          <li>Live instructor-led sessions</li>
-          <li>All recordings included</li>
-          <li>Real project assignments</li>
-          <li>Certificate on completion</li>
-          <li>Lifetime community access</li>
-          <li>Career guidance sessions</li>
-          <li>30-day money-back guarantee</li>
-        </ul>
-        <div style="text-align:center;margin-top:14px;font-size:0.75rem;color:var(--text)">
-          🔒 Secure payment via Paystack
-        </div>
-      </div>
-    </div>
-
+    <button class="btn btn-gold" onclick="initiatePayment()">Pay <span id="moPrice"></span></button>
   </div>
 </div>
 
-<footer class="footer">
-  <div class="container">
-    <div class="footer-bottom" style="border-top:none;padding-top:0">
-      <span>© 2025 NextForge Academy · Lagos, Nigeria</span>
-      <a href="/courses.html" style="color:var(--gold)">← All Courses</a>
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <img src="https://i.ibb.co/hFC9RPhY/Transparent.png" height="30" style="margin-bottom:20px;">
+                <p style="font-size:0.85rem; line-height:1.6;">Empowering professionals through high-impact technical training and mentorship.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom:20px; font-size:0.9rem;">Quick Links</h4>
+                <a href="/courses.html" class="footer-link">All Courses</a>
+                <a href="/about.html" class="footer-link">About Us</a>
+                <a href="/contact.html" class="footer-link">Contact</a>
+            </div>
+        </div>
+        <div style="border-top:1px solid var(--border); padding-top:20px; text-align:center; font-size:0.8rem; color:var(--text);">
+            © 2024 NextForge Academy. All rights reserved.
+        </div>
     </div>
-  </div>
 </footer>
 
-<a href="https://wa.me/2349060914286" class="whatsapp-btn" target="_blank">💬</a>
-
 <script>
-window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>20));
+// SIMULATED DATA (In production, fetch this based on URL ID)
+const courseData = {
+    title: "Project Management Professional",
+    category: "Management",
+    price: 250000,
+    about: "This comprehensive journey into modern project management is designed to transition you from a team member to a strategic leader. You will master Agile, Scrum, and Waterfall frameworks while leading real-world initiatives.",
+    syllabus: [
+        { title: "Module 1: Foundations of PM", lessons: ["Project Lifecycle", "Stakeholder Management", "The PMO Framework"] },
+        { title: "Module 2: Agile & Scrum", lessons: ["Sprint Planning", "Backlog Refinement", "Kanban Methodology"] },
+        { title: "Module 3: Project Leadership", lessons: ["Risk Mitigation", "Budgeting & ROI", "Leading Virtual Teams"] }
+    ]
+};
 
-const slug = new URLSearchParams(location.search).get('slug') ||
-             new URLSearchParams(location.search).get('id');
-let course = null;
-let paystackKey = '';
-let currentUser = null;
+function init() {
+    document.getElementById('courseTitle').innerText = courseData.title;
+    document.getElementById('moCourseName').innerText = courseData.title;
+    document.getElementById('courseCat').innerText = courseData.category;
+    document.getElementById('courseAbout').innerText = courseData.about;
+    document.getElementById('coursePrice').innerText = '₦' + courseData.price.toLocaleString();
+    document.getElementById('moPrice').innerText = '₦' + courseData.price.toLocaleString();
 
-function showTab(name, el) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  ['overview','curriculum','instructor'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t === name ? 'block' : 'none';
-  });
-}
-
-function toggleMod(id) {
-  const el = document.getElementById('mod-'+id);
-  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-
-async function handleEnroll() {
-  const token = localStorage.getItem('nf_token');
-
-  // Not logged in — redirect to register
-  if (!token) {
-    sessionStorage.setItem('enrollAfterLogin', course.id);
-    window.location.href = '/register.html';
-    return;
-  }
-
-  const btn = document.getElementById('enrollBtn');
-  btn.textContent = 'Initializing payment...';
-  btn.disabled = true;
-
-  try {
-    // Get user info
-    const userRes = await fetch('/api/auth/me', {
-      credentials: 'include',
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    const user = await userRes.json();
-
-    // Initialize Paystack
-    const res = await fetch('/api/payments/initialize', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-      body: JSON.stringify({ course_id: course.id })
-    });
-    const data = await res.json();
-
-    if (!res.ok) {
-      if (data.error && data.error.includes('Already enrolled')) {
-        alert('You are already enrolled in this course!');
-        window.location.href = '/student/dashboard.html';
-        return;
-      }
-      throw new Error(data.error || 'Payment initialization failed');
-    }
-
-    // Open Paystack popup
-    const handler = PaystackPop.setup({
-      key: paystackKey,
-      email: user.email,
-      amount: course.price * 100,
-      currency: 'NGN',
-      ref: data.reference,
-      metadata: {
-        user_id: user.id,
-        course_id: course.id,
-        student_name: user.full_name,
-        course_title: course.title
-      },
-      callback: function(response) {
-        // Verify on our server
-        btn.textContent = 'Verifying payment...';
-        fetch('/api/payments/verify', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          },
-          body: JSON.stringify({ reference: response.reference })
-        }).then(r => r.json()).then(d => {
-          if (d.success) {
-            btn.textContent = '✓ Enrolled!';
-            btn.style.background = 'var(--green)';
-            setTimeout(() => window.location.href = '/student/dashboard.html', 1500);
-          }
-        });
-      },
-      onClose: function() {
-        btn.textContent = 'Enroll Now →';
-        btn.disabled = false;
-      }
-    });
-    handler.openIframe();
-
-  } catch(e) {
-    alert(e.message || 'Payment failed. Please try again or contact support.');
-    btn.textContent = 'Enroll Now →';
-    btn.disabled = false;
-  }
-}
-
-async function loadCourse() {
-  try {
-    const [courseRes, configRes] = await Promise.all([
-      fetch('/api/courses/' + slug),
-      fetch('/api/payments/config')
-    ]);
-    course = await courseRes.json();
-    const cfg = await configRes.json();
-    paystackKey = cfg.publicKey;
-
-    document.title = course.title + ' — NextForge Academy';
-    document.getElementById('breadCat').textContent = course.category;
-    document.getElementById('courseTitle').textContent = course.title;
-    document.getElementById('courseDesc').textContent = course.description;
-    document.getElementById('courseAbout').textContent = course.about || course.description;
-    document.getElementById('heroDur').textContent = '🕒 ' + course.duration;
-    document.getElementById('heroLvl').textContent = '📊 ' + course.level;
-    document.getElementById('cardPrice').textContent = '₦' + Number(course.price).toLocaleString();
-    document.getElementById('inclDur').textContent = course.duration + ' programme';
-
-    document.getElementById('heroBadges').innerHTML =
-      '<span class="badge badge-gold">' + course.level + '</span>' +
-      '<span class="badge badge-blue">Certificate</span>' +
-      '<span class="badge badge-green">' + (course.weeks <= 6 ? 'Self-Paced Option' : 'Live Cohort') + '</span>';
-
-    if (course.outcomes) {
-      document.getElementById('outcomesGrid').innerHTML =
-        course.outcomes.split('|').map(o => '<div class="outcome-item">' + o + '</div>').join('');
-    }
-
-    if (course.tools) {
-      document.getElementById('toolsList').innerHTML =
-        course.tools.split('|').map(t =>
-          '<span class="badge badge-white" style="padding:6px 12px;font-size:0.78rem;text-transform:none;letter-spacing:0">' + t + '</span>'
-        ).join('');
-    }
-
-    if (course.modules?.length) {
-      const totalLessons = course.modules.reduce((s,m) => s + (m.lessons?.length||0), 0);
-      document.getElementById('currMeta').textContent =
-        course.modules.length + ' modules · ' + totalLessons + ' lessons';
-
-      document.getElementById('modulesContainer').innerHTML = course.modules.map(m => `
-        <div class="module-wrap">
-          <div class="module-hdr" onclick="toggleMod(${m.id})">
-            <div>
-              <div style="font-weight:600;color:var(--white);font-size:0.875rem">${m.title}</div>
-              <div style="font-size:0.75rem;color:var(--text);margin-top:2px">${m.lessons?.length||0} lessons</div>
+    const syllabusHTML = courseData.syllabus.map((mod, idx) => `
+        <div class="module-card">
+            <div class="module-head" onclick="toggleModule(${idx})">
+                <span style="font-weight:700;">${mod.title}</span>
+                <span>▼</span>
             </div>
-            <span style="color:var(--text);font-size:0.8rem">▼</span>
-          </div>
-          <div id="mod-${m.id}" style="display:${m===course.modules[0]?'block':'none'}">
-            ${(m.lessons||[]).map(l => `
-              <div class="lesson-row">
-                <div style="display:flex;align-items:center;gap:9px">
-                  <span style="font-size:0.8rem">▶</span>
-                  <span>${l.title}</span>
-                </div>
-                <span style="color:var(--text);font-size:0.75rem">${l.duration_mins}min</span>
-              </div>`).join('')}
-            ${(m.assignments||[]).map(a => `
-              <div class="lesson-row">
-                <div style="display:flex;align-items:center;gap:9px">
-                  <span>📝</span><span>${a.title}</span>
-                </div>
-                <span style="font-size:0.75rem;color:var(--text)">Assignment</span>
-              </div>`).join('')}
-          </div>
-        </div>`).join('');
-    }
-
-    // Check if already enrolled
-    const token = localStorage.getItem('nf_token');
-    if (token) {
-      const enrollRes = await fetch('/api/courses/' + course.id + '/enrolled', {
-        credentials: 'include',
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
-      const enrollData = await enrollRes.json();
-      if (enrollData.enrolled) {
-        const btn = document.getElementById('enrollBtn');
-        btn.textContent = '✓ Already Enrolled — Go to Course';
-        btn.style.background = 'var(--green)';
-        btn.onclick = () => window.location.href = '/student/lesson.html?course=' + course.id;
-      }
-    }
-
-  } catch(e) {
-    document.getElementById('courseTitle').textContent = 'Course not found';
-    console.error(e);
-  }
+            <div class="lesson-list" id="mod-${idx}">
+                ${mod.lessons.map(lesson => `
+                    <div class="lesson-item"><span>▶</span> ${lesson}</div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+    document.getElementById('syllabusContainer').innerHTML = syllabusHTML;
 }
 
-loadCourse();
+function toggleModule(idx) {
+    const el = document.getElementById(`mod-${idx}`);
+    el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+function openEnrollModal() {
+    document.getElementById('enrollMo').classList.add('open');
+}
+
+function closeModal() {
+    document.getElementById('enrollMo').classList.remove('open');
+}
+
+function initiatePayment() {
+    alert("Redirecting to Paystack Secure Checkout...");
+    // Integration logic here
+}
+
+init();
 </script>
 </body>
 </html>
+
