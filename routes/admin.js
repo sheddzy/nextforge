@@ -33,27 +33,7 @@ router.get('/classes', requireStaff, (req, res) => {
 });
 
 
-// Dashboard stats
-router.get('/stats', requireStaff, (req, res) => {
-  const isAdmin = req.user.role === 'admin';
-  const stats = {
-    totalStudents: db.prepare("SELECT COUNT(*) as c FROM users WHERE role='student'").get().c,
-    totalEnrollments: db.prepare('SELECT COUNT(*) as c FROM enrollments').get().c,
-    totalCourses: db.prepare('SELECT COUNT(*) as c FROM courses').get().c,
-    totalRevenue: db.prepare("SELECT COALESCE(SUM(amount),0) as c FROM payments WHERE status='success'").get().c,
-    recentStudents: db.prepare(`
-      SELECT u.id,u.full_name,u.email,u.track,u.created_at,
-        COUNT(e.id) as enrollments
-      FROM users u LEFT JOIN enrollments e ON e.user_id = u.id
-      WHERE u.role='student'
-      GROUP BY u.id ORDER BY u.created_at DESC LIMIT 10`).all(),
-    recentPayments: db.prepare(`
-      SELECT p.*,u.full_name,u.email,c.title as course_title
-      FROM payments p JOIN users u ON p.user_id=u.id JOIN courses c ON p.course_id=c.id
-      ORDER BY p.created_at DESC LIMIT 10`).all()
-  };
-  res.json(stats);
-});
+// Note: /stats endpoint defined at the end of this file with instructor stats included
 
 // All students
 router.get('/students', requireStaff, (req, res) => {
@@ -404,4 +384,178 @@ router.get('/instructors/:id', requireAdmin, (req, res) => {
   `).all(req.params.id);
   res.json({ ...user, courses: enrollments });
 });
+
+// INSTRUCTORS - List all active instructors
+router.get('/instructors/active', requireStaff, (req, res) => {
+  const instructors = db.prepare(`
+    SELECT id, full_name, email, phone, bio, avatar_url, is_approved, created_at,
+      (SELECT COUNT(*) FROM courses WHERE instructor_id = users.id) as courses_count
+    FROM users
+    WHERE role = 'instructor' AND is_active = 1
+    ORDER BY created_at DESC
+  `).all();
+  res.json(instructors);
+});
+
+// INSTRUCTORS - List pending instructors
+router.get('/instructors/pending', requireStaff, (req, res) => {
+  const pending = db.prepare(`
+    SELECT id, full_name, email, phone, bio, created_at
+    FROM users
+    WHERE role = 'instructor' AND is_approved = 0
+    ORDER BY created_at DESC
+  `).all();
+  res.json(pending);
+});
+
+// INSTRUCTORS - Get instructor stats for dashboard
+router.get('/instructors/stats', requireStaff, (req, res) => {
+  const stats = {
+    totalInstructors: db.prepare("SELECT COUNT(*) as c FROM users WHERE role = 'instructor'").get().c,
+    approvedInstructors: db.prepare("SELECT COUNT(*) as c FROM users WHERE role = 'instructor' AND is_approved = 1").get().c,
+    pendingInstructors: db.prepare("SELECT COUNT(*) as c FROM users WHERE role = 'instructor' AND is_approved = 0").get().c,
+  };
+  res.json(stats);
+});
+
+// INSTRUCTORS - Approve instructor
+router.post('/instructors/:id/approve', requireAdmin, (req, res) => {
+  const instructor = db.prepare('SELECT id FROM users WHERE id = ? AND role = ?').get(req.params.id, 'instructor');
+  if (!instructor) return res.status(404).json({ error: 'Instructor not found' });
+  
+  db.prepare('UPDATE users SET is_approved = 1 WHERE id = ?').run(req.params.id);
+  res.json({ success: true, message: 'Instructor approved' });
+});
+
+// INSTRUCTORS - Reject/Suspend instructor
+router.post('/instructors/:id/reject', requireAdmin, (req, res) => {
+  const instructor = db.prepare('SELECT id FROM users WHERE id = ? AND role = ?').get(req.params.id, 'instructor');
+  if (!instructor) return res.status(404).json({ error: 'Instructor not found' });
+  
+  db.prepare('UPDATE users SET is_approved = 0 WHERE id = ?').run(req.params.id);
+  res.json({ success: true, message: 'Instructor rejected' });
+});
+
+// PAYMENTS - Get all payments
+router.get('/payments', requireStaff, (req, res) => {
+  const payments = db.prepare(`
+    SELECT p.*, u.full_name, u.email, c.title as course_title
+    FROM payments p
+    JOIN users u ON p.user_id = u.id
+    JOIN courses c ON p.course_id = c.id
+    ORDER BY p.created_at DESC
+  `).all();
+  res.json(payments);
+});
+
+// PAYMENTS - Get payment stats
+router.get('/payments/stats', requireStaff, (req, res) => {
+  const stats = {
+    totalPayments: db.prepare("SELECT COUNT(*) as c FROM payments").get().c,
+    successfulPayments: db.prepare("SELECT COUNT(*) as c FROM payments WHERE status = 'success'").get().c,
+    pendingPayments: db.prepare("SELECT COUNT(*) as c FROM payments WHERE status = 'pending'").get().c,
+    totalRevenue: db.prepare("SELECT COALESCE(SUM(amount), 0) as c FROM payments WHERE status = 'success'").get().c
+  };
+  res.json(stats);
+});
+
+// CERTIFICATES - List all certificates
+router.get('/certificates', requireStaff, (req, res) => {
+  const certificates = db.prepare(`
+    SELECT c.*, u.full_name as student_name, u.email, co.title as course_title
+    FROM certificates c
+    JOIN users u ON c.user_id = u.id
+    JOIN courses co ON c.course_id = co.id
+    ORDER BY c.issued_at DESC
+  `).all();
+  res.json(certificates);
+});
+
+// CERTIFICATES - Issue certificate
+router.post('/certificates', requireStaff, (req, res) => {
+  const { user_id, course_id } = req.body;
+  
+  if (!user_id || !course_id) {
+    return res.status(400).json({ error: 'user_id and course_id are required' });
+  }
+
+  // Check if user and course exist
+  const user = db.prepare('SELECT id FROM users WHERE id = ?').get(user_id);
+  const course = db.prepare('SELECT id FROM courses WHERE id = ?').get(course_id);
+  
+  if (!user || !course) {
+    return res.status(404).json({ error: 'User or course not found' });
+  }
+
+  // Check if certificate already exists
+  const existing = db.prepare('SELECT id FROM certificates WHERE user_id = ? AND course_id = ?').get(user_id, course_id);
+  if (existing) {
+    return res.status(409).json({ error: 'Certificate already exists for this user and course' });
+  }
+
+  // Generate unique certificate code
+  const certCode = `NFC-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+  
+  const result = db.prepare(`
+    INSERT INTO certificates (user_id, course_id, cert_code)
+    VALUES (?, ?, ?)
+  `).run(user_id, course_id, certCode);
+
+  res.json({ 
+    success: true, 
+    id: result.lastInsertRowid,
+    cert_code: certCode,
+    message: 'Certificate issued successfully'
+  });
+});
+
+// CERTIFICATES - Verify certificate (public endpoint)
+router.get('/certificates/verify/:code', (req, res) => {
+  const { code } = req.params;
+  
+  const cert = db.prepare(`
+    SELECT c.*, u.full_name as student_name, co.title as course_title
+    FROM certificates c
+    JOIN users u ON c.user_id = u.id
+    JOIN courses co ON c.course_id = co.id
+    WHERE c.cert_code = ?
+  `).get(code);
+
+  if (!cert) {
+    return res.status(404).json({ valid: false, error: 'Certificate not found' });
+  }
+
+  res.json({
+    valid: true,
+    cert_code: cert.cert_code,
+    student_name: cert.student_name,
+    course_title: cert.course_title,
+    issued_at: cert.issued_at
+  });
+});
+
+// UPDATE stats endpoint to include instructor count
+router.get('/stats', requireStaff, (req, res) => {
+  const isAdmin = req.user.role === 'admin';
+  const stats = {
+    totalStudents: db.prepare("SELECT COUNT(*) as c FROM users WHERE role='student'").get().c,
+    totalInstructors: db.prepare("SELECT COUNT(*) as c FROM users WHERE role='instructor'").get().c,
+    pendingInstructors: db.prepare("SELECT COUNT(*) as c FROM users WHERE role='instructor' AND is_approved=0").get().c,
+    totalEnrollments: db.prepare('SELECT COUNT(*) as c FROM enrollments').get().c,
+    totalCourses: db.prepare('SELECT COUNT(*) as c FROM courses').get().c,
+    totalRevenue: db.prepare("SELECT COALESCE(SUM(amount),0) as c FROM payments WHERE status='success'").get().c,
+    recentStudents: db.prepare(`
+      SELECT u.id,u.full_name,u.email,u.track,u.created_at,
+        COUNT(e.id) as enrollments
+      FROM users u LEFT JOIN enrollments e ON e.user_id = u.id
+      WHERE u.role='student'
+      GROUP BY u.id ORDER BY u.created_at DESC LIMIT 10`).all(),
+    recentPayments: db.prepare(`
+      SELECT p.*,u.full_name,u.email,c.title as course_title
+      FROM payments p JOIN users u ON p.user_id=u.id JOIN courses c ON p.course_id=c.id
+      ORDER BY p.created_at DESC LIMIT 10`).all()
+  };
+  res.json(stats);
+});
+
 module.exports = router;
