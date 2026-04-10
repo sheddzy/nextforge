@@ -158,15 +158,12 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
 </head>
 <body>
 
-<!-- LEFT -->
 <div class="left">
-  <!-- TOP -->
   <div class="left-top">
     <a href="/" class="left-logo"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></a>
     <div class="left-top-right">Already enrolled? <a href="/login.html">Sign in →</a></div>
   </div>
 
-  <!-- STEPS -->
   <div class="step-bar">
     <div class="step-inner">
       <div class="step-bubble active" id="b1">1</div><div class="step-lbl active" id="l1">Details</div>
@@ -181,10 +178,8 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
     </div>
   </div>
 
-  <!-- BODY -->
   <div class="left-body">
 
-    <!-- S1 -->
     <div class="sp on" id="s1">
       <div class="step-title">Create Your Account</div>
       <div class="step-sub">Join 1,200+ professionals already building their tech careers</div>
@@ -203,7 +198,6 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
       <button class="btn-main" onclick="step1()">Continue →</button>
     </div>
 
-    <!-- S2 -->
     <div class="sp" id="s2">
       <div class="step-title">Tell Us About Yourself</div>
       <div class="step-sub">Profile photo is required — it helps your instructor know who you are.</div>
@@ -227,40 +221,37 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
       </div>
 
       <div id="instrF" style="display:none">
+        <div class="fg"><label class="fl">Which course will you be managing?</label>
+          <select class="fi" id="r_icourse">
+            <option value="">Select a course...</option>
+          </select>
+        </div>
         <div class="g2i">
           <div class="fg"><label class="fl">Professional Title</label><input class="fi" id="r_title" placeholder="e.g. Senior Product Manager"/></div>
           <div class="fg"><label class="fl">Years of Experience</label><select class="fi" id="r_exp"><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
         </div>
         <div class="g2i">
-          <div class="fg"><label class="fl">Country</label><select class="fi" id="r_ictry"><option value="">Select...</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option><option>South Africa</option><option>United Kingdom</option><option>Canada</option><option>United States</option><option>Other</option></select></div>
+          <div class="fg"><label class="fl">Country</label><select class="fi" id="r_ictry"><option value="">Select...</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option><option>Other</option></select></div>
           <div class="fg"><label class="fl">City</label><input class="fi" id="r_icity" placeholder="City, State"/></div>
         </div>
         <div class="fg"><label class="fl">Full Address</label><input class="fi" id="r_iaddr" placeholder="Street address, city, country"/></div>
         <div class="fg"><label class="fl">Skills / Expertise</label><input class="fi" id="r_skills" placeholder="e.g. Project Management, SQL, Power BI"/></div>
-        <div class="fg"><label class="fl">Certifications</label><input class="fi" id="r_certs" placeholder="e.g. PMP, Google Analytics"/></div>
         <div class="g2i">
           <div class="fg"><label class="fl">Bank Name</label><input class="fi" id="r_bank" placeholder="e.g. Access Bank"/></div>
           <div class="fg"><label class="fl">Account Number</label><input class="fi" id="r_acct" placeholder="10-digit" maxlength="10"/></div>
         </div>
         <div class="fg"><label class="fl">Account Name</label><input class="fi" id="r_aname" placeholder="Name on account"/></div>
-        <div class="fg"><label class="fl">Why do you want to teach at NextForge?</label><textarea class="fi" id="r_itw" rows="2" placeholder="Teaching experience and motivation..."></textarea></div>
+        <div class="fg"><label class="fl">Why do you want to teach at NextForge?</label><textarea class="fi" id="r_itw" rows="2" placeholder="Experience and motivation..."></textarea></div>
       </div>
-         <div class="fg"><label class="fl">Which course will you be managing?</label>
-    <select class="fi" id="r_icourse" required>
-      <option value="">Select a course...</option>
-      </select>
-  </div>
-    <div class="fg"><label class="fl">Years of Experience</label><select class="fi" id="r_exp"><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
-  </div>
+
+      <div class="al-err" id="e2"></div>
       <button class="btn-main" onclick="step2()">Continue →</button>
       <button class="btn-back" onclick="goStep(1)">← Back</button>
     </div>
-</div>div class="g2i">
-    <!-- S3 -->
+
     <div class="sp" id="s3">
       <div class="step-title" id="s3t">Choose Your Programme</div>
       <div class="step-sub" id="s3s">Select a course — full payment required to enroll</div>
-
       <div id="courseArea">
         <div id="courseList">Loading courses...</div>
         <div class="pay-sum" id="paySummary" style="display:none">
@@ -268,14 +259,11 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
           <div style="text-align:right"><div style="font-size:0.69rem;color:var(--text);margin-bottom:4px">Secured by</div><div style="font-size:0.8rem;color:var(--gold);font-weight:700">Paystack 🔒</div></div>
         </div>
       </div>
-
       <div class="al-err" id="e3"></div>
       <button class="btn-main" id="payBtn" onclick="step3Pay()">Pay & Continue 🔒</button>
-      <div style="text-align:center;font-size:0.72rem;color:var(--text);margin-bottom:8px">Cards, Bank Transfer, USSD accepted</div>
       <button class="btn-back" onclick="goStep(2)">← Back</button>
     </div>
 
-    <!-- S4 OTP -->
     <div class="sp" id="s4">
       <div class="step-title">Verify Your Email</div>
       <div class="step-sub" id="otpSub">Enter the 6-digit code sent to your email address</div>
@@ -292,70 +280,59 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
       <div style="text-align:center;font-size:0.8rem;color:var(--text);margin-top:8px">Didn't get it? <a href="#" style="color:var(--gold)" onclick="resendOTP()">Resend code</a></div>
     </div>
 
-    <!-- S5 SUCCESS -->
     <div class="sp" id="s5">
       <div style="text-align:center;padding:24px 0">
-        <div id="s5ic" style="font-size:3.5rem;margin-bottom:14px">🎉</div>
-        <div class="step-title" id="s5t" style="text-align:center">Account Created!</div>
-        <div class="step-sub" id="s5m" style="text-align:center;margin-bottom:20px">Welcome to NextForge Academy!</div>
-        <div style="width:100%;height:6px;background:var(--navy-3);border-radius:3px;overflow:hidden;margin-bottom:8px"><div id="sBar" style="height:100%;background:linear-gradient(90deg,var(--green),var(--green-2));border-radius:3px;width:0%;transition:width 0.1s"></div></div>
+        <div style="font-size:3.5rem;margin-bottom:14px">🎉</div>
+        <div class="step-title">Account Created!</div>
+        <div class="step-sub">Welcome to NextForge Academy!</div>
+        <div style="width:100%;height:6px;background:var(--navy-3);border-radius:3px;overflow:hidden;margin-bottom:8px">
+          <div id="sBar" style="height:100%;background:linear-gradient(90deg,var(--green),var(--green-2));width:0%;transition:width 0.1s"></div>
+        </div>
         <div id="s5sub" style="font-size:0.75rem;color:var(--text)">Redirecting...</div>
       </div>
     </div>
 
-  </div><!-- /left-body -->
-</div><!-- /left -->
+  </div></div><div class="sep"></div>
 
-<!-- SEPARATOR -->
-<div class="sep"></div>
-
-<!-- RIGHT -->
 <div class="right">
   <div class="right-inner">
     <div class="brand-logo-big"><img src="https://i.ibb.co/hFC9RPhY/Transparent.png" alt="NextForge Academy"/></div>
     <div class="brand-name">Next<span>Forge</span></div>
     <div class="brand-tag">Academy</div>
-    <div class="brand-tagline">Expert-led tech training for ambitious professionals worldwide. Small cohorts, real mentorship, verified outcomes.</div>
+    <div class="brand-tagline">Expert-led tech training for ambitious professionals worldwide.</div>
     <div class="brand-stats">
       <div><div class="bs-num">1,200+</div><div class="bs-lbl">Students</div></div>
       <div><div class="bs-num">12+</div><div class="bs-lbl">Countries</div></div>
       <div><div class="bs-num">6</div><div class="bs-lbl">Programmes</div></div>
-      <div><div class="bs-num">4.9★</div><div class="bs-lbl">Rating</div></div>
     </div>
     <div class="brand-badges">
       <span class="bb">📋 Project Management</span>
       <span class="bb">📊 Data Analysis</span>
       <span class="bb">🧭 Product Management</span>
       <span class="bb">🗂 Notion Mastery</span>
-      <span class="bb">⚙️ Operations Systems</span>
-      <span class="bb">💡 Business Communication</span>
     </div>
   </div>
 </div>
 
 <script>
-let role='student', avBase64='', payRef='', selId=null, selPrice=0, skipCourse=false;
-let psk='';
+let role='student', avBase64='', payRef='', selId=null, selPrice=0, skipCourse=false, psk='';
 
-// 1. Initialize Payment Config
+// Fetch Public Key
 fetch('/api/payments/config').then(r=>r.json()).then(d=>psk=d.publicKey).catch(()=>{});
 
-// 2. Load Courses for Step 3
 async function loadCoursesIntoList(){
-  try{
-    const res=await fetch('/api/courses');
-    const courses=await res.json();
-    const icons=['📋','🧭','📊','🗂','⚙️','💡'];
+  try {
+    const res = await fetch('/api/courses');
+    const courses = await res.json();
+    const icons = ['📋','🧭','📊','🗂','⚙️','💡'];
     
-    // Also populate the Instructor's course dropdown in Step 2
-    const instrCourseSelect = document.getElementById('r_icourse');
+    // Populate Instructor Dropdown
+    const instrSelect = document.getElementById('r_icourse');
     
-    let html=courses.map((c,i)=>{
-      // Add to instructor dropdown
+    let html = courses.map((c,i)=>{
       const opt = document.createElement('option');
-      opt.value = c.id;
-      opt.textContent = c.title;
-      if(instrCourseSelect) instrCourseSelect.appendChild(opt);
+      opt.value = c.id; opt.textContent = c.title;
+      instrSelect.appendChild(opt);
 
       return `
       <div class="cs" onclick="selCourse(${c.id},${c.price},'${c.title.replace(/'/g,"\\'")}',this)">
@@ -369,20 +346,19 @@ async function loadCoursesIntoList(){
       </div>`;
     }).join('');
 
-    html+=`<div class="cs" id="skipCard" onclick="selSkip(this)">
+    html += `<div class="cs" onclick="selSkip(this)">
       <input type="radio" name="course" value="skip"/>
       <div class="cs-icon" style="background:rgba(255,255,255,0.05)">⏭</div>
-      <div style="flex:1"><div style="font-weight:600;font-size:0.84rem;color:var(--white)">Browse courses later</div><div style="font-size:0.7rem;color:var(--text)">Create account now, enroll when ready</div></div>
+      <div style="flex:1"><div style="font-weight:600;font-size:0.84rem;color:var(--white)">Browse courses later</div><div style="font-size:0.7rem;color:var(--text)">Create account now</div></div>
       <div class="cs-price" style="color:var(--green-2)">Free</div>
     </div>`;
     document.getElementById('courseList').innerHTML=html;
-  }catch{
-    document.getElementById('courseList').innerHTML='<div style="color:var(--text);padding:20px;">Failed to load courses.</div>';
+  } catch {
+    document.getElementById('courseList').innerHTML='<div style="color:var(--text);padding:20px;">Error loading courses.</div>';
   }
 }
 loadCoursesIntoList();
 
-// 3. Navigation & Helpers
 function setRole(r,el){
   role=r;
   document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
@@ -395,7 +371,7 @@ function goStep(n){
   document.querySelectorAll('.sp').forEach(s=>s.classList.remove('on'));
   document.getElementById('s'+n).classList.add('on');
   for(let i=1;i<=5;i++){
-    const b=document.getElementById('b'+i),l=document.getElementById('l'+i);
+    const b=document.getElementById('b'+i), l=document.getElementById('l'+i);
     if(i<n){b.classList.remove('active');b.classList.add('done');if(i<5)b.textContent='✓';}
     else if(i===n){b.classList.add('active');b.classList.remove('done');b.textContent=i===5?'✓':String(i);l?.classList.add('active');}
     else{b.classList.remove('active','done');b.textContent=i===5?'✓':String(i);l?.classList.remove('active');}
@@ -415,54 +391,40 @@ function previewAv(input){
   r.readAsDataURL(input.files[0]);
 }
 
-function getBio() {
-  if (role === 'student') {
-    return {
-      occupation: document.getElementById('r_occ').value,
-      country: document.getElementById('r_ctry').value,
-      city: document.getElementById('r_city').value,
-      address: document.getElementById('r_addr').value,
-      motivation: document.getElementById('r_why').value,
-      goal: document.getElementById('r_goal').value,
-      source: document.getElementById('r_src').value
-    };
-  } else {
-    // For instructors, we also grab their assigned course here
-    selId = document.getElementById('r_icourse').value; 
-    return {
-      title: document.getElementById('r_title').value,
-      experience: document.getElementById('r_exp').value,
-      country: document.getElementById('r_ictry').value,
-      city: document.getElementById('r_icity').value,
-      skills: document.getElementById('r_skills').value,
-      bank_name: document.getElementById('r_bank').value,
-      account_number: document.getElementById('r_acct').value,
-      account_name: document.getElementById('r_aname').value,
-      motivation: document.getElementById('r_itw').value
-    };
-  }
+function getBio(){
+  if(role==='student') return {
+    occupation: document.getElementById('r_occ').value,
+    country: document.getElementById('r_ctry').value,
+    city: document.getElementById('r_city').value,
+    address: document.getElementById('r_addr').value,
+    motivation: document.getElementById('r_why').value,
+    goal: document.getElementById('r_goal').value,
+    source: document.getElementById('r_src').value
+  };
+  return {
+    title: document.getElementById('r_title').value,
+    experience: document.getElementById('r_exp').value,
+    country: document.getElementById('r_ictry').value,
+    city: document.getElementById('r_icity').value,
+    skills: document.getElementById('r_skills').value,
+    bank_name: document.getElementById('r_bank').value,
+    account_number: document.getElementById('r_acct').value,
+    account_name: document.getElementById('r_aname').value,
+    motivation: document.getElementById('r_itw').value
+  };
 }
 
-// 4. Step Logic
-async function step1(){
-  const first=document.getElementById('r_first').value.trim(), email=document.getElementById('r_email').value.trim();
-  if(!first || !email || document.getElementById('r_pass').value.length < 8) return alert('Please check your details.');
-  goStep(2);
-}
+async function step1(){ goStep(2); }
 
 async function step2(){
-  if(!avBase64) return alert('Profile photo is required.');
-  if(role === 'instructor') {
-    // Instructors skip payment and go to email verification directly
-    const email=document.getElementById('r_email').value.trim(), name=document.getElementById('r_first').value.trim();
-    try {
-      await fetch('/api/auth/send-otp', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email, name}) });
-      document.getElementById('otpSub').textContent = 'Enter the code sent to ' + email;
-      goStep(4);
-    } catch(e) { alert('Failed to send verification code.'); }
-  } else {
-    goStep(3);
-  }
+  if(!avBase64) return alert('Photo required.');
+  if(role==='instructor'){
+    selId = document.getElementById('r_icourse').value;
+    if(!selId) return alert('Please select a course to manage.');
+    const email=document.getElementById('r_email').value;
+    await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name:document.getElementById('r_first').value})});
+    goStep(4);
+  } else { goStep(3); }
 }
 
 function selCourse(id,price,name,el){
@@ -473,70 +435,51 @@ function selCourse(id,price,name,el){
   document.getElementById('payBtn').textContent='Pay & Continue 🔒';
 }
 
+function selSkip(el){
+  document.querySelectorAll('.cs').forEach(c=>c.classList.remove('sel')); el.classList.add('sel');
+  selId=null; selPrice=0; skipCourse=true;
+  document.getElementById('paySummary').style.display='none';
+  document.getElementById('payBtn').textContent='Continue Free →';
+}
+
 async function step3Pay(){
-  const email=document.getElementById('r_email').value;
-  const handler = PaystackPop.setup({
-    key: psk, email, amount: selPrice * 100,
-    callback: (response) => {
-      payRef = response.reference;
-      // Send OTP after successful payment
-      fetch('/api/auth/send-otp', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email, name: document.getElementById('r_first').value}) })
-        .then(() => goStep(4));
-    }
+  if(skipCourse){
+    const email=document.getElementById('r_email').value;
+    await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name:document.getElementById('r_first').value})});
+    return goStep(4);
+  }
+  const handler=PaystackPop.setup({
+    key:psk, email:document.getElementById('r_email').value, amount:selPrice*100,
+    callback: r=>{ payRef=r.reference; goStep(4); }
   });
   handler.openIframe();
 }
 
 async function verifyOTP(){
-  const otp = Array.from({length:6},(_,i)=>document.getElementById('p'+i).value).join('');
-  if(otp.length < 6) return alert('Enter full code.');
-  
-  const btn = document.getElementById('verBtn');
-  btn.disabled = true; btn.textContent = 'Processing...';
-
-  try {
-    const payload = {
-      full_name: document.getElementById('r_first').value + ' ' + document.getElementById('r_last').value,
-      email: document.getElementById('r_email').value,
-      phone: document.getElementById('r_phone').value,
-      password: document.getElementById('r_pass').value,
-      role,
-      course_id: selId,
-      payment_reference: payRef,
-      avatar_base64: avBase64,
-      bio: getBio(),
-      otp
-    };
-
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+  const otp=Array.from({length:6},(_,i)=>document.getElementById('p'+i).value).join('');
+  const btn=document.getElementById('verBtn'); btn.disabled=true;
+  try{
+    const res=await fetch('/api/auth/register',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        full_name: document.getElementById('r_first').value+' '+document.getElementById('r_last').value,
+        email: document.getElementById('r_email').value,
+        phone: document.getElementById('r_phone').value,
+        password: document.getElementById('r_pass').value,
+        role, course_id: selId, payment_reference: payRef, avatar_base64: avBase64, bio: getBio(), otp
+      })
     });
-
-    const d = await res.json();
+    const d=await res.json();
     if(!res.ok) throw new Error(d.error);
-
-    if(d.token) localStorage.setItem('token', d.token);
+    if(d.token) localStorage.setItem('token',d.token);
     goStep(5);
-    
-    // Redirect logic
-    let p = 0;
-    const interval = setInterval(() => {
-      p += 10; document.getElementById('sBar').style.width = p+'%';
-      if(p>=100) {
-        clearInterval(interval);
-        window.location.href = role === 'instructor' ? 'instructor/dashboard.html' : 'student/dashboard.html';
-      }
-    }, 150);
-
-  } catch(e) {
-    alert(e.message);
-    btn.disabled = false; btn.textContent = 'Verify & Create Account →';
-  }
+    let p=0; const inv=setInterval(()=>{
+      p+=10; document.getElementById('sBar').style.width=p+'%';
+      if(p>=100){ clearInterval(inv); window.location.href=role==='instructor'?'/instructor/dashboard.html':'/student/dashboard.html'; }
+    },150);
+  } catch(e){ alert(e.message); btn.disabled=false; }
 }
 
-// 5. Input Movement for OTP
 function pm(inp,i){ if(inp.value.length===1 && i<5) document.getElementById('p'+(i+1)).focus(); }
 function pb(e,i){ if(e.key==='Backspace' && !e.target.value && i>0) document.getElementById('p'+(i-1)).focus(); }
 </script>
