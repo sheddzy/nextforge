@@ -329,17 +329,30 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
 </div>
 
 <script>
-let role='student',avBase64='',payRef='',selId=null,selPrice=0,skipCourse=false;
+let role='student', avBase64='', payRef='', selId=null, selPrice=0, skipCourse=false;
 let psk='';
+
+// 1. Initialize Payment Config
 fetch('/api/payments/config').then(r=>r.json()).then(d=>psk=d.publicKey).catch(()=>{});
 
-// Load courses
+// 2. Load Courses for Step 3
 async function loadCoursesIntoList(){
   try{
     const res=await fetch('/api/courses');
     const courses=await res.json();
     const icons=['📋','🧭','📊','🗂','⚙️','💡'];
-    let html=courses.map((c,i)=>`
+    
+    // Also populate the Instructor's course dropdown in Step 2
+    const instrCourseSelect = document.getElementById('r_icourse');
+    
+    let html=courses.map((c,i)=>{
+      // Add to instructor dropdown
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.title;
+      if(instrCourseSelect) instrCourseSelect.appendChild(opt);
+
+      return `
       <div class="cs" onclick="selCourse(${c.id},${c.price},'${c.title.replace(/'/g,"\\'")}',this)">
         <input type="radio" name="course"/>
         <div class="cs-icon">${c.thumbnail||icons[i]||'📋'}</div>
@@ -348,7 +361,9 @@ async function loadCoursesIntoList(){
           <div style="font-size:0.7rem;color:var(--text)">${c.duration} · ${c.level}</div>
         </div>
         <div class="cs-price">₦${Number(c.price).toLocaleString()}</div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
+
     html+=`<div class="cs" id="skipCard" onclick="selSkip(this)">
       <input type="radio" name="course" value="skip"/>
       <div class="cs-icon" style="background:rgba(255,255,255,0.05)">⏭</div>
@@ -357,17 +372,12 @@ async function loadCoursesIntoList(){
     </div>`;
     document.getElementById('courseList').innerHTML=html;
   }catch{
-    document.getElementById('courseList').innerHTML=`
-      ${['Project Management','Product Management','Data Analysis','Notion Mastery','Operations Systems','Business Communication'].map((n,i)=>{
-        const prices=[250000,250000,300000,160000,200000,200000];
-        const icons=['📋','🧭','📊','🗂','⚙️','💡'];
-        return`<div class="cs" onclick="selCourse(${i+1},${prices[i]},'${n}',this)"><input type="radio" name="course"/><div class="cs-icon">${icons[i]}</div><div style="flex:1"><div style="font-weight:600;font-size:0.84rem;color:var(--white)">${n}</div></div><div class="cs-price">₦${prices[i].toLocaleString()}</div></div>`;
-      }).join('')}
-      <div class="cs" onclick="selSkip(this)"><input type="radio" name="course"/><div class="cs-icon">⏭</div><div style="flex:1"><div style="font-weight:600;font-size:0.84rem;color:var(--white)">Browse later</div></div><div class="cs-price" style="color:var(--green-2)">Free</div></div>`;
+    document.getElementById('courseList').innerHTML='<div style="color:var(--text);padding:20px;">Failed to load courses.</div>';
   }
 }
 loadCoursesIntoList();
 
+// 3. Navigation & Helpers
 function setRole(r,el){
   role=r;
   document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
@@ -387,166 +397,143 @@ function goStep(n){
     if(i<5){const c=document.getElementById('c'+i);if(c)c.classList.toggle('done',i<n);}
   }
 }
-function err(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block';}
-function clearErr(id){document.getElementById(id).style.display='none';}
+
 function previewAv(input){
   if(!input.files[0])return;
-  const r=new FileReader();r.onload=e=>{avBase64=e.target.result;const img=document.getElementById('avPrev');img.src=avBase64;img.style.display='block';document.getElementById('avPh').style.display='none';};r.readAsDataURL(input.files[0]);
-}
-function selCourse(id,price,name,el){
-  document.querySelectorAll('.cs').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');el.querySelector('input').checked=true;
-  selId=id;selPrice=price;skipCourse=false;
-  const s=document.getElementById('paySummary');s.style.display='flex';document.getElementById('payAmt').textContent='₦'+Number(price).toLocaleString();
-  document.getElementById('payBtn').textContent='Pay ₦'+Number(price).toLocaleString()+' & Continue 🔒';
-  document.getElementById('payBtn').onclick=step3Pay;
-}
-function selSkip(el){
-  document.querySelectorAll('.cs').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');
-  selId=null;selPrice=0;skipCourse=true;
-  document.getElementById('paySummary').style.display='none';
-  document.getElementById('payBtn').textContent='Create Account (No Payment) →';
-  document.getElementById('payBtn').onclick=skipPayment;
+  const r=new FileReader();
+  r.onload=e=>{
+    avBase64=e.target.result;
+    const img=document.getElementById('avPrev');
+    img.src=avBase64; img.style.display='block';
+    document.getElementById('avPh').style.display='none';
+  };
+  r.readAsDataURL(input.files[0]);
 }
 
+function getBio() {
+  if (role === 'student') {
+    return {
+      occupation: document.getElementById('r_occ').value,
+      country: document.getElementById('r_ctry').value,
+      city: document.getElementById('r_city').value,
+      address: document.getElementById('r_addr').value,
+      motivation: document.getElementById('r_why').value,
+      goal: document.getElementById('r_goal').value,
+      source: document.getElementById('r_src').value
+    };
+  } else {
+    // For instructors, we also grab their assigned course here
+    selId = document.getElementById('r_icourse').value; 
+    return {
+      title: document.getElementById('r_title').value,
+      experience: document.getElementById('r_exp').value,
+      country: document.getElementById('r_ictry').value,
+      city: document.getElementById('r_icity').value,
+      skills: document.getElementById('r_skills').value,
+      bank_name: document.getElementById('r_bank').value,
+      account_number: document.getElementById('r_acct').value,
+      account_name: document.getElementById('r_aname').value,
+      motivation: document.getElementById('r_itw').value
+    };
+  }
+}
+
+// 4. Step Logic
 async function step1(){
-  clearErr('e1');
-  const first=document.getElementById('r_first').value.trim(),last=document.getElementById('r_last').value.trim(),
-    email=document.getElementById('r_email').value.trim(),phone=document.getElementById('r_phone').value.trim(),
-    pass=document.getElementById('r_pass').value;
-  if(!first||!last||!email||!phone||!pass)return err('e1','Please fill in all fields.');
-  if(pass.length<8)return err('e1','Password must be at least 8 characters.');
-  const btn=event.target;btn.textContent='Checking...';btn.disabled=true;
-  try{
-    const res=await fetch('/api/auth/check-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
-    const d=await res.json();
-    if(d.exists)return err('e1','This email is already registered. Please sign in instead.');
-    goStep(2);
-  }catch{err('e1','Network error. Please try again.');}
-  finally{btn.textContent='Continue →';btn.disabled=false;}
+  const first=document.getElementById('r_first').value.trim(), email=document.getElementById('r_email').value.trim();
+  if(!first || !email || document.getElementById('r_pass').value.length < 8) return alert('Please check your details.');
+  goStep(2);
 }
 
 async function step2(){
-  clearErr('e2');
-  if(!avBase64)return err('e2','Please upload a profile photo — your instructor needs to know who you are.');
-  if(role==='student'){
-    if(!document.getElementById('r_why').value.trim()||!document.getElementById('r_goal').value.trim())
-      return err('e2','Please fill in your motivation and career goal.');
-  }else{
-    if(!document.getElementById('r_title').value.trim()||!document.getElementById('r_skills').value.trim())
-      return err('e2','Please fill in your professional title and skills.');
-    // Send OTP for instructor
-    const email=document.getElementById('r_email').value.trim(),name=document.getElementById('r_first').value.trim();
-    const btn=event.target;btn.textContent='Sending code...';btn.disabled=true;
-    try{
-      const r=await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name})});
-      const d=await r.json();if(!r.ok)return err('e2',d.error||'Failed to send code.');
-      document.getElementById('s3t').textContent='Verify Your Email';
-      document.getElementById('s3s').textContent='Verify your email before submitting your instructor application.';
-      document.getElementById('courseArea').style.display='none';
-      document.getElementById('payBtn').textContent='Verify & Submit Application →';
-      document.getElementById('payBtn').onclick=instrVerifyGo;
-    }catch{err('e2','Network error.');}
-    finally{btn.textContent='Continue →';btn.disabled=false;}
+  if(!avBase64) return alert('Profile photo is required.');
+  if(role === 'instructor') {
+    // Instructors skip payment and go to email verification directly
+    const email=document.getElementById('r_email').value.trim(), name=document.getElementById('r_first').value.trim();
+    try {
+      await fetch('/api/auth/send-otp', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email, name}) });
+      document.getElementById('otpSub').textContent = 'Enter the code sent to ' + email;
+      goStep(4);
+    } catch(e) { alert('Failed to send verification code.'); }
+  } else {
+    goStep(3);
   }
-  goStep(3);
+}
+
+function selCourse(id,price,name,el){
+  document.querySelectorAll('.cs').forEach(c=>c.classList.remove('sel')); el.classList.add('sel');
+  selId=id; selPrice=price; skipCourse=false;
+  document.getElementById('paySummary').style.display='flex';
+  document.getElementById('payAmt').textContent='₦'+Number(price).toLocaleString();
+  document.getElementById('payBtn').textContent='Pay & Continue 🔒';
 }
 
 async function step3Pay(){
-  clearErr('e3');
-  if(!selId)return err('e3','Please select a programme to continue.');
-  const btn=document.getElementById('payBtn');btn.textContent='Opening payment...';btn.disabled=true;
-  const email=document.getElementById('r_email').value.trim(),first=document.getElementById('r_first').value.trim(),last=document.getElementById('r_last').value.trim();
-  try{
-    const res=await fetch('/api/payments/initialize-registration',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,course_id:selId,amount:selPrice})});
-    const data=await res.json();if(!res.ok)throw new Error(data.error||'Payment init failed');
-    const handler=PaystackPop.setup({
-      key:psk,email,amount:selPrice*100,currency:'NGN',ref:data.reference,firstname:first,lastname:last,
-      metadata:{course_id:selId,type:'registration'},
-      callback:function(response){
-        payRef=response.reference;btn.textContent='Payment confirmed! Sending code...';
-        fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name:first})})
-          .then(r=>r.json()).then(d=>{
-            if(!d.success){err('e3',d.error||'Failed to send code.');btn.textContent='Pay & Continue 🔒';btn.disabled=false;return;}
-            document.getElementById('otpSub').textContent='Payment confirmed ✓ Enter the code sent to '+email;
-            goStep(4);
-          });
-      },
-      onClose:function(){btn.textContent='Pay ₦'+Number(selPrice).toLocaleString()+' & Continue 🔒';btn.disabled=false;}
-    });
-    handler.openIframe();
-  }catch(e){err('e3',e.message||'Payment failed. Try again.');btn.textContent='Pay & Continue 🔒';btn.disabled=false;}
+  const email=document.getElementById('r_email').value;
+  const handler = PaystackPop.setup({
+    key: psk, email, amount: selPrice * 100,
+    callback: (response) => {
+      payRef = response.reference;
+      // Send OTP after successful payment
+      fetch('/api/auth/send-otp', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email, name: document.getElementById('r_first').value}) })
+        .then(() => goStep(4));
+    }
+  });
+  handler.openIframe();
 }
-async function skipPayment(){
-  clearErr('e3');
-  const email=document.getElementById('r_email').value.trim(),name=document.getElementById('r_first').value.trim();
-  const btn=document.getElementById('payBtn');btn.textContent='Sending code...';btn.disabled=true;
-  try{
-    const r=await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name})});
-    const d=await r.json();if(!r.ok)return err('e3',d.error||'Failed.');
-    document.getElementById('otpSub').textContent='Enter the code sent to '+email;goStep(4);
-  }catch{err('e3','Network error.');}
-  finally{btn.textContent='Create Account (No Payment) →';btn.disabled=false;}
-}
-function instrVerifyGo(){goStep(4);}
-function pm(inp,i){if(inp.value.length===1&&i<5)document.getElementById('p'+(i+1)).focus();}
-function pb(e,i){if(e.key==='Backspace'&&!e.target.value&&i>0)document.getElementById('p'+(i-1)).focus();}
-function getOTP(){return Array.from({length:6},(_,i)=>document.getElementById('p'+i).value).join('');}
 
 async function verifyOTP(){
-  clearErr('e4');
-  const otp=getOTP();if(otp.length<6)return err('e4','Please enter the complete 6-digit code.');
-  const btn=document.getElementById('verBtn');btn.textContent='Creating account...';btn.disabled=true;
-  try{
-    const bio=getBio();
-    const payload={
-      full_name:document.getElementById('r_first').value.trim()+' '+document.getElementById('r_last').value.trim(),
-      email:document.getElementById('r_email').value.trim(),
-      phone:document.getElementById('r_phone').value.trim(),
-      password:document.getElementById('r_pass').value,
-      role,course_id:selId,payment_reference:payRef,
-      avatar_base64:avBase64,bio:JSON.stringify(bio),otp
+  const otp = Array.from({length:6},(_,i)=>document.getElementById('p'+i).value).join('');
+  if(otp.length < 6) return alert('Enter full code.');
+  
+  const btn = document.getElementById('verBtn');
+  btn.disabled = true; btn.textContent = 'Processing...';
+
+  try {
+    const payload = {
+      full_name: document.getElementById('r_first').value + ' ' + document.getElementById('r_last').value,
+      email: document.getElementById('r_email').value,
+      phone: document.getElementById('r_phone').value,
+      password: document.getElementById('r_pass').value,
+      role,
+      course_id: selId,
+      payment_reference: payRef,
+      avatar_base64: avBase64,
+      bio: getBio(),
+      otp
     };
-    const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(payload)});
-    const d=await res.json();
-    if(!res.ok)return err('e4',d.error||'Registration failed. Please try again.');
-    if(role==='instructor'){
-      goStep(5);
-      document.getElementById('s5ic').textContent='⏳';
-      document.getElementById('s5t').textContent='Application Submitted!';
-      document.getElementById('s5m').textContent='Your instructor application is under review. You\'ll receive an email once approved.';
-      document.getElementById('s5sub').textContent='Redirecting to home...';
-      setTimeout(()=>window.location.href='/',4000);
-    }else{
-      localStorage.setItem('nf_token',d.token);localStorage.setItem('nf_role',d.role);localStorage.setItem('nf_name',d.name);
-      goStep(5);
-      let w=0;const iv=setInterval(()=>{w+=2;document.getElementById('sBar').style.width=w+'%';if(w>=100){clearInterval(iv);window.location.href='/student/dashboard.html';}},30);
-    }
-  }catch{err('e4','Network error. Please try again.');}
-  finally{btn.textContent='Verify & Create Account →';btn.disabled=false;}
+
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const d = await res.json();
+    if(!res.ok) throw new Error(d.error);
+
+    if(d.token) localStorage.setItem('token', d.token);
+    goStep(5);
+    
+    // Redirect logic
+    let p = 0;
+    const interval = setInterval(() => {
+      p += 10; document.getElementById('sBar').style.width = p+'%';
+      if(p>=100) {
+        clearInterval(interval);
+        window.location.href = role === 'instructor' ? '/dashboard-5.html' : '/dashboard-8.html';
+      }
+    }, 150);
+
+  } catch(e) {
+    alert(e.message);
+    btn.disabled = false; btn.textContent = 'Verify & Create Account →';
+  }
 }
-async function resendOTP(){
-  await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('r_email').value.trim(),name:document.getElementById('r_first').value.trim()})});
-  alert('New code sent! Check your inbox.');
-}
-function getBio(){
-  return{
-    occupation:document.getElementById('r_occ')?.value?.trim()||'',
-    country:document.getElementById('r_ctry')?.value||document.getElementById('r_ictry')?.value||'',
-    city:document.getElementById('r_city')?.value?.trim()||document.getElementById('r_icity')?.value?.trim()||'',
-    address:document.getElementById('r_addr')?.value?.trim()||document.getElementById('r_iaddr')?.value?.trim()||'',
-    reason:document.getElementById('r_why')?.value?.trim()||'',
-    goal:document.getElementById('r_goal')?.value?.trim()||'',
-    source:document.getElementById('r_src')?.value||'',
-    title:document.getElementById('r_title')?.value?.trim()||'',
-    exp:document.getElementById('r_exp')?.value||'',
-    skills:document.getElementById('r_skills')?.value?.trim()||'',
-    certs:document.getElementById('r_certs')?.value?.trim()||'',
-    bank:document.getElementById('r_bank')?.value?.trim()||'',
-    account:document.getElementById('r_acct')?.value?.trim()||'',
-    acctname:document.getElementById('r_aname')?.value?.trim()||'',
-    why:document.getElementById('r_itw')?.value?.trim()||''
-  };
-}
+
+// 5. Input Movement for OTP
+function pm(inp,i){ if(inp.value.length===1 && i<5) document.getElementById('p'+(i+1)).focus(); }
+function pb(e,i){ if(e.key==='Backspace' && !e.target.value && i>0) document.getElementById('p'+(i-1)).focus(); }
 </script>
 </body>
 </html>
