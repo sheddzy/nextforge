@@ -69,6 +69,17 @@ router.post('/students/:id/toggle', requireAdmin, (req, res) => {
   res.json({ success: true });
 });
 
+// Update student profile
+router.put('/students/:id', requireAdmin, (req, res) => {
+  const { full_name, phone, track } = req.body;
+  if (!full_name) return res.status(400).json({ error: 'Name required' });
+  
+  db.prepare('UPDATE users SET full_name = ?, phone = ?, track = ? WHERE id = ? AND role = ?')
+    .run(full_name, phone || null, track || null, req.params.id, 'student');
+  
+  res.json({ success: true, message: 'Student updated' });
+});
+
 // All courses admin/instructor view
 router.get('/courses', requireStaff, (req, res) => {
   const baseQuery = `
@@ -105,6 +116,37 @@ router.post('/courses', requireAdmin, (req, res) => {
   const r = db.prepare(`INSERT INTO courses (title,slug,description,category,duration,weeks,price,level,thumbnail,image_url,outcomes,tools)
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`).run(title, slug, description, category, duration, weeks || 6, price || 0, level || 'Beginner', thumbnail || '📋', image_url, outcomes, tools);
   res.json({ success: true, id: r.lastInsertRowid });
+});
+
+// Update course
+router.put('/courses/:id', requireAdmin, (req, res) => {
+  const { title, description, category, duration, weeks, price, level, instructor_id } = req.body;
+  if (!title) return res.status(400).json({ error: 'Title required' });
+  
+  db.prepare(`UPDATE courses SET 
+    title = ?, description = ?, category = ?, duration = ?, weeks = ?, price = ?, level = ?, instructor_id = ?
+    WHERE id = ?`).run(title, description, category, duration, weeks || 6, price || 0, level || 'Beginner', instructor_id || null, req.params.id);
+  
+  res.json({ success: true, message: 'Course updated' });
+});
+
+// Get single course
+router.get('/courses/:id', requireStaff, (req, res) => {
+  const course = db.prepare(`
+    SELECT c.*, u.full_name as instructor_name
+    FROM courses c
+    LEFT JOIN users u ON u.id = c.instructor_id
+    WHERE c.id = ?
+  `).get(req.params.id);
+  
+  if (!course) return res.status(404).json({ error: 'Course not found' });
+  res.json(course);
+});
+
+// Delete course
+router.delete('/courses/:id', requireAdmin, (req, res) => {
+  db.prepare('DELETE FROM courses WHERE id = ?').run(req.params.id);
+  res.json({ success: true, message: 'Course deleted' });
 });
 
 // Save lessons for a course
@@ -385,6 +427,17 @@ router.post('/instructors/:id/toggle', requireAdmin, (req, res) => {
     : 'Your instructor account has been deactivated. Please contact info@nextforgeacademy.online for more information.';
   db.prepare('INSERT INTO notifications (user_id, message, type) VALUES (?,?,?)').run(req.params.id, msg, newStatus ? 'success' : 'warning');
   res.json({ success: true, is_active: newStatus });
+});
+
+// Update instructor profile
+router.put('/instructors/:id', requireAdmin, (req, res) => {
+  const { full_name, phone, bio } = req.body;
+  if (!full_name) return res.status(400).json({ error: 'Name required' });
+  
+  db.prepare('UPDATE users SET full_name = ?, phone = ?, bio = ? WHERE id = ? AND role = ?')
+    .run(full_name, phone || null, bio || null, req.params.id, 'instructor');
+  
+  res.json({ success: true, message: 'Instructor updated' });
 });
 
 // Get single instructor detail
