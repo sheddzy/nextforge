@@ -278,6 +278,20 @@ router.get('/promo-codes/validate/:code', (req, res) => {
   }
 });
 
+// Delete promo code
+router.delete('/promo-codes/:id', requireAdmin, (req, res) => {
+  try {
+    const deleted = db.prepare('DELETE FROM promo_codes WHERE id = ?').run(req.params.id);
+    if (deleted.changes === 0) {
+      return res.status(404).json({ error: 'Promo code not found' });
+    }
+    res.json({ success: true, message: 'Promo code deleted' });
+  } catch(e) {
+    console.error('Error deleting promo code:', e.message);
+    res.status(500).json({ error: 'Failed to delete promo code' });
+  }
+});
+
 // Mark attendance
 router.post('/attendance', requireStaff, (req, res) => {
   const { user_id, course_id, session_label, session_date, status } = req.body;

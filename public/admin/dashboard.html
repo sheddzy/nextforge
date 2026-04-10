@@ -478,6 +478,9 @@
         <div class="nav-item" onclick="showSection('enrollments')">
           <span class="nav-icon">📋</span> Enrollments
         </div>
+        <div class="nav-item" onclick="showSection('promo-codes')">
+          <span class="nav-icon">🎟️</span> Promo Codes
+        </div>
       </div>
 
       <div class="nav-section">
@@ -625,6 +628,30 @@
           </div>
         </div>
 
+        <!-- PROMO CODES -->
+        <div id="promo-codes" class="section">
+          <div class="table-header">
+            <h3>Promo Code Management</h3>
+            <button class="btn btn-primary btn-sm" onclick="openPromoModal()">+ Create Promo Code</button>
+          </div>
+          <div class="table-container">
+            <table id="promo-codes-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Discount</th>
+                  <th>Max Uses</th>
+                  <th>Used</th>
+                  <th>Expires</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="promo-codes-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
         <!-- CERTIFICATES -->
         <div id="certificates" class="section">
           <div class="table-header">
@@ -680,6 +707,41 @@
       <div class="form-actions">
         <button class="btn btn-secondary" onclick="closeCourseModal()">Cancel</button>
         <button class="btn btn-primary" onclick="saveCourse()">Save Course</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="promo-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="promo-modal-title">Create Promo Code</span>
+        <button class="close-btn" onclick="closePromoModal()">×</button>
+      </div>
+      <div class="form-group">
+        <label>Code (e.g., SAVE20)</label>
+        <input type="text" id="promo-code" placeholder="Enter promo code..." style="text-transform: uppercase;">
+      </div>
+      <div class="form-group">
+        <label>Discount (%)</label>
+        <input type="number" id="promo-discount" placeholder="20" min="1" max="100">
+      </div>
+      <div class="form-group">
+        <label>Max Uses (0 = unlimited)</label>
+        <input type="number" id="promo-max-uses" placeholder="0" min="0">
+      </div>
+      <div class="form-group">
+        <label>Expires At (optional)</label>
+        <input type="datetime-local" id="promo-expires">
+      </div>
+      <div class="form-group">
+        <label>Course (optional - leave blank for all courses)</label>
+        <select id="promo-course">
+          <option value="">All Courses</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-secondary" onclick="closePromoModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="savePromo()">Create Promo Code</button>
       </div>
     </div>
   </div>
@@ -753,6 +815,7 @@
         courses: 'Course Management',
         payments: 'Payment Records',
         enrollments: 'Enrollment Records',
+        'promo-codes': 'Promo Code Management',
         certificates: 'Certificates'
       };
       document.getElementById('page-title').textContent = titles[id];
@@ -763,6 +826,7 @@
       if (id === 'courses') loadCourses();
       if (id === 'payments') loadPayments();
       if (id === 'enrollments') loadEnrollments();
+      if (id === 'promo-codes') loadPromoCodes();
       if (id === 'certificates') loadCertificates();
     }
 
@@ -1075,6 +1139,130 @@
         }
       } catch (e) {
         showAlert('Error issuing certificate', 'danger');
+      }
+    }
+
+    // PROMO CODES
+    async function loadPromoCodes() {
+      try {
+        const res = await fetch(API_URL + '/admin/promo-codes', H);
+        const promoCodes = await res.json();
+        renderPromoCodes(promoCodes);
+      } catch (e) {
+        showAlert('Failed to load promo codes', 'danger');
+      }
+    }
+
+    function renderPromoCodes(promoCodes) {
+      const html = promoCodes.map(p => `
+        <tr>
+          <td><strong>${p.code}</strong></td>
+          <td>${p.discount_percent}%</td>
+          <td>${p.max_uses === 0 ? 'Unlimited' : p.max_uses}</td>
+          <td>${p.used_count || 0}</td>
+          <td>${p.expires_at ? new Date(p.expires_at).toLocaleDateString() : '—'}</td>
+          <td><span class="badge ${p.is_active ? 'badge-green' : 'badge-red'}">${p.is_active ? 'Active' : 'Inactive'}</span></td>
+          <td>
+            <div class="action-buttons">
+              <button class="icon-btn" onclick="editPromo(${p.id})">Edit</button>
+              <button class="icon-btn" onclick="deletePromo(${p.id})">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+      document.getElementById('promo-codes-tbody').innerHTML = html;
+    }
+
+    function openPromoModal() {
+      // Load courses for dropdown
+      fetch(API_URL + '/admin/courses', H)
+        .then(res => res.json())
+        .then(courses => {
+          let html = '<option value="">All Courses</option>';
+          courses.forEach(c => {
+            html += `<option value="${c.id}">${c.title}</option>`;
+          });
+          document.getElementById('promo-course').innerHTML = html;
+        })
+        .catch(() => {});
+
+      document.getElementById('promo-modal-title').textContent = 'Create Promo Code';
+      document.getElementById('promo-code').value = '';
+      document.getElementById('promo-discount').value = '';
+      document.getElementById('promo-max-uses').value = '0';
+      document.getElementById('promo-expires').value = '';
+      document.getElementById('promo-course').value = '';
+      document.getElementById('promo-modal').classList.add('active');
+    }
+
+    function closePromoModal() {
+      document.getElementById('promo-modal').classList.remove('active');
+    }
+
+    async function savePromo() {
+      const code = document.getElementById('promo-code').value.toUpperCase();
+      const discount = document.getElementById('promo-discount').value;
+      const maxUses = document.getElementById('promo-max-uses').value;
+      const expires = document.getElementById('promo-expires').value;
+      const courseId = document.getElementById('promo-course').value;
+
+      if (!code || !discount) {
+        showAlert('Code and discount are required', 'danger');
+        return;
+      }
+
+      if (discount < 1 || discount > 100) {
+        showAlert('Discount must be between 1 and 100', 'danger');
+        return;
+      }
+
+      try {
+        const res = await fetch(API_URL + '/admin/promo-codes', {
+          method: 'POST',
+          ...H,
+          body: JSON.stringify({
+            code: code,
+            discount_percent: parseInt(discount),
+            max_uses: parseInt(maxUses) || 0,
+            expires_at: expires || null,
+            course_id: courseId ? parseInt(courseId) : null
+          })
+        });
+
+        if (res.ok) {
+          showAlert('Promo code created successfully!', 'success');
+          closePromoModal();
+          loadPromoCodes();
+        } else {
+          const err = await res.json();
+          showAlert(err.error || 'Failed to create promo code', 'danger');
+        }
+      } catch (e) {
+        showAlert('Error creating promo code', 'danger');
+      }
+    }
+
+    function editPromo(id) { 
+      showAlert('Promo code edit coming soon', 'success'); 
+    }
+
+    async function deletePromo(id) { 
+      if (confirm('Are you sure you want to delete this promo code?')) {
+        try {
+          const res = await fetch(API_URL + '/admin/promo-codes/' + id, {
+            method: 'DELETE',
+            ...H
+          });
+          
+          if (res.ok) {
+            showAlert('Promo code deleted', 'success');
+            loadPromoCodes();
+          } else {
+            showAlert('Failed to delete promo code', 'danger');
+          }
+        } catch (e) {
+          showAlert('Error deleting promo code', 'danger');
+        }
       }
     }
 
