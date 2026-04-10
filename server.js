@@ -108,6 +108,15 @@ app.get('/api/verify-certificate/:code', (req, res) => {
 });
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+
+app.use((err, req, res, next) => {
+  console.error(err.stack || err);
+  if (req.path.startsWith('/api')) {
+    return res.status(500).json({ error: err.message || 'Internal server error' });
+  }
+  res.status(500).send('Internal server error');
+});
+
 // ================= ADMIN DASHBOARD APIs =================
 
 // GET STUDENTS

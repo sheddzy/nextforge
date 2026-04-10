@@ -425,22 +425,25 @@ async function step2() {
   try {
     const res = await fetch('/api/auth/send-otp', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ email, name })
     });
 
-    // CHECK IF THE RESPONSE IS HTML INSTEAD OF JSON
-    const contentType = res.headers.get("content-type");
-    if (contentType && contentType.indexOf("application/json") !== -1) {
-      const data = await res.json();
-      goStep(4);
-    } else {
-      const text = await res.text(); // Get the HTML text
-      console.error("Server returned HTML instead of JSON:", text);
-      alert("Server Error: Received an HTML response. Check console for details.");
+    const contentType = res.headers.get('content-type') || '';
+    let data = null;
+    if (contentType.includes('application/json')) {
+      data = await res.json();
     }
+
+    if (!res.ok) {
+      const errMsg = data?.error || (await res.text()) || 'Failed to send OTP';
+      throw new Error(errMsg);
+    }
+
+    goStep(4);
   } catch (err) {
-    console.error("Fetch error:", err);
+    console.error('Fetch error:', err);
+    alert(err.message || 'Unable to send verification code. Please try again.');
   }
 }
 
@@ -462,7 +465,12 @@ function selSkip(el){
 async function step3Pay(){
   if(skipCourse){
     const email=document.getElementById('r_email').value;
-    await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name:document.getElementById('r_first').value})});
+    const res = await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({email,name:document.getElementById('r_first').value})});
+    const contentType = res.headers.get('content-type') || '';
+    if (!res.ok) {
+      const errMsg = contentType.includes('application/json') ? (await res.json()).error : await res.text();
+      return alert(errMsg || 'Failed to send verification code.');
+    }
     return goStep(4);
   }
   const handler=PaystackPop.setup({
@@ -477,7 +485,7 @@ async function verifyOTP(){
   const btn=document.getElementById('verBtn'); btn.disabled=true;
   try{
     const res=await fetch('/api/auth/register',{
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({
         full_name: document.getElementById('r_first').value+' '+document.getElementById('r_last').value,
         email: document.getElementById('r_email').value,
@@ -486,9 +494,13 @@ async function verifyOTP(){
         role, course_id: selId, payment_reference: payRef, avatar_base64: avBase64, bio: getBio(), otp
       })
     });
-    const d=await res.json();
-    if(!res.ok) throw new Error(d.error);
-    if(d.token) localStorage.setItem('token',d.token);
+    const contentType = res.headers.get('content-type') || '';
+    const d = contentType.includes('application/json') ? await res.json() : null;
+    if (!res.ok) {
+      const errMsg = d?.error || (await res.text()) || 'Registration failed';
+      throw new Error(errMsg);
+    }
+    if (d?.token) localStorage.setItem('token', d.token);
     goStep(5);
     let p=0; const inv=setInterval(()=>{
       p+=10; document.getElementById('sBar').style.width=p+'%';
