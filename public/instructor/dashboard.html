@@ -789,7 +789,54 @@ async function postAnn(){
   if(res.ok){ok.textContent='✓ Announcement posted!';ok.style.display='block';document.getElementById('annTitle').value='';document.getElementById('annBody').value='';}
   else{const d=await res.json();err.textContent=d.error||'Failed.';err.style.display='block';}
 }
+const TOKEN = localStorage.getItem('token');
+const HEADERS = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}` };
 
+// 1. Isolation: Get ONLY the assigned course
+async function loadInstructorData() {
+  try {
+    const res = await fetch('/api/instructor/my-course', { headers: HEADERS });
+    const data = await res.json();
+    
+    if (res.ok) {
+      document.getElementById('assignedCourseName').textContent = data.course.title;
+      localStorage.setItem('active_course_id', data.course._id); // Store for saving content
+    }
+  } catch (e) { console.error("Load failed", e); }
+}
+
+// 2. Save Content Fix (Solves "Fail to Save")
+async function saveContent() {
+  const btn = document.getElementById('saveBtn');
+  const msg = document.getElementById('statusMsg');
+  const courseId = localStorage.getItem('active_course_id');
+
+  const payload = {
+    courseId: courseId,
+    title: document.getElementById('lessonTitle').value,
+    content: document.getElementById('lessonContent').value,
+    videoUrl: document.getElementById('videoUrl').value
+  };
+
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/instructor/update-content', {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error('Permission denied or connection lost');
+    
+    msg.innerHTML = '<span style="color:var(--green)">✓ Saved successfully!</span>';
+  } catch (err) {
+    msg.innerHTML = `<span style="color:var(--red)">Error: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+window.onload = loadInstructorData;
 loadDashboard();
 </script>
 </body>
