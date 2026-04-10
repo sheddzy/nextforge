@@ -2,8 +2,12 @@ require('dotenv').config();
 const Database = require('better-sqlite3');
 const bcrypt = require('bcryptjs');
 const path = require('path');
+const fs = require('fs');
 
-const db = new Database(path.join('/app/data', 'nectforge.db'));
+const dataDir = process.env.DB_PATH ? process.env.DB_PATH : path.join(__dirname, 'data');
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+
+const db = new Database(path.join(dataDir, 'nectforge.db'));
 db.pragma('journal_mode = WAL');
 
 db.exec(`

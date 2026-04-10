@@ -516,7 +516,11 @@ async function verifyOTP(){
       const errMsg = d?.error || (await res.text()) || 'Registration failed';
       throw new Error(errMsg);
     }
-    if (d?.token) localStorage.setItem('token', d.token);
+    if (d?.token) {
+      localStorage.setItem('nf_token', d.token);
+      localStorage.setItem('nf_role', d.role);
+      localStorage.setItem('nf_name', d.name || document.getElementById('r_first').value);
+    }
     goStep(5);
     let p=0; const inv=setInterval(()=>{
       p+=10; document.getElementById('sBar').style.width=p+'%';
