@@ -349,4 +349,16 @@ usersWithoutId.forEach(u => {
   const uniqueId = `${prefix}-${String(u.id).padStart(4,'0')}-${Math.random().toString(36).substr(2,4).toUpperCase()}`;
   db.prepare('UPDATE users SET unique_id = ? WHERE id = ?').run(uniqueId, u.id);
 });
+
+// Seed default admin if none exist
+const adminCount = db.prepare("SELECT COUNT(*) as count FROM users WHERE role = 'admin'").get();
+if (adminCount.count === 0) {
+  const adminPassword = bcrypt.hashSync('Admin@2026!', 10);
+  db.prepare(`
+    INSERT INTO users (full_name, email, password, role, is_verified, is_active, is_approved)
+    VALUES (?, ?, ?, ?, 1, 1, 1)
+  `).run('Admin NextForge', 'admin@nextforgeacademy.online', adminPassword, 'admin');
+  console.log('✓ Default admin account created: admin@nextforgeacademy.online / Admin@2026!');
+}
+
 module.exports = db;
