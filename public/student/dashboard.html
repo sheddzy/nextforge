@@ -789,6 +789,67 @@ async function loadDashboard(){
   }catch(e){console.error(e);}
 }
 loadDashboard();
+
+  // --- CORE LOGIC: REPLACE YOUR ENTIRE SCRIPT SECTION WITH THIS ---
+const TOKEN = localStorage.getItem('token');
+const HEADERS = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}` };
+
+// 1. Initial Load & Auth Check
+async function initDash() {
+  if (!TOKEN) {
+    window.location.href = '/login.html'; // Direct to login if no token
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/student/dashboard', { headers: HEADERS });
+    if (res.status === 401) throw new Error('Unauthorized');
+    const data = await res.json();
+    
+    // Update Stats
+    document.getElementById('activeCount').textContent = data.activeCourses || 0;
+    document.getElementById('certCount').textContent = data.certificates || 0;
+    
+    // Render Courses
+    renderCourses(data.enrolledCourses);
+  } catch (e) {
+    console.error("Session expired", e);
+    window.location.href = '/login.html';
+  }
+}
+
+// 2. Course Card Logic (Fixed Redirect)
+function renderCourses(courses) {
+  const container = document.getElementById('dashCourses');
+  if (!courses || courses.length === 0) {
+    container.innerHTML = `<div class="empty-state"><p>No courses yet.</p><button class="btn btn-gold" onclick="location.href='/courses.html'">Browse Courses</button></div>`;
+    return;
+  }
+
+  container.innerHTML = courses.map(c => `
+    <div class="course-card" onclick="handleCourseClick('${c._id}')">
+      <h4>${c.title}</h4>
+      <div class="progress-bar"><div class="progress" style="width:${c.progress}%"></div></div>
+      <p>${c.progress}% Complete</p>
+    </div>
+  `).join('');
+}
+
+function handleCourseClick(courseId) {
+  // Instead of registration, go to the actual course player
+  window.location.href = `/player.html?courseId=${courseId}`;
+}
+
+// 3. UI Toggles (Preserving your existing sidebar logic)
+function sp(sectionId, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(sectionId).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+
+window.onload = initDash;
+  
 </script>
 </body>
 </html>
