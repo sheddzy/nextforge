@@ -245,14 +245,6 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
         <div class="fg"><label class="fl">Account Name</label><input class="fi" id="r_aname" placeholder="Name on account"/></div>
         <div class="fg"><label class="fl">Why do you want to teach at NextForge?</label><textarea class="fi" id="r_itw" rows="2" placeholder="Teaching experience and motivation..."></textarea></div>
       </div>
-
-      <div class="al-err" id="e2"></div>
-      <button class="btn-main" onclick="step2()">Continue →</button>
-      <button class="btn-back" onclick="goStep(1)">← Back</button>
-    </div>
-<div id="instrF" style="display:none">
-  <div class="g2i">
-    <div class="fg"><label class="fl">Professional Title</label><input class="fi" id="r_title" placeholder="e.g. Senior Product Manager"/></div>
     <div class="fg"><label class="fl">Years of Experience</label><select class="fi" id="r_exp"><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
   </div>
 
@@ -266,6 +258,11 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
   <div class="g2i">
     <div class="fg"><label class="fl">Country</label>...</div>
     
+      <div class="al-err" id="e2"></div>
+      <button class="btn-main" onclick="step2()">Continue →</button>
+      <button class="btn-back" onclick="goStep(1)">← Back</button>
+    </div>
+
     <!-- S3 -->
     <div class="sp" id="s3">
       <div class="step-title" id="s3t">Choose Your Programme</div>
