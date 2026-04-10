@@ -108,6 +108,16 @@ router.get('/courses', requireStaff, (req, res) => {
   res.json(courses);
 });
 
+// Get lessons for a course
+router.get('/courses/:id/lessons', requireStaff, (req, res) => {
+  const course = db.prepare('SELECT instructor_id FROM courses WHERE id = ?').get(req.params.id);
+  if (!course) return res.status(404).json({ error: 'Course not found' });
+  if (req.user.role === 'instructor' && course.instructor_id !== req.user.id) return res.status(403).json({ error: 'Access denied' });
+
+  const lessons = db.prepare('SELECT * FROM lessons WHERE course_id = ? ORDER BY order_index').all(req.params.id);
+  res.json(lessons);
+});
+
 // Create course
 router.post('/courses', requireAdmin, (req, res) => {
   const { title, slug, description, category, duration, weeks, price, level, thumbnail, image_url, outcomes, tools } = req.body;
@@ -115,6 +125,35 @@ router.post('/courses', requireAdmin, (req, res) => {
   const r = db.prepare(`INSERT INTO courses (title,slug,description,category,duration,weeks,price,level,thumbnail,image_url,outcomes,tools)
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`).run(title, slug, description, category, duration, weeks || 6, price || 0, level || 'Beginner', thumbnail || '📋', image_url, outcomes, tools);
   res.json({ success: true, id: r.lastInsertRowid });
+});
+
+// Save lessons for a course
+router.post('/courses/:id/lessons', requireStaff, (req, res) => {
+  const course = db.prepare('SELECT instructor_id FROM courses WHERE id = ?').get(req.params.id);
+  if (!course) return res.status(404).json({ error: 'Course not found' });
+  if (req.user.role === 'instructor' && course.instructor_id !== req.user.id) return res.status(403).json({ error: 'Access denied' });
+
+  const { lessons } = req.body;
+  if (!Array.isArray(lessons)) return res.status(400).json({ error: 'Lessons must be an array' });
+
+  // Delete existing lessons for the course
+  db.prepare('DELETE FROM lessons WHERE course_id = ?').run(req.params.id);
+
+  // Ensure a module exists
+  let module = db.prepare('SELECT id FROM modules WHERE course_id = ? LIMIT 1').get(req.params.id);
+  if (!module) {
+    const r = db.prepare('INSERT INTO modules (course_id, title, order_index) VALUES (?, ?, ?)').run(req.params.id, 'Course Content', 1);
+    module = { id: r.lastInsertRowid };
+  }
+
+  // Insert lessons
+  for (let i = 0; i < lessons.length; i++) {
+    const l = lessons[i];
+    db.prepare('INSERT INTO lessons (module_id, course_id, title, lesson_type, duration_mins, order_index) VALUES (?, ?, ?, ?, ?, ?)')
+      .run(module.id, req.params.id, l.title, l.type || 'video', l.duration || 45, i + 1);
+  }
+
+  res.json({ success: true });
 });
 
 // Add module

@@ -49,6 +49,7 @@ router.post('/login', (req, res) => {
   if (!user || !bcrypt.compareSync(password, user.password))
     return res.status(401).json({ error: 'Incorrect email or password' });
   if (!user.is_active) return res.status(403).json({ error: 'Account suspended. Contact support.' });
+  if (user.role === 'instructor' && !user.is_approved) return res.status(403).json({ error: 'Account pending approval. Contact admin.' });
 
   const token = signToken(user);
   const isProd = process.env.NODE_ENV === 'production';

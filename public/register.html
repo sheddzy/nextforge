@@ -506,7 +506,7 @@ async function verifyOTP(){
         course_id: role === 'instructor' ? document.getElementById('r_icourse').value : selId,
         payment_reference: payRef,
         avatar_base64: avBase64,
-        bio: getBio(),
+        bio: JSON.stringify(getBio()),
         otp
       })
     });
