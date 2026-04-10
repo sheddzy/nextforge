@@ -250,7 +250,22 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
       <button class="btn-main" onclick="step2()">Continue →</button>
       <button class="btn-back" onclick="goStep(1)">← Back</button>
     </div>
+<div id="instrF" style="display:none">
+  <div class="g2i">
+    <div class="fg"><label class="fl">Professional Title</label><input class="fi" id="r_title" placeholder="e.g. Senior Product Manager"/></div>
+    <div class="fg"><label class="fl">Years of Experience</label><select class="fi" id="r_exp"><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
+  </div>
 
+  <div class="fg">
+    <label class="fl">Which course will you be managing?</label>
+    <select class="fi" id="r_icourse" required>
+      <option value="">Select a course...</option>
+      </select>
+  </div>
+
+  <div class="g2i">
+    <div class="fg"><label class="fl">Country</label>...</div>
+    
     <!-- S3 -->
     <div class="sp" id="s3">
       <div class="step-title" id="s3t">Choose Your Programme</div>
@@ -521,7 +536,7 @@ async function verifyOTP(){
       p += 10; document.getElementById('sBar').style.width = p+'%';
       if(p>=100) {
         clearInterval(interval);
-        window.location.href = role === 'instructor' ? '/dashboard-5.html' : '/dashboard-8.html';
+        window.location.href = role === 'instructor' ? 'instructor/dashboard.html' : 'student/dashboard.html';
       }
     }, 150);
 
