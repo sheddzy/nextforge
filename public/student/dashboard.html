@@ -720,7 +720,25 @@ async function loadAllCoursesForEnroll(){
       </div>`).join('');
   }catch{ document.getElementById('enrollCourseList').innerHTML='<div style="color:var(--text);text-align:center;padding:24px;">Could not load courses.</div>'; }
 }
-function enrollCourse(id){ window.location.href='/register.html?course='+id; }
+async function enrollCourse(id){
+  try {
+    const res = await fetch('/api/enroll', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ course_id: id })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Enrollment failed' }));
+      return alert(err.error || 'Enrollment failed.');
+    }
+    alert('Enrollment successful! Refreshing course list...');
+    loadAllCoursesForEnroll();
+  } catch (e) {
+    console.error(e);
+    alert('Enrollment failed. Check your connection and try again.');
+  }
+}
 
 function fillPF(){
   if(!userData)return;

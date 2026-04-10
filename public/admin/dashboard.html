@@ -628,7 +628,7 @@ html,body{background:#060e1e!important;}
 
 <script>
 // ── DEMO OVERRIDE: Mock Data (Makes UI work without a real backend)
-const isDemo = true; // Set to false when your APIs are ready!
+const isDemo = false; // Set to true only for demo fallback
 
 // ── AUTH ──
 const token = localStorage.getItem('nf_token') || (isDemo ? 'demo-token' : null);
@@ -690,7 +690,7 @@ function sp(id, el) {
   document.getElementById('sb')?.classList.remove('mob-open');
   document.getElementById('mobOv')?.classList.remove('open');
   // Lazy load
-  const loaders = { students: loadStudents, instructors: loadInstructors, courses: loadCourses, payments: loadPayments, pricing: loadPricing, promos: renderPromos, cohort: initCohort };
+  const loaders = { students: loadStudents, instructors: loadInstructors, courses: loadCourses, payments: loadPayments, pricing: loadPricing, promos: loadPromos, cohort: initCohort };
   if (loaders[id]) loaders[id]();
   if (id === 'addcourse') { currentCourseId = null; document.getElementById('addCourseTitle').textContent = 'Add New Course'; resetForm(); }
 }
@@ -774,8 +774,8 @@ async function loadInstructors() {
         '<div style="flex:1;min-width:0;"><div style="font-weight:700;color:var(--white);font-size:0.875rem;">' + i.full_name + '</div>' +
         '<div style="font-size:0.73rem;color:var(--text);">' + i.email + '</div></div>' +
         '<div style="display:flex;gap:6px;flex-shrink:0;">' +
-          '<button class="btn btn-success btn-sm">Approve</button>' +
-          '<button class="btn btn-danger btn-sm">Reject</button>' +
+          '<button class="btn btn-success btn-sm" onclick="approveInstr(' + i.id + ',true)">Approve</button>' +
+          '<button class="btn btn-danger btn-sm" onclick="approveInstr(' + i.id + ',false)">Reject</button>' +
         '</div></div>';
     }).join('') : '<div style="color:var(--text);font-size:0.875rem;padding:12px;">No pending applications.</div>';
 
@@ -784,7 +784,9 @@ async function loadInstructors() {
         '<td><div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:rgba(240,165,0,0.15);display:flex;align-items:center;justify-content:center;">👨‍🏫</div></td>' +
         '<td style="color:var(--white);font-weight:600;">' + i.full_name + '</td>' +
         '<td style="font-size:0.8rem;">' + i.email + '</td>' +
-        '<td colspan="4" style="font-size:0.79rem;color:var(--text);">Details hidden in demo mode</td>' +
+        '<td colspan="4" style="font-size:0.79rem;color:var(--text);">' +
+          '<button class="btn btn-ghost btn-sm" onclick="viewInstr(' + i.id + ')">View Profile</button>' +
+        '</td>' +
       '</tr>';
     }).join('') : '<tr><td colspan="7" style="text-align:center;padding:18px;color:var(--text);">No active instructors.</td></tr>';
   } catch(e) {}
@@ -810,8 +812,60 @@ async function loadCourses() {
   } catch(e) { }
 }
 function editCourse(id) { sp('addcourse', null); }
-function saveCourse() { showOk('cOk', 'Course Saved! (Demo)'); setTimeout(() => sp('courses', null), 1000); }
-function resetForm() {}
+async function saveCourse() {
+  const title = document.getElementById('c_title').value.trim();
+  const category = document.getElementById('c_cat').value;
+  const duration = document.getElementById('c_dur').value.trim();
+  const level = document.getElementById('c_level').value;
+  const price = Number(document.getElementById('c_price').value);
+  const weeks = Number(document.getElementById('c_weeks').value);
+  const description = document.getElementById('c_desc').value.trim();
+  const outcomes = document.getElementById('c_who').value.trim();
+  const tools = document.getElementById('c_pre').value.trim();
+  const thumbnail = document.getElementById('c_thumb').value.trim();
+  const image_url = document.getElementById('c_img').value.trim();
+  const err = document.getElementById('cErr');
+  err.style.display = 'none';
+
+  if (!title || !category || !price) {
+    err.textContent = 'Title, category and price are required.';
+    err.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/admin/courses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({
+        title,
+        slug: title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''),
+        description,
+        category,
+        duration,
+        weeks: weeks || 6,
+        price,
+        level,
+        image_url: image_url || null,
+        outcomes: outcomes || null,
+        tools: tools || null,
+        thumbnail: thumbnail || null
+      })
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || 'Failed to save course');
+    }
+    showOk('cOk', 'Course created successfully!');
+    setTimeout(() => sp('courses', null), 1000);
+  } catch (e) {
+    err.textContent = e.message || 'Unable to save course.';
+    err.style.display = 'block';
+  }
+}
+function resetForm() {
+  ['c_title','c_cat','c_dur','c_level','c_price','c_weeks','c_desc','c_who','c_pre','c_thumb','c_img'].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
+}
 
 // ── PAYMENTS ──
 async function loadPayments() {
@@ -860,16 +914,146 @@ function renderPromos() {
 async function loadCoursesForPromo() {
   if (!allCourses.length) { try { allCourses = await api('/api/admin/courses'); } catch {} }
   const sel = document.getElementById('pCourse');
-  if (sel) sel.innerHTML = '<option value="">All Courses</option>' + allCourses.map(c => '<option value="' + c.title + '">' + c.title + '</option>').join('');
+  if (sel) sel.innerHTML = '<option value="">All Courses</option>' + allCourses.map(c => '<option value="' + c.id + '">' + c.title + '</option>').join('');
 }
 
-function savePromo() {
-    const ok = document.getElementById('promoOk');
-    ok.textContent = 'Promo Created (Demo)'; ok.style.display='block';
+async function savePromo() {
+  const code = document.getElementById('pCode').value.trim().toUpperCase();
+  const discount = Number(document.getElementById('pDisc').value);
+  const maxUses = Number(document.getElementById('pUses').value) || 0;
+  const expires_at = document.getElementById('pExp').value || null;
+  const course_id = document.getElementById('pCourse').value || null;
+  const err = document.getElementById('promoErr');
+  const ok = document.getElementById('promoOk');
+  err.style.display = 'none';
+  ok.style.display = 'none';
+
+  if (!code || !discount) {
+    err.textContent = 'Promo code and discount percentage are required.';
+    err.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/admin/promo-codes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({
+        code,
+        discount_percent: discount,
+        max_uses: maxUses,
+        expires_at,
+        course_id: course_id || null
+      })
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || 'Failed to create promo code');
+    }
+    ok.textContent = 'Promo created successfully!'; ok.style.display = 'block';
+    await loadPromos();
     setTimeout(() => closeMo(), 1000);
+  } catch (e) {
+    err.textContent = e.message || 'Unable to create promo code.';
+    err.style.display = 'block';
+  }
 }
 
 // ── UTILS ──
+async function viewStu(id) {
+  try {
+    const data = await api('/api/admin/students/' + id);
+    document.getElementById('stuDetail').innerHTML = `
+      <h3 style="color:#fff;margin-bottom:10px;">${data.full_name}</h3>
+      <p style="color:var(--text);margin-bottom:6px;"><strong>Email:</strong> ${data.email}</p>
+      <p style="color:var(--text);margin-bottom:6px;"><strong>Phone:</strong> ${data.phone || 'N/A'}</p>
+      <p style="color:var(--text);margin-bottom:12px;"><strong>Joined:</strong> ${new Date(data.created_at).toLocaleDateString()}</p>
+      <div style="margin-bottom:10px;"><strong>Enrollments</strong></div>
+      ${(data.enrollments||[]).map(e => `<div style="padding:10px;background:rgba(255,255,255,0.04);border-radius:10px;margin-bottom:7px;"><strong>${e.title}</strong> · ${e.status} · ${e.completed}/${e.total} lessons</div>`).join('')}
+    `;
+    document.getElementById('stuMo').classList.add('open');
+  } catch (e) {
+    alert('Unable to load student profile.');
+  }
+}
+
+async function viewInstr(id) {
+  try {
+    const data = await api('/api/admin/instructors/' + id);
+    document.getElementById('instrDetail').innerHTML = `
+      <h3 style="color:#fff;margin-bottom:10px;">${data.full_name}</h3>
+      <p style="color:var(--text);margin-bottom:6px;"><strong>Email:</strong> ${data.email}</p>
+      <p style="color:var(--text);margin-bottom:6px;"><strong>Phone:</strong> ${data.phone || 'N/A'}</p>
+      <p style="color:var(--text);margin-bottom:6px;"><strong>Approved:</strong> ${data.is_approved ? 'Yes' : 'No'}</p>
+      <p style="color:var(--text);margin-bottom:12px;"><strong>Joined:</strong> ${new Date(data.created_at).toLocaleDateString()}</p>
+      <div style="margin-bottom:8px;"><strong>Courses</strong></div>
+      ${(data.courses||[]).map(c => `<div style="padding:10px;background:rgba(255,255,255,0.04);border-radius:10px;margin-bottom:7px;"><strong>${c.title}</strong> · ${c.students} students</div>`).join('')}
+    `;
+    document.getElementById('instrMo').classList.add('open');
+  } catch (e) {
+    alert('Unable to load instructor profile.');
+  }
+}
+
+async function toggleStu(id, isActive) {
+  try {
+    const res = await fetch('/api/admin/students/' + id + '/toggle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }
+    });
+    if (!res.ok) throw new Error('Failed to update student status');
+    loadStudents();
+  } catch (e) {
+    alert(e.message || 'Unable to update student status.');
+  }
+}
+
+async function approveInstr(id, approve) {
+  try {
+    const res = await fetch('/api/admin/instructors/' + id + '/approve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ approve })
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || 'Action failed');
+    }
+    loadInstructors();
+  } catch (e) {
+    alert(e.message || 'Unable to update instructor approval.');
+  }
+}
+
+async function updatePrice(courseId) {
+  try {
+    const price = Number(document.getElementById('np_' + courseId).value);
+    if (!price || isNaN(price)) throw new Error('Enter a valid price');
+    const res = await fetch('/api/admin/courses/' + courseId + '/price', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ price })
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || 'Failed to update price');
+    }
+    alert('Price updated successfully.');
+    loadPricing();
+  } catch (e) {
+    alert(e.message || 'Unable to update price.');
+  }
+}
+
+async function loadPromos() {
+  try {
+    promos = await api('/api/admin/promo-codes');
+    renderPromos();
+  } catch (e) {
+    document.getElementById('promoList').innerHTML = '<div style="color:var(--text);text-align:center;padding:24px;">Unable to load promo codes.</div>';
+  }
+}
+
 function showErr(id, msg) { const el=document.getElementById(id); if(el){el.textContent=msg; el.style.display='block';} }
 function showOk(id, msg) { const el=document.getElementById(id); if(el){el.textContent=msg; el.style.display='block'; setTimeout(()=>el.style.display='none',4000);} }
 

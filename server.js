@@ -150,16 +150,6 @@ app.get('/api/instructors', requireAuth, (req, res) => {
   }
 });
 
-// GET COURSES
-app.get('/api/courses', requireAuth, (req, res) => {
-  try {
-    const courses = db.prepare(`SELECT * FROM courses ORDER BY id DESC`).all();
-    res.json(courses);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch courses' });
-  }
-});
-
 // GET PROMO CODES
 app.get('/api/promocodes', requireAuth, (req, res) => {
   try {

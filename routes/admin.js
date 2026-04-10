@@ -89,24 +89,31 @@ router.post('/students/:id/toggle', requireAdmin, (req, res) => {
   res.json({ success: true });
 });
 
-// All courses admin view
+// All courses admin/instructor view
 router.get('/courses', requireStaff, (req, res) => {
-  const courses = db.prepare(`
+  const baseQuery = `
     SELECT c.*,COUNT(e.id) as enrollments,
       u.full_name as instructor_name
     FROM courses c
     LEFT JOIN enrollments e ON e.course_id=c.id
     LEFT JOIN users u ON u.id=c.instructor_id
-    GROUP BY c.id ORDER BY c.id`).all();
+    `;
+
+  if (req.user.role === 'instructor') {
+    const courses = db.prepare(baseQuery + `WHERE c.instructor_id = ? GROUP BY c.id ORDER BY c.id`).all(req.user.id);
+    return res.json(courses);
+  }
+
+  const courses = db.prepare(baseQuery + `GROUP BY c.id ORDER BY c.id`).all();
   res.json(courses);
 });
 
 // Create course
 router.post('/courses', requireAdmin, (req, res) => {
-  const { title, slug, description, category, duration, weeks, price, level, image_url, outcomes, tools } = req.body;
+  const { title, slug, description, category, duration, weeks, price, level, thumbnail, image_url, outcomes, tools } = req.body;
   if (!title || !slug) return res.status(400).json({ error: 'Title and slug required' });
-  const r = db.prepare(`INSERT INTO courses (title,slug,description,category,duration,weeks,price,level,image_url,outcomes,tools)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?)`).run(title, slug, description, category, duration, weeks || 6, price || 0, level || 'Beginner', image_url, outcomes, tools);
+  const r = db.prepare(`INSERT INTO courses (title,slug,description,category,duration,weeks,price,level,thumbnail,image_url,outcomes,tools)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`).run(title, slug, description, category, duration, weeks || 6, price || 0, level || 'Beginner', thumbnail || '📋', image_url, outcomes, tools);
   res.json({ success: true, id: r.lastInsertRowid });
 });
 

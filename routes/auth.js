@@ -40,61 +40,6 @@ router.post('/send-otp', async (req, res) => {
   res.json({ success: true });
 });
 
-// ===================== Register =====================
-router.post('/register', async (req, res) => {
-  const { full_name, email, password, track, phone, role, otp } = req.body;
-  if (!full_name || !email || !password || !otp)
-    return res.status(400).json({ error: 'All fields required' });
-
-  const record = db.prepare('SELECT * FROM otp_store WHERE email = ?').get(email);
-  if (!record) return res.status(400).json({ error: 'Please request a verification code first' });
-  if (record.otp !== otp) return res.status(400).json({ error: 'Incorrect verification code' });
-  if (Date.now() > record.expires_at) return res.status(400).json({ error: 'Code expired. Please request a new one.' });
-
-  const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
-  if (exists) return res.status(409).json({ error: 'Email already registered' });
-
-  const hash = bcrypt.hashSync(password, 10);
-  const userRole = ['admin','instructor'].includes(role) ? role : 'student';
-  const result = db.prepare(`INSERT INTO users (full_name,email,password,role,track,phone,is_verified)
-    VALUES (?,?,?,?,?,?,1)`).run(full_name, email, hash, userRole, track || null, phone || null);
-
-  db.prepare('DELETE FROM otp_store WHERE email = ?').run(email);
-
-  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(result.lastInsertRowid);
-
-  // Auto-enroll in selected course
-  if (track && userRole === 'student') {
-    const course = db.prepare('SELECT * FROM courses WHERE slug = ? OR title LIKE ?').get(track, `%${track}%`);
-    if (course) {
-      try {
-        db.prepare('INSERT OR IGNORE INTO enrollments (user_id,course_id) VALUES (?,?)').run(user.id, course.id);
-        await sendWelcome(user, course);
-        const admins = db.prepare("SELECT email FROM users WHERE role='admin'").all();
-        for (const admin of admins) await sendAdminNewEnrollment(admin.email, user, course);
-      } catch(e) { console.error('Post-register error:', e.message); }
-    }
-  }
-// After inserting new user, generate unique_id
-const prefix = userRole === 'admin' ? 'NFA' : userRole === 'instructor' ? 'NFI' : 'NFS';
-const uniqueId = `${prefix}-${String(result.lastInsertRowid).padStart(4,'0')}-${Math.random().toString(36).substr(2,4).toUpperCase()}`;
-db.prepare('UPDATE users SET unique_id = ? WHERE id = ?').run(uniqueId, result.lastInsertRowid);
-  
-  db.prepare('INSERT INTO notifications (user_id,message,type) VALUES (?,?,?)')
-    .run(user.id, `Welcome to NextForge Academy, ${full_name}! 🎉`, 'success');
-
-  const token = signToken(user);
-  const isProd = process.env.NODE_ENV === 'production';
-  res.cookie('token', token, {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000
-  });
-
-  res.json({ success: true, token, role: user.role, name: user.full_name });
-});
-
 // ===================== Login =====================
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
@@ -318,6 +263,14 @@ router.post('/register', async (req, res) => {
 
   db.prepare('DELETE FROM otp_store WHERE email = ?').run(email);
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(result.lastInsertRowid);
+
+  // If instructor selected a course during registration, assign them to it
+  if (userRole === 'instructor' && course_id) {
+    const course = db.prepare('SELECT id,instructor_id FROM courses WHERE id = ?').get(course_id);
+    if (course && !course.instructor_id) {
+      db.prepare('UPDATE courses SET instructor_id = ? WHERE id = ?').run(user.id, course_id);
+    }
+  }
 
   // If student with payment — verify payment and enroll
   if (userRole === 'student' && course_id && payment_reference) {

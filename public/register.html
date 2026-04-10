@@ -315,6 +315,9 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.6;}
 </div>
 
 <script>
+const params = new URLSearchParams(window.location.search);
+const preCourse = params.get('course');
+const preRole = params.get('role');
 let role='student', avBase64='', payRef='', selId=null, selPrice=0, skipCourse=false, psk='';
 
 // Fetch Public Key
@@ -333,9 +336,9 @@ async function loadCoursesIntoList(){
       const opt = document.createElement('option');
       opt.value = c.id; opt.textContent = c.title;
       instrSelect.appendChild(opt);
-
+      const isPreselected = preCourse && String(c.id) === String(preCourse);
       return `
-      <div class="cs" onclick="selCourse(${c.id},${c.price},'${c.title.replace(/'/g,"\\'")}',this)">
+      <div class="cs${isPreselected ? ' sel' : ''}" data-course-id="${c.id}" data-price="${c.price}" data-title="${c.title.replace(/'/g,"\\'")}" onclick="selCourse(${c.id},${c.price},'${c.title.replace(/'/g,"\\'")}',this)">
         <input type="radio" name="course"/>
         <div class="cs-icon">${c.thumbnail||icons[i]||'📋'}</div>
         <div style="flex:1;min-width:0">
@@ -353,6 +356,14 @@ async function loadCoursesIntoList(){
       <div class="cs-price" style="color:var(--green-2)">Free</div>
     </div>`;
     document.getElementById('courseList').innerHTML=html;
+    if (preCourse) {
+      const el = document.querySelector(`.cs[data-course-id="${preCourse}"]`);
+      if (el) selCourse(Number(el.dataset.courseId), Number(el.dataset.price), el.dataset.title, el);
+    }
+    if (preRole === 'instructor') {
+      const instrButton = document.querySelectorAll('.role-btn')[1];
+      if (instrButton) setRole('instructor', instrButton);
+    }
   } catch {
     document.getElementById('courseList').innerHTML='<div style="color:var(--text);padding:20px;">Error loading courses.</div>';
   }
@@ -491,7 +502,12 @@ async function verifyOTP(){
         email: document.getElementById('r_email').value,
         phone: document.getElementById('r_phone').value,
         password: document.getElementById('r_pass').value,
-        role, course_id: selId, payment_reference: payRef, avatar_base64: avBase64, bio: getBio(), otp
+        role,
+        course_id: role === 'instructor' ? document.getElementById('r_icourse').value : selId,
+        payment_reference: payRef,
+        avatar_base64: avBase64,
+        bio: getBio(),
+        otp
       })
     });
     const contentType = res.headers.get('content-type') || '';
