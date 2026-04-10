@@ -416,15 +416,32 @@ function getBio(){
 
 async function step1(){ goStep(2); }
 
-async function step2(){
-  if(!avBase64) return alert('Photo required.');
-  if(role==='instructor'){
-    selId = document.getElementById('r_icourse').value;
-    if(!selId) return alert('Please select a course to manage.');
-    const email=document.getElementById('r_email').value;
-    await fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name:document.getElementById('r_first').value})});
-    goStep(4);
-  } else { goStep(3); }
+async function step2() {
+  if (!avBase64) return alert('Photo required.');
+  
+  const email = document.getElementById('r_email').value;
+  const name = document.getElementById('r_first').value;
+
+  try {
+    const res = await fetch('/api/auth/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, name })
+    });
+
+    // CHECK IF THE RESPONSE IS HTML INSTEAD OF JSON
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.indexOf("application/json") !== -1) {
+      const data = await res.json();
+      goStep(4);
+    } else {
+      const text = await res.text(); // Get the HTML text
+      console.error("Server returned HTML instead of JSON:", text);
+      alert("Server Error: Received an HTML response. Check console for details.");
+    }
+  } catch (err) {
+    console.error("Fetch error:", err);
+  }
 }
 
 function selCourse(id,price,name,el){
