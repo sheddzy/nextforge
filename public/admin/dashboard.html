@@ -3,168 +3,381 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NextForge Admin | Live Control</title>
+  <title>NextForge Admin | Command Center</title>
   <style>
     :root {
-      --bg: #0b0f19; --panel: #151b2b; --primary: #fbbf24; --secondary: #3b82f6;
-      --text: #f8fafc; --muted: #94a3b8; --border: #334155; --success: #10b981; --danger: #ef4444;
+      --bg: #0b0f19;
+      --panel: #151b2b;
+      --accent: #fbbf24;
+      --primary: #3b82f6;
+      --success: #10b981;
+      --danger: #ef4444;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-    body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
-    
-    /* Sidebar */
-    .sidebar { width: 260px; background: var(--panel); border-right: 1px solid var(--border); padding: 30px 20px; position: sticky; top: 0; height: 100vh; }
-    .nav-item { padding: 12px 16px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; color: var(--muted); transition: 0.3s; display: flex; align-items: center; gap: 12px; }
-    .nav-item:hover, .nav-item.active { background: rgba(251, 191, 36, 0.1); color: var(--primary); }
-    .nav-item.active { background: var(--primary); color: #000; font-weight: 700; }
 
-    /* Main Area */
-    .main { flex: 1; padding: 40px; overflow-y: auto; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
-    .card { background: linear-gradient(145deg, #1e2538, #151b2b); padding: 25px; border-radius: 15px; border: 1px solid var(--border); }
-    .card h3 { color: var(--muted); font-size: 14px; text-transform: uppercase; }
-    .card p { font-size: 28px; font-weight: 800; margin-top: 10px; color: var(--primary); }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; overflow: hidden; }
+
+    /* Sidebar Navigation */
+    .sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); padding: 30px 20px; display: flex; flex-direction: column; }
+    .logo { font-size: 22px; font-weight: 800; color: var(--accent); margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+    .nav-group { flex: 1; }
+    .nav-item { 
+      padding: 14px 18px; margin-bottom: 8px; border-radius: 12px; cursor: pointer; 
+      color: var(--muted); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+      display: flex; align-items: center; gap: 12px; font-weight: 500;
+    }
+    .nav-item:hover { background: rgba(251, 191, 36, 0.05); color: var(--accent); transform: translateX(5px); }
+    .nav-item.active { background: var(--accent); color: #000; font-weight: 700; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); }
+
+    /* Main Dashboard Area */
+    .main-content { flex: 1; overflow-y: auto; padding: 40px; position: relative; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    
+    /* Stats Cards */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .stat-card { 
+      background: linear-gradient(145deg, #1e2538, #151b2b); padding: 25px; border-radius: 20px; 
+      border: 1px solid var(--border); position: relative; overflow: hidden;
+    }
+    .stat-card::after { content: ''; position: absolute; top: -50%; right: -50%; width: 100px; height: 100px; background: var(--accent); opacity: 0.05; border-radius: 50%; }
+    .stat-label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .stat-value { font-size: 32px; font-weight: 800; margin-top: 10px; color: #fff; }
 
     /* Tables */
-    .table-container { background: var(--panel); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; margin-top: 20px; }
+    .section { display: none; animation: fadeIn 0.4s ease; }
+    .section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .table-box { background: var(--panel); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .table-header { padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
     table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 15px 20px; background: rgba(0,0,0,0.2); font-size: 12px; color: var(--muted); }
-    td { padding: 15px 20px; border-bottom: 1px solid var(--border); font-size: 14px; }
-    .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-    .badge-pending { background: rgba(251, 191, 36, 0.2); color: var(--primary); }
-    .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    th { text-align: left; padding: 18px 25px; background: rgba(0,0,0,0.2); font-size: 11px; text-transform: uppercase; color: var(--muted); }
+    td { padding: 18px 25px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 14px; }
+    
+    .badge { padding: 6px 12px; border-radius: 30px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .badge-yellow { background: rgba(251, 191, 36, 0.1); color: var(--accent); border: 1px solid var(--accent); }
+    .badge-green { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid var(--success); }
+    .badge-red { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); }
+
+    /* Buttons */
+    .btn { padding: 12px 24px; border-radius: 10px; cursor: pointer; border: none; font-weight: 600; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(251, 191, 36, 0.4); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: #fff; }
+    .btn-sm { padding: 6px 12px; font-size: 11px; }
 
     /* Modals */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px); }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; }
     .modal-overlay.active { display: flex; }
-    .modal { background: var(--panel); width: 500px; padding: 30px; border-radius: 16px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+    .modal { background: var(--panel); width: 100%; max-width: 550px; border-radius: 24px; border: 1px solid var(--border); overflow: hidden; }
+    .modal-body { padding: 30px; }
+    .modal-footer { padding: 20px 30px; background: rgba(0,0,0,0.2); display: flex; justify-content: flex-end; gap: 12px; }
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--muted); }
-    .form-control { width: 100%; padding: 12px; background: #0b0f19; border: 1px solid var(--border); border-radius: 8px; color: #fff; }
-    .btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-weight: 600; }
-    .btn-primary { background: var(--primary); color: #000; }
-    .btn-outline { background: transparent; border: 1px solid var(--border); color: #fff; }
+    .form-control { width: 100%; padding: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: #fff; }
 
-    /* AI Box */
-    .ai-gen { background: rgba(59, 130, 246, 0.1); border: 1px dashed var(--secondary); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
+    /* Progress Bar */
+    .prog-bg { width: 100%; background: #2d3748; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+    .prog-fill { height: 100%; background: var(--success); transition: width 0.8s ease; }
   </style>
 </head>
 <body>
 
   <aside class="sidebar">
-    <h2 style="color: var(--primary); margin-bottom: 30px;">NextForge Academy</h2>
-    <div class="nav-item active" onclick="showTab('courses')">📚 Courses</div>
-    <div class="nav-item" onclick="showTab('students')">👥 Students</div>
-    <div class="nav-item" onclick="showTab('instructors')">👨‍🏫 Instructors</div>
-    <div class="nav-item" onclick="showTab('enrollments')">📈 Enrollments</div>
-    <div class="nav-item" onclick="showTab('promos')">🎟️ Promo Codes</div>
+    <div class="logo">⚡ NextForge<span>Admin</span></div>
+    <div class="nav-group">
+      <div class="nav-item active" onclick="switchTab('dashboard')">🏠 Dashboard</div>
+      <div class="nav-item" onclick="switchTab('students')">👥 Students</div>
+      <div class="nav-item" onclick="switchTab('instructors')">👨‍🏫 Instructors</div>
+      <div class="nav-item" onclick="switchTab('courses')">📚 Courses</div>
+      <div class="nav-item" onclick="switchTab('enrollments')">📈 Enrollments</div>
+      <div class="nav-item" onclick="switchTab('promos')">🎟️ Promo Codes</div>
+    </div>
+    <button class="btn btn-outline" style="width:100%" onclick="location.reload()">🔄 Refresh Hub</button>
   </aside>
 
-  <main class="main">
-    <div class="card-grid">
-      <div class="card"><h3>Active Students</h3><p id="count-students">0</p></div>
-      <div class="card"><h3>Pending Content</h3><p id="count-pending" style="color: var(--danger)">0</p></div>
-      <div class="card"><h3>Total Revenue</h3><p>₦1.2M</p></div>
+  <main class="main-content">
+    <div id="dashboard" class="section active">
+      <div class="header"><h1>Platform Status</h1></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Total Learners</div><div class="stat-value" id="count-students">0</div></div>
+        <div class="stat-card"><div class="stat-label">Pending Reviews</div><div class="stat-value" id="count-pending" style="color:var(--accent)">0</div></div>
+        <div class="stat-card"><div class="stat-label">Active Courses</div><div class="stat-value" id="count-courses">0</div></div>
+      </div>
     </div>
 
-    <div id="section-courses" class="section">
-      <div style="display: flex; justify-content: space-between;">
-        <h2>Course Management</h2>
-        <button class="btn btn-primary" onclick="openCourseModal()">+ Create New Course</button>
-      </div>
-      <div class="table-container">
+    <div id="students" class="section">
+      <div class="table-box">
+        <div class="table-header"><h3>Active Students</h3></div>
         <table>
-          <thead><tr><th>Title</th><th>Instructor</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Name</th><th>Email</th><th>Registration</th><th>Action</th></tr></thead>
+          <tbody id="tbl-students"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="instructors" class="section">
+      <div class="table-box">
+        <div class="table-header"><h3>Instructor Network</h3></div>
+        <table>
+          <thead><tr><th>Name</th><th>Expertise</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="tbl-instructors"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="courses" class="section">
+      <div class="table-box">
+        <div class="table-header">
+          <h3>Course Catalog</h3>
+          <button class="btn btn-primary btn-sm" onclick="openCourseModal()">+ Add Course</button>
+        </div>
+        <table>
+          <thead><tr><th>Title</th><th>Instructor</th><th>Price</th><th>Status</th><th>Action</th></tr></thead>
           <tbody id="tbl-courses"></tbody>
         </table>
       </div>
     </div>
 
-    <div id="section-promos" class="section" style="display:none;">
-      <div style="display: flex; justify-content: space-between;">
-        <h2>Promo Codes</h2>
-        <button class="btn btn-primary" onclick="openPromoModal()">+ Create Promo</button>
-      </div>
-      <div class="table-container">
+    <div id="enrollments" class="section">
+      <div class="table-box">
+        <div class="table-header"><h3>Enrollment Progress</h3></div>
         <table>
-          <thead><tr><th>Code</th><th>Discount %</th><th>Status</th></tr></thead>
+          <thead><tr><th>Student</th><th>Course</th><th>Payment</th><th>Progress</th></tr></thead>
+          <tbody id="tbl-enrollments"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="promos" class="section">
+      <div class="table-box">
+        <div class="table-header">
+          <h3>Promotions</h3>
+          <button class="btn btn-primary btn-sm" onclick="openPromoModal()">+ New Promo</button>
+        </div>
+        <table>
+          <thead><tr><th>Code</th><th>Discount</th><th>Usage</th><th>Status</th></tr></thead>
           <tbody id="tbl-promos"></tbody>
         </table>
       </div>
     </div>
   </main>
 
-  <div class="modal-overlay" id="contentModal">
+  <div class="modal-overlay" id="courseModal">
     <div class="modal">
-      <h3 id="contentTitle">Course Curriculum</h3>
-      <div class="ai-gen">
-        <p style="font-size: 12px; margin-bottom: 10px;">🤖 AI Generator: Auto-create lessons based on name</p>
-        <button class="btn btn-outline" style="font-size: 12px;" onclick="generateAI()">Generate Modules</button>
+      <div class="modal-body">
+        <h2 style="margin-bottom:20px" id="cModalTitle">Manage Course</h2>
+        <input type="hidden" id="editCourseId">
+        <div class="form-group"><label>Course Title</label><input type="text" id="cTitle" class="form-control"></div>
+        <div class="form-group"><label>Price (₦)</label><input type="number" id="cPrice" class="form-control"></div>
+        <div class="form-group"><label>Instructor</label><select id="cInst" class="form-control"></select></div>
+        
+        <div style="background:rgba(59,130,246,0.1); padding:15px; border-radius:12px; border:1px dashed var(--primary)">
+          <p style="font-size:12px; color:var(--primary); margin-bottom:10px">🤖 AI Curriculum Generator</p>
+          <button class="btn btn-outline btn-sm" onclick="generateAI()">✨ Build Modules Automatically</button>
+          <div id="aiOutput" style="margin-top:10px; font-size:12px; color:var(--muted)"></div>
+        </div>
       </div>
-      <div id="moduleList" style="margin-bottom: 20px;"></div>
-      <div style="display: flex; gap: 10px;">
-        <button class="btn btn-primary" onclick="approveContent()">Approve Content</button>
-        <button class="btn btn-outline" onclick="closeModal('contentModal')">Close</button>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('courseModal')">Cancel</button>
+        <button class="btn btn-success" id="btnApproveCourse" onclick="approveCourse()">Approve & Publish</button>
+        <button class="btn btn-primary" onclick="saveCourse()">Save Details</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="promoModal">
+    <div class="modal">
+      <div class="modal-body">
+        <h2>New Promo Code</h2>
+        <div class="form-group"><label>Code</label><input type="text" id="pCode" class="form-control" placeholder="E.G. NEXT2026"></div>
+        <div class="form-group"><label>Discount (%)</label><input type="number" id="pDisc" class="form-control"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('promoModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="savePromo()">Create Code</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="userModal">
+    <div class="modal">
+      <div class="modal-body">
+        <h2 id="uTitle">Review Profile</h2>
+        <div id="uDetail" style="margin:15px 0; color:var(--muted); font-size:14px"></div>
+        <div class="form-group"><label>Display Name</label><input type="text" id="uName" class="form-control"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('userModal')">Close</button>
+        <button class="btn btn-success" id="btnApproveUser" onclick="approveInstructor()">Verify Instructor</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Live data synced with NextForge Academy
-    let courses = [
-      { id: 1, title: 'Project Management', instructor: 'Shedrack Ebete', price: 250000, status: 'Published', modules: [] },
-      { id: 2, title: 'Data Analysis', instructor: 'Pending', price: 300000, status: 'Draft', modules: [] },
-      { id: 3, title: 'Notion Mastery', instructor: 'Shedrack Ebete', price: 160000, status: 'Published', modules: [] }
-    ];
-    let promos = [];
-    let currentId = null;
+    // Database State
+    const DB = {
+      students: [
+        { id: 1, name: "Samuel Okon", email: "samuel@nextforge.com", date: "2026-03-20" },
+        { id: 2, name: "Grace Adams", email: "grace@nextforge.com", date: "2026-04-01" }
+      ],
+      instructors: [
+        { id: 101, name: "Shedrack Ebete", expertise: "Operations Arch", status: "Verified" },
+        { id: 102, name: "Linda John", expertise: "Data Science", status: "Pending" }
+      ],
+      courses: [
+        { id: 501, title: "Notion Mastery", price: 160000, instId: 101, status: "Draft", modules: 0 }
+      ],
+      enrollments: [
+        { studentId: 1, courseId: 501, status: "Success", progress: 65 },
+        { studentId: 2, courseId: 501, status: "Pending", progress: 0 }
+      ],
+      promos: []
+    };
 
-    function renderCourses() {
-      const tbody = document.getElementById('tbl-courses');
-      tbody.innerHTML = courses.map(c => `
-        <tr>
-          <td><strong>${c.title}</strong></td>
-          <td>${c.instructor}</td>
-          <td>₦${c.price.toLocaleString()}</td>
-          <td><span class="badge ${c.status === 'Published' ? 'badge-success' : 'badge-pending'}">${c.status}</span></td>
-          <td>
-            <a href="#" onclick="manageContent(${c.id})" style="color: var(--secondary); font-size: 12px; margin-right: 10px;">Curriculum</a>
-            <a href="#" onclick="editPrice(${c.id})" style="color: var(--muted); font-size: 12px;">Edit Price</a>
-          </td>
-        </tr>
+    function switchTab(tabId) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+      render();
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    function render() {
+      // Stats
+      document.getElementById('count-students').innerText = DB.students.length;
+      document.getElementById('count-courses').innerText = DB.courses.filter(c=>c.status==='Published').length;
+      document.getElementById('count-pending').innerText = DB.instructors.filter(i=>i.status==='Pending').length + DB.courses.filter(c=>c.status==='Draft').length;
+
+      // Students
+      document.getElementById('tbl-students').innerHTML = DB.students.map(s => `
+        <tr><td><strong>${s.name}</strong></td><td>${s.email}</td><td>${s.date}</td>
+        <td><button class="btn btn-outline btn-sm" onclick="viewUser(${s.id}, 'student')">View Profile</button></td></tr>
       `).join('');
-      document.getElementById('count-pending').innerText = courses.filter(c => c.status === 'Draft').length;
+
+      // Instructors
+      document.getElementById('tbl-instructors').innerHTML = DB.instructors.map(i => `
+        <tr><td><strong>${i.name}</strong></td><td>${i.expertise}</td>
+        <td><span class="badge ${i.status==='Verified'?'badge-green':'badge-yellow'}">${i.status}</span></td>
+        <td><button class="btn btn-outline btn-sm" onclick="viewUser(${i.id}, 'instructor')">Review</button></td></tr>
+      `).join('');
+
+      // Courses
+      document.getElementById('tbl-courses').innerHTML = DB.courses.map(c => {
+        let inst = DB.instructors.find(i => i.id == c.instId);
+        return `<tr><td><strong>${c.title}</strong><br><small>${c.modules} Modules</small></td>
+        <td>${inst?inst.name:'N/A'}</td><td>₦${c.price.toLocaleString()}</td>
+        <td><span class="badge ${c.status==='Published'?'badge-green':'badge-yellow'}">${c.status}</span></td>
+        <td><button class="btn btn-outline btn-sm" onclick="editCourse(${c.id})">Edit/Approve</button></td></tr>`;
+      }).join('');
+
+      // Enrollments
+      document.getElementById('tbl-enrollments').innerHTML = DB.enrollments.map(e => {
+        let s = DB.students.find(x => x.id == e.studentId);
+        let c = DB.courses.find(x => x.id == e.courseId);
+        let progBar = e.status === 'Success' 
+          ? `<div class="prog-bg"><div class="prog-fill" style="width:${e.progress}%"></div></div><small>${e.progress}%</small>`
+          : '<small style="color:var(--muted)">Waiting for registration...</small>';
+        return `<tr><td>${s.name}</td><td>${c.title}</td>
+        <td><span class="badge ${e.status==='Success'?'badge-green':'badge-red'}">${e.status}</span></td>
+        <td>${progBar}</td></tr>`;
+      }).join('');
+
+      // Promos
+      document.getElementById('tbl-promos').innerHTML = DB.promos.length ? DB.promos.map(p => `
+        <tr><td><strong>${p.code}</strong></td><td>${p.disc}%</td><td>0 Uses</td><td><span class="badge badge-green">Active</span></td></tr>
+      `).join('') : '<tr><td colspan="4" style="text-align:center; color:var(--muted)">No active promos</td></tr>';
+    }
+
+    // Logic Functions
+    function viewUser(id, type) {
+      let u = type === 'student' ? DB.students.find(s=>s.id==id) : DB.instructors.find(i=>i.id==id);
+      document.getElementById('uTitle').innerText = type === 'student' ? 'Student Info' : 'Instructor Review';
+      document.getElementById('uName').value = u.name;
+      document.getElementById('uDetail').innerText = type === 'student' ? `Email: ${u.email}` : `Expertise: ${u.expertise}`;
+      document.getElementById('btnApproveUser').style.display = (type==='instructor' && u.status==='Pending') ? 'block' : 'none';
+      window.currentUserRef = u;
+      openModal('userModal');
+    }
+
+    function approveInstructor() {
+      window.currentUserRef.status = 'Verified';
+      closeModal('userModal');
+      render();
+    }
+
+    function openCourseModal() {
+      document.getElementById('cModalTitle').innerText = "Create Course";
+      document.getElementById('editCourseId').value = "";
+      document.getElementById('cTitle').value = "";
+      document.getElementById('cPrice').value = "";
+      document.getElementById('aiOutput').innerText = "";
+      populateInst();
+      openModal('courseModal');
+    }
+
+    function populateInst(selectedId) {
+      let sel = document.getElementById('cInst');
+      sel.innerHTML = DB.instructors.filter(i=>i.status==='Verified').map(i => `<option value="${i.id}" ${i.id==selectedId?'selected':''}>${i.name}</option>`).join('');
+    }
+
+    function editCourse(id) {
+      let c = DB.courses.find(x=>x.id==id);
+      document.getElementById('cModalTitle').innerText = "Edit Course";
+      document.getElementById('editCourseId').value = id;
+      document.getElementById('cTitle').value = c.title;
+      document.getElementById('cPrice').value = c.price;
+      document.getElementById('aiOutput').innerText = `${c.modules} Modules already active`;
+      populateInst(c.instId);
+      openModal('courseModal');
     }
 
     function generateAI() {
-      const course = courses.find(c => c.id === currentId);
-      const list = document.getElementById('moduleList');
-      const curriculum = course.title.includes('Notion') 
-        ? ['Personal OS Setup', 'Database Relations', 'Formula 2.0 Mastering']
-        : ['Fundamentals', 'Case Studies', 'Capstone Project'];
-      
-      list.innerHTML = curriculum.map((m, i) => `<div style="padding: 10px; border-bottom: 1px solid var(--border); font-size: 13px;">Module ${i+1}: ${m}</div>`).join('');
+      let title = document.getElementById('cTitle').value;
+      if(!title) return alert("Enter course title first!");
+      let count = title.toLowerCase().includes('notion') ? 8 : 5;
+      document.getElementById('aiOutput').innerText = `✨ Created ${count} modules for "${title}" curriculum.`;
+      window.tempModules = count;
     }
 
-    function manageContent(id) {
-      currentId = id;
-      const course = courses.find(c => c.id === id);
-      document.getElementById('contentTitle').innerText = course.title + " Content";
-      document.getElementById('contentModal').classList.add('active');
+    function approveCourse() {
+      saveCourse('Published');
     }
 
-    function approveContent() {
-      const course = courses.find(c => c.id === currentId);
-      course.status = 'Published';
-      closeModal('contentModal');
-      renderCourses();
+    function saveCourse(forcedStatus) {
+      let id = document.getElementById('editCourseId').value;
+      let title = document.getElementById('cTitle').value;
+      let price = document.getElementById('cPrice').value;
+      let instId = document.getElementById('cInst').value;
+
+      if(id) {
+        let c = DB.courses.find(x=>x.id==id);
+        c.title = title; c.price = price; c.instId = instId;
+        if(forcedStatus) c.status = forcedStatus;
+        if(window.tempModules) c.modules = window.tempModules;
+      } else {
+        DB.courses.push({ id: Date.now(), title, price, instId, status: forcedStatus || 'Draft', modules: window.tempModules || 0 });
+      }
+      window.tempModules = null;
+      closeModal('courseModal');
+      render();
     }
 
-    function openPromoModal() { /* Logic for Promo Code Creation */ }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-    function showTab(tab) { /* Logic for tab switching */ }
+    function openPromoModal() { openModal('promoModal'); }
+    function savePromo() {
+      DB.promos.push({ code: document.getElementById('pCode').value.toUpperCase(), disc: document.getElementById('pDisc').value });
+      closeModal('promoModal');
+      render();
+    }
 
-    renderCourses();
+    // Init
+    render();
   </script>
 </body>
 </html>
