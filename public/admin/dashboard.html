@@ -804,6 +804,55 @@
     </div>
   </div>
 
+  <div id="course-content-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Course Content Management</span>
+        <button class="close-btn" onclick="closeContentModal()">×</button>
+      </div>
+      <div style="margin-bottom: 20px;">
+        <h4 id="content-course-title" style="color: #fbbf24; margin-bottom: 15px;"></h4>
+        
+        <div style="margin-bottom: 20px;">
+          <label style="font-weight: 600; display: block; margin-bottom: 10px;">Generate AI Curriculum</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <input type="text" id="ai-course-name" placeholder="Course name for AI generation">
+            <button class="btn btn-primary btn-sm" onclick="generateAICurriculum()">🤖 Generate</button>
+          </div>
+          <div id="ai-status" style="font-size: 12px; color: #8b92a0; margin-top: 8px;"></div>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #2d3748; margin: 15px 0;">
+
+        <label style="font-weight: 600; display: block; margin-bottom: 10px;">Lessons</label>
+        <div id="lessons-list" style="max-height: 300px; overflow-y: auto; margin-bottom: 15px;"></div>
+
+        <div style="display: grid; gap: 10px;">
+          <div>
+            <input type="text" id="lesson-title" placeholder="Lesson title">
+          </div>
+          <div>
+            <input type="number" id="lesson-duration" placeholder="Duration (mins)" min="0">
+          </div>
+          <div>
+            <select id="lesson-type">
+              <option value="video">Video</option>
+              <option value="text">Text</option>
+              <option value="assignment">Assignment</option>
+              <option value="quiz">Quiz</option>
+            </select>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="addLesson()">+ Add Lesson</button>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-secondary" onclick="closeContentModal()">Close</button>
+        <button class="btn btn-primary" onclick="saveLessons()">Save Lessons</button>
+      </div>
+    </div>
+  </div>
+
   <div id="certificate-modal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -1010,6 +1059,7 @@
           <td>${c.enrollments || 0}</td>
           <td>
             <div class="action-buttons">
+              <button class="icon-btn" onclick="showCourseContent(${c.id})" title="Manage content">📝</button>
               <button class="icon-btn" onclick="editCourse(${c.id})">Edit</button>
               <button class="icon-btn" onclick="deleteCourse(${c.id})">Delete</button>
             </div>
@@ -1100,11 +1150,34 @@
 
     // COURSE MODAL
     function openCourseModal() {
+      courseEditingId = null;
+      document.getElementById('modal-title').textContent = 'Add Course';
+      document.getElementById('course-title').value = '';
+      document.getElementById('course-desc').value = '';
+      document.getElementById('course-price').value = '';
+      document.getElementById('course-duration').value = '';
+      document.getElementById('course-category').value = '';
+      document.getElementById('course-instructor').value = '';
+      document.getElementById('course-save-btn').textContent = 'Save Course';
+      
+      // Load instructors
+      fetch(API_URL + '/admin/instructors/active', H)
+        .then(res => res.json())
+        .then(instructors => {
+          let html = '<option value="">Select instructor...</option>';
+          instructors.forEach(i => {
+            html += `<option value="${i.id}">${i.full_name}</option>`;
+          });
+          document.getElementById('course-instructor').innerHTML = html;
+        })
+        .catch(() => {});
+      
       document.getElementById('course-modal').classList.add('active');
     }
 
     function closeCourseModal() {
       document.getElementById('course-modal').classList.remove('active');
+      courseEditingId = null;
     }
 
     async function saveCourse() {
@@ -1113,6 +1186,7 @@
       const price = document.getElementById('course-price').value;
       const duration = document.getElementById('course-duration').value;
       const category = document.getElementById('course-category').value;
+      const instructorId = document.getElementById('course-instructor').value;
 
       if (!title || !desc || !price) {
         showAlert('Fill in all required fields', 'danger');
@@ -1120,28 +1194,28 @@
       }
 
       try {
-        const res = await fetch(API_URL + '/admin/courses', {
-          method: 'POST',
+        const method = courseEditingId ? 'PUT' : 'POST';
+        const url = courseEditingId ? API_URL + '/admin/courses/' + courseEditingId : API_URL + '/admin/courses';
+        
+        const body = courseEditingId 
+          ? { title, description: desc, price: parseInt(price), duration, category, instructor_id: instructorId ? parseInt(instructorId) : null }
+          : { title, slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-'), description: desc, price: parseInt(price), duration, category, instructor_id: instructorId ? parseInt(instructorId) : null };
+
+        const res = await fetch(url, {
+          method: method,
           ...H,
-          body: JSON.stringify({
-            title,
-            slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-            description: desc,
-            price: parseInt(price),
-            duration,
-            category
-          })
+          body: JSON.stringify(body)
         });
 
         if (res.ok) {
-          showAlert('Course created successfully', 'success');
+          showAlert(courseEditingId ? 'Course updated successfully' : 'Course created successfully', 'success');
           closeCourseModal();
           loadCourses();
         } else {
-          showAlert('Failed to create course', 'danger');
+          showAlert('Failed to save course', 'danger');
         }
       } catch (e) {
-        showAlert('Error creating course', 'danger');
+        showAlert('Error saving course', 'danger');
       }
     }
 
@@ -1324,197 +1398,163 @@
       }
     }
 
-    // STUB FUNCTIONS - IMPLEMENT REAL FUNCTIONALITY
-    let currentEditingId = null;
-    
-    async function editStudent(id) {
+    // COURSE CONTENT MANAGEMENT
+    let currentContentCourseId = null;
+    let tempLessons = [];
+
+    async function showCourseContent(courseId) {
       try {
-        const res = await fetch(API_URL + '/admin/students/' + id, H);
-        const student = await res.json();
-        
-        currentEditingId = id;
-        document.getElementById('student-name').value = student.full_name || '';
-        document.getElementById('student-phone').value = student.phone || '';
-        document.getElementById('student-track').value = student.track || '';
-        document.getElementById('student-modal').classList.add('active');
-      } catch (e) {
-        showAlert('Failed to load student', 'danger');
-      }
-    }
-
-    function closeStudentModal() {
-      document.getElementById('student-modal').classList.remove('active');
-      currentEditingId = null;
-    }
-
-    async function saveStudent() {
-      if (!currentEditingId) return;
-      
-      const fullName = document.getElementById('student-name').value;
-      const phone = document.getElementById('student-phone').value;
-      const track = document.getElementById('student-track').value;
-
-      if (!fullName) {
-        showAlert('Name is required', 'danger');
-        return;
-      }
-
-      try {
-        const res = await fetch(API_URL + '/admin/students/' + currentEditingId, {
-          method: 'PUT',
-          ...H,
-          body: JSON.stringify({ full_name: fullName, phone, track })
-        });
-
-        if (res.ok) {
-          showAlert('Student updated successfully!', 'success');
-          closeStudentModal();
-          loadStudents();
-        } else {
-          showAlert('Failed to update student', 'danger');
-        }
-      } catch (e) {
-        showAlert('Error updating student', 'danger');
-      }
-    }
-
-    async function toggleStudent(id, active) { 
-      try {
-        const res = await fetch(API_URL + '/admin/students/' + id + '/toggle', {
-          method: 'POST',
-          ...H
-        });
-
-        if (res.ok) {
-          showAlert(active ? 'Student suspended' : 'Student restored', 'success');
-          loadStudents();
-        } else {
-          showAlert('Failed to toggle student', 'danger');
-        }
-      } catch (e) {
-        showAlert('Error toggling student', 'danger');
-      }
-    }
-
-    async function editInstructor(id) {
-      try {
-        const instructors = allInstructors;
-        const instructor = instructors.find(i => i.id === id);
-        
-        if (!instructor) {
-          showAlert('Instructor not found', 'danger');
-          return;
-        }
-
-        currentEditingId = id;
-        document.getElementById('instructor-name').value = instructor.full_name || '';
-        document.getElementById('instructor-phone').value = instructor.phone || '';
-        document.getElementById('instructor-bio').value = instructor.bio || '';
-        document.getElementById('instructor-modal').classList.add('active');
-      } catch (e) {
-        showAlert('Failed to load instructor', 'danger');
-      }
-    }
-
-    function closeInstructorModal() {
-      document.getElementById('instructor-modal').classList.remove('active');
-      currentEditingId = null;
-    }
-
-    async function saveInstructor() {
-      if (!currentEditingId) return;
-      
-      const fullName = document.getElementById('instructor-name').value;
-      const phone = document.getElementById('instructor-phone').value;
-      const bio = document.getElementById('instructor-bio').value;
-
-      if (!fullName) {
-        showAlert('Name is required', 'danger');
-        return;
-      }
-
-      try {
-        const res = await fetch(API_URL + '/admin/instructors/' + currentEditingId, {
-          method: 'PUT',
-          ...H,
-          body: JSON.stringify({ full_name: fullName, phone, bio })
-        });
-
-        if (res.ok) {
-          showAlert('Instructor updated successfully!', 'success');
-          closeInstructorModal();
-          loadInstructors();
-        } else {
-          showAlert('Failed to update instructor', 'danger');
-        }
-      } catch (e) {
-        showAlert('Error updating instructor', 'danger');
-      }
-    }
-
-    async function approveInstructor(id) {
-      try {
-        const res = await fetch(API_URL + '/admin/instructors/' + id + '/approve', {
-          method: 'POST',
-          ...H,
-          body: JSON.stringify({ approve: true })
-        });
-
-        if (res.ok) {
-          showAlert('Instructor approved!', 'success');
-          loadInstructors();
-        } else {
-          showAlert('Failed to approve instructor', 'danger');
-        }
-      } catch (e) {
-        showAlert('Error approving instructor', 'danger');
-      }
-    }
-
-    let courseEditingId = null;
-
-    async function editCourse(id) {
-      try {
-        const res = await fetch(API_URL + '/admin/courses/' + id, H);
+        const res = await fetch(API_URL + '/admin/courses/' + courseId, H);
         const course = await res.json();
         
-        courseEditingId = id;
-        document.getElementById('modal-title').textContent = 'Edit Course';
-        document.getElementById('course-title').value = course.title || '';
-        document.getElementById('course-desc').value = course.description || '';
-        document.getElementById('course-price').value = course.price || '';
-        document.getElementById('course-duration').value = course.duration || '';
-        document.getElementById('course-category').value = course.category || '';
-        document.getElementById('course-instructor').value = course.instructor_id || '';
-        document.getElementById('course-save-btn').textContent = 'Update Course';
-        document.getElementById('course-modal').classList.add('active');
+        currentContentCourseId = courseId;
+        document.getElementById('content-course-title').textContent = course.title;
+        
+        // Load existing lessons
+        fetch(API_URL + '/admin/courses/' + courseId + '/lessons', H)
+          .then(res => res.json())
+          .then(lessons => {
+            tempLessons = lessons || [];
+            renderLessonsList();
+          })
+          .catch(() => { tempLessons = []; renderLessonsList(); });
+        
+        document.getElementById('course-content-modal').classList.add('active');
       } catch (e) {
         showAlert('Failed to load course', 'danger');
       }
     }
 
-    async function deleteCourse(id) {
-      if (!confirm('Are you sure you want to delete this course? This action cannot be undone.')) return;
+    function closeContentModal() {
+      document.getElementById('course-content-modal').classList.remove('active');
+      currentContentCourseId = null;
+      tempLessons = [];
+    }
+
+    function renderLessonsList() {
+      const html = tempLessons.map((l, i) => `
+        <div style="background: #2d3748; padding: 10px; border-radius: 6px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <strong>${l.title}</strong>
+            <div style="font-size: 12px; color: #8b92a0;">${l.lesson_type} • ${l.duration_mins}min</div>
+          </div>
+          <button class="icon-btn" onclick="removeLesson(${i})">✕</button>
+        </div>
+      `).join('');
       
+      document.getElementById('lessons-list').innerHTML = html || '<p style="color: #8b92a0;">No lessons yet</p>';
+    }
+
+    function addLesson() {
+      const title = document.getElementById('lesson-title').value;
+      const duration = document.getElementById('lesson-duration').value;
+      const type = document.getElementById('lesson-type').value;
+
+      if (!title) {
+        showAlert('Lesson title required', 'danger');
+        return;
+      }
+
+      tempLessons.push({
+        title,
+        duration_mins: duration || 45,
+        lesson_type: type,
+        type: type
+      });
+
+      document.getElementById('lesson-title').value = '';
+      document.getElementById('lesson-duration').value = '';
+      renderLessonsList();
+    }
+
+    function removeLesson(index) {
+      tempLessons.splice(index, 1);
+      renderLessonsList();
+    }
+
+    async function saveLessons() {
+      if (!currentContentCourseId || tempLessons.length === 0) {
+        showAlert('Add at least one lesson', 'danger');
+        return;
+      }
+
       try {
-        const res = await fetch(API_URL + '/admin/courses/' + id, {
-          method: 'DELETE',
-          ...H
+        const res = await fetch(API_URL + '/admin/courses/' + currentContentCourseId + '/lessons', {
+          method: 'POST',
+          ...H,
+          body: JSON.stringify({ lessons: tempLessons })
         });
 
         if (res.ok) {
-          showAlert('Course deleted', 'success');
+          showAlert('Lessons saved successfully!', 'success');
+          closeContentModal();
           loadCourses();
         } else {
-          showAlert('Failed to delete course', 'danger');
+          showAlert('Failed to save lessons', 'danger');
         }
       } catch (e) {
-        showAlert('Error deleting course', 'danger');
+        showAlert('Error saving lessons', 'danger');
       }
     }
 
-    function verifyCertificate(code) { 
-      showAlert('Certificate ' + code + ' verified', 'success'); 
+    // AI CURRICULUM GENERATION
+    async function generateAICurriculum() {
+      const courseName = document.getElementById('ai-course-name').value;
+      if (!courseName) {
+        showAlert('Enter course name for AI generation', 'danger');
+        return;
+      }
+
+      document.getElementById('ai-status').textContent = '🤖 Generating curriculum...';
+
+      try {
+        // Simulated AI generation - in production, call your AI API
+        const curriculum = await generateCurriculumAI(courseName);
+        
+        tempLessons = curriculum;
+        renderLessonsList();
+        document.getElementById('ai-status').textContent = '✓ Curriculum generated - ' + curriculum.length + ' lessons added';
+      } catch (e) {
+        document.getElementById('ai-status').textContent = '✗ Failed to generate curriculum';
+      }
+    }
+
+    async function generateCurriculumAI(courseName) {
+      // Simulated AI curriculum based on course name patterns
+      const patterns = {
+        'project': ['Project Planning', 'Scope Definition', 'Timeline & Scheduling', 'Risk Management', 'Team Building', 'Execution', 'Monitoring & Control', 'Closure'],
+        'product': ['Product Strategy', 'Market Research', 'User Research', 'Feature Planning', 'Design & Prototyping', 'MVP Development', 'Launch & Go-to-Market'],
+        'data': ['Data Fundamentals', 'Excel Mastery', 'SQL Basics', 'Data Cleaning', 'Analysis & Visualization', 'Power BI/Dashboards', 'Real-world Project'],
+        'notion': ['Notion Basics', 'Databases & Properties', 'Personal OS Setup', 'Templates', 'CRM System', 'Automation', 'Monetization'],
+        'management': ['Leadership Basics', 'Team Dynamics', 'Communication', 'Decision Making', 'Conflict Resolution', 'Performance Management'],
+      };
+
+      let lessons = [];
+      for (const [key, topics] of Object.entries(patterns)) {
+        if (courseName.toLowerCase().includes(key)) {
+          lessons = topics.map((title, i) => ({
+            title,
+            lesson_type: 'video',
+            duration_mins: 45,
+            type: 'video',
+            order_index: i + 1
+          }));
+          break;
+        }
+      }
+
+      if (lessons.length === 0) {
+        // Default curriculum
+        lessons = [
+          { title: 'Introduction to ' + courseName, lesson_type: 'video', duration_mins: 30, type: 'video', order_index: 1 },
+          { title: 'Core Concepts', lesson_type: 'video', duration_mins: 45, type: 'video', order_index: 2 },
+          { title: 'Practical Implementation', lesson_type: 'video', duration_mins: 50, type: 'video', order_index: 3 },
+          { title: 'Advanced Topics', lesson_type: 'video', duration_mins: 45, type: 'video', order_index: 4 },
+          { title: 'Capstone Project', lesson_type: 'assignment', duration_mins: 120, type: 'assignment', order_index: 5 },
+        ];
+      }
+
+      return lessons;
     }
 
     // INIT
