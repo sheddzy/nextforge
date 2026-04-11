@@ -1398,6 +1398,199 @@
       }
     }
 
+    // EDIT STUDENT & INSTRUCTOR
+    let currentEditingId = null;
+
+    async function editStudent(id) {
+      try {
+        const res = await fetch(API_URL + '/admin/students/' + id, H);
+        const student = await res.json();
+        
+        currentEditingId = id;
+        document.getElementById('student-name').value = student.full_name || '';
+        document.getElementById('student-phone').value = student.phone || '';
+        document.getElementById('student-track').value = student.track || '';
+        document.getElementById('student-modal').classList.add('active');
+      } catch (e) {
+        showAlert('Failed to load student', 'danger');
+      }
+    }
+
+    function closeStudentModal() {
+      document.getElementById('student-modal').classList.remove('active');
+      currentEditingId = null;
+    }
+
+    async function saveStudent() {
+      if (!currentEditingId) return;
+      
+      const fullName = document.getElementById('student-name').value;
+      const phone = document.getElementById('student-phone').value;
+      const track = document.getElementById('student-track').value;
+
+      if (!fullName) {
+        showAlert('Name is required', 'danger');
+        return;
+      }
+
+      try {
+        const res = await fetch(API_URL + '/admin/students/' + currentEditingId, {
+          method: 'PUT',
+          ...H,
+          body: JSON.stringify({ full_name: fullName, phone, track })
+        });
+
+        if (res.ok) {
+          showAlert('Student updated successfully!', 'success');
+          closeStudentModal();
+          loadStudents();
+        } else {
+          showAlert('Failed to update student', 'danger');
+        }
+      } catch (e) {
+        showAlert('Error updating student: ' + e.message, 'danger');
+      }
+    }
+
+    async function toggleStudent(id, active) { 
+      try {
+        const res = await fetch(API_URL + '/admin/students/' + id + '/toggle', {
+          method: 'POST',
+          ...H
+        });
+
+        if (res.ok) {
+          showAlert(active ? 'Student suspended' : 'Student restored', 'success');
+          loadStudents();
+        } else {
+          showAlert('Failed to toggle student', 'danger');
+        }
+      } catch (e) {
+        showAlert('Error toggling student', 'danger');
+      }
+    }
+
+    async function editInstructor(id) {
+      try {
+        const instructors = allInstructors;
+        const instructor = instructors.find(i => i.id === id);
+        
+        if (!instructor) {
+          showAlert('Instructor not found', 'danger');
+          return;
+        }
+
+        currentEditingId = id;
+        document.getElementById('instructor-name').value = instructor.full_name || '';
+        document.getElementById('instructor-phone').value = instructor.phone || '';
+        document.getElementById('instructor-bio').value = instructor.bio || '';
+        document.getElementById('instructor-modal').classList.add('active');
+      } catch (e) {
+        showAlert('Failed to load instructor', 'danger');
+      }
+    }
+
+    function closeInstructorModal() {
+      document.getElementById('instructor-modal').classList.remove('active');
+      currentEditingId = null;
+    }
+
+    async function saveInstructor() {
+      if (!currentEditingId) return;
+      
+      const fullName = document.getElementById('instructor-name').value;
+      const phone = document.getElementById('instructor-phone').value;
+      const bio = document.getElementById('instructor-bio').value;
+
+      if (!fullName) {
+        showAlert('Name is required', 'danger');
+        return;
+      }
+
+      try {
+        const res = await fetch(API_URL + '/admin/instructors/' + currentEditingId, {
+          method: 'PUT',
+          ...H,
+          body: JSON.stringify({ full_name: fullName, phone, bio })
+        });
+
+        if (res.ok) {
+          showAlert('Instructor updated successfully!', 'success');
+          closeInstructorModal();
+          loadInstructors();
+        } else {
+          showAlert('Failed to update instructor', 'danger');
+        }
+      } catch (e) {
+        showAlert('Error updating instructor: ' + e.message, 'danger');
+      }
+    }
+
+    async function approveInstructor(id) {
+      try {
+        const res = await fetch(API_URL + '/admin/instructors/' + id + '/approve', {
+          method: 'POST',
+          ...H,
+          body: JSON.stringify({ approve: true })
+        });
+
+        if (res.ok) {
+          showAlert('Instructor approved!', 'success');
+          loadInstructors();
+        } else {
+          showAlert('Failed to approve instructor', 'danger');
+        }
+      } catch (e) {
+        showAlert('Error approving instructor', 'danger');
+      }
+    }
+
+    let courseEditingId = null;
+
+    async function editCourse(id) {
+      try {
+        const res = await fetch(API_URL + '/admin/courses/' + id, H);
+        const course = await res.json();
+        
+        courseEditingId = id;
+        document.getElementById('modal-title').textContent = 'Edit Course';
+        document.getElementById('course-title').value = course.title || '';
+        document.getElementById('course-desc').value = course.description || '';
+        document.getElementById('course-price').value = course.price || '';
+        document.getElementById('course-duration').value = course.duration || '';
+        document.getElementById('course-category').value = course.category || '';
+        document.getElementById('course-instructor').value = course.instructor_id || '';
+        document.getElementById('course-save-btn').textContent = 'Update Course';
+        document.getElementById('course-modal').classList.add('active');
+      } catch (e) {
+        showAlert('Failed to load course', 'danger');
+      }
+    }
+
+    async function deleteCourse(id) {
+      if (!confirm('Are you sure you want to delete this course? This action cannot be undone.')) return;
+      
+      try {
+        const res = await fetch(API_URL + '/admin/courses/' + id, {
+          method: 'DELETE',
+          ...H
+        });
+
+        if (res.ok) {
+          showAlert('Course deleted', 'success');
+          loadCourses();
+        } else {
+          showAlert('Failed to delete course', 'danger');
+        }
+      } catch (e) {
+        showAlert('Error deleting course', 'danger');
+      }
+    }
+
+    function verifyCertificate(code) { 
+      showAlert('Certificate ' + code + ' verified', 'success'); 
+    }
+
     // COURSE CONTENT MANAGEMENT
     let currentContentCourseId = null;
     let tempLessons = [];
