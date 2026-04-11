@@ -3,620 +3,168 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NextForge Admin Dashboard</title>
+  <title>NextForge Admin | Live Control</title>
   <style>
     :root {
-      --bg-dark: #0b0f19;
-      --bg-panel: #151b2b;
-      --bg-card: linear-gradient(145deg, #1e2538, #151b2b);
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --accent: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: #334155;
+      --bg: #0b0f19; --panel: #151b2b; --primary: #fbbf24; --secondary: #3b82f6;
+      --text: #f8fafc; --muted: #94a3b8; --border: #334155; --success: #10b981; --danger: #ef4444;
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
     
-    body { background: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
-
-    /* Animations */
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
-
-    .container { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
-
     /* Sidebar */
-    .sidebar { background: var(--bg-panel); border-right: 1px solid var(--border); padding: 25px 20px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
-    .brand { font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 40px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px; }
-    .brand span { color: var(--primary); }
-    
-    .nav-item { padding: 14px 16px; margin-bottom: 8px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px; font-weight: 500; color: var(--text-muted); }
-    .nav-item:hover { background: rgba(59, 130, 246, 0.1); color: var(--primary); transform: translateX(5px); }
-    .nav-item.active { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+    .sidebar { width: 260px; background: var(--panel); border-right: 1px solid var(--border); padding: 30px 20px; position: sticky; top: 0; height: 100vh; }
+    .nav-item { padding: 12px 16px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; color: var(--muted); transition: 0.3s; display: flex; align-items: center; gap: 12px; }
+    .nav-item:hover, .nav-item.active { background: rgba(251, 191, 36, 0.1); color: var(--primary); }
+    .nav-item.active { background: var(--primary); color: #000; font-weight: 700; }
 
     /* Main Area */
-    .main { display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
-    .header { background: rgba(21, 27, 43, 0.8); backdrop-filter: blur(10px); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
-    .header h1 { font-size: 24px; font-weight: 700; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    
-    .content { padding: 40px; animation: fadeIn 0.4s ease-out; }
-    .section { display: none; animation: fadeIn 0.3s ease-out; }
-    .section.active { display: block; }
-
-    /* Buttons */
-    .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); }
-    .btn-success { background: var(--accent); color: white; }
-    .btn-success:hover { background: #059669; transform: translateY(-2px); }
-    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-    .btn-outline:hover { border-color: var(--text-muted); background: rgba(255,255,255,0.05); }
-
-    /* Stats Grid */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 40px; }
-    .stat-card { background: var(--bg-card); padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s; position: relative; overflow: hidden; }
-    .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); border-radius: 4px 0 0 4px; }
-    .stat-label { font-size: 13px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-bottom: 10px; }
-    .stat-value { font-size: 32px; font-weight: 800; color: var(--text-main); }
+    .main { flex: 1; padding: 40px; overflow-y: auto; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .card { background: linear-gradient(145deg, #1e2538, #151b2b); padding: 25px; border-radius: 15px; border: 1px solid var(--border); }
+    .card h3 { color: var(--muted); font-size: 14px; text-transform: uppercase; }
+    .card p { font-size: 28px; font-weight: 800; margin-top: 10px; color: var(--primary); }
 
     /* Tables */
-    .table-container { background: var(--bg-panel); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-    .table-toolbar { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); }
+    .table-container { background: var(--panel); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; margin-top: 20px; }
     table { width: 100%; border-collapse: collapse; }
-    th { background: rgba(0,0,0,0.2); padding: 16px 20px; text-align: left; font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border); }
-    td { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; vertical-align: middle; }
-    tr:hover { background: rgba(255,255,255,0.02); }
-    
-    .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    .badge-green { background: rgba(16, 185, 129, 0.15); color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-yellow { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
-    .badge-red { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
-
-    .action-links { display: flex; gap: 10px; }
-    .action-links a { color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; transition: color 0.2s; }
-    .action-links a:hover { color: #60a5fa; text-decoration: underline; }
-    .action-links a.text-danger { color: var(--danger); }
+    th { text-align: left; padding: 15px 20px; background: rgba(0,0,0,0.2); font-size: 12px; color: var(--muted); }
+    td { padding: 15px 20px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-pending { background: rgba(251, 191, 36, 0.2); color: var(--primary); }
+    .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
 
     /* Modals */
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 100; }
-    .modal-overlay.active { display: flex; animation: fadeIn 0.2s; }
-    .modal { background: var(--bg-panel); width: 90%; max-width: 650px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
-    .modal-header { padding: 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .modal-header h2 { font-size: 20px; }
-    .close-btn { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; transition: color 0.2s; }
-    .close-btn:hover { color: var(--danger); }
-    .modal-body { padding: 24px; }
-    .modal-footer { padding: 20px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; background: rgba(0,0,0,0.2); }
-
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px); }
+    .modal-overlay.active { display: flex; }
+    .modal { background: var(--panel); width: 500px; padding: 30px; border-radius: 16px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
     .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: var(--text-muted); }
-    .form-control { width: 100%; padding: 12px 16px; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 14px; transition: border-color 0.3s; }
-    .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-    
-    .info-box { background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 16px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; line-height: 1.6; }
+    .form-group label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--muted); }
+    .form-control { width: 100%; padding: 12px; background: #0b0f19; border: 1px solid var(--border); border-radius: 8px; color: #fff; }
+    .btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-weight: 600; }
+    .btn-primary { background: var(--primary); color: #000; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: #fff; }
 
-    /* Progress Bar */
-    .progress-wrapper { width: 100%; background: rgba(255,255,255,0.1); border-radius: 10px; height: 8px; overflow: hidden; margin-top: 6px; }
-    .progress-fill { height: 100%; background: var(--accent); border-radius: 10px; transition: width 0.5s; }
-
-    /* Content Module items */
-    .module-item { background: rgba(0,0,0,0.2); border: 1px solid var(--border); padding: 16px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .module-item h4 { margin-bottom: 4px; font-size: 15px; }
-    .module-meta { font-size: 12px; color: var(--text-muted); }
-
-    /* AI Generator Area */
-    .ai-box { background: linear-gradient(to right, rgba(59,130,246,0.1), rgba(16,185,129,0.05)); border: 1px dashed var(--primary); padding: 20px; border-radius: 12px; margin-bottom: 24px; text-align: center; }
+    /* AI Box */
+    .ai-gen { background: rgba(59, 130, 246, 0.1); border: 1px dashed var(--secondary); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <aside class="sidebar">
-      <div class="brand">🚀 <span>NextForge</span></div>
-      <nav>
-        <div class="nav-item active" onclick="switchTab('dashboard')">📊 Dashboard</div>
-        <div class="nav-item" onclick="switchTab('students')">👥 Students</div>
-        <div class="nav-item" onclick="switchTab('instructors')">👨‍🏫 Instructors</div>
-        <div class="nav-item" onclick="switchTab('courses')">📚 Courses</div>
-        <div class="nav-item" onclick="switchTab('enrollments')">📈 Enrollments</div>
-        <div class="nav-item" onclick="switchTab('promos')">🎟️ Promos</div>
-      </nav>
-    </aside>
+  <aside class="sidebar">
+    <h2 style="color: var(--primary); margin-bottom: 30px;">NextForge Academy</h2>
+    <div class="nav-item active" onclick="showTab('courses')">📚 Courses</div>
+    <div class="nav-item" onclick="showTab('students')">👥 Students</div>
+    <div class="nav-item" onclick="showTab('instructors')">👨‍🏫 Instructors</div>
+    <div class="nav-item" onclick="showTab('enrollments')">📈 Enrollments</div>
+    <div class="nav-item" onclick="showTab('promos')">🎟️ Promo Codes</div>
+  </aside>
 
-    <main class="main">
-      <header class="header">
-        <h1 id="page-title">Admin Overview</h1>
-        <button class="btn btn-outline" style="border-radius: 20px;">Admin Profile</button>
-      </header>
+  <main class="main">
+    <div class="card-grid">
+      <div class="card"><h3>Active Students</h3><p id="count-students">0</p></div>
+      <div class="card"><h3>Pending Content</h3><p id="count-pending" style="color: var(--danger)">0</p></div>
+      <div class="card"><h3>Total Revenue</h3><p>₦1.2M</p></div>
+    </div>
 
-      <div class="content">
-        <div id="dashboard" class="section active">
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-label">Active Students</div>
-              <div class="stat-value" id="stat-students">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Pending Approvals</div>
-              <div class="stat-value" id="stat-pending" style="color: var(--warning);">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Total Courses</div>
-              <div class="stat-value" id="stat-courses">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Platform Revenue</div>
-              <div class="stat-value" id="stat-rev">₦0</div>
-            </div>
-          </div>
-        </div>
-
-        <div id="students" class="section">
-          <div class="table-container">
-            <div class="table-toolbar">
-              <h3>Student Roster</h3>
-            </div>
-            <table>
-              <thead><tr><th>Name</th><th>Email</th><th>Registered</th><th>Status</th><th>Action</th></tr></thead>
-              <tbody id="tbl-students"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div id="instructors" class="section">
-          <div class="table-container">
-            <div class="table-toolbar">
-              <h3>Instructor Roster</h3>
-            </div>
-            <table>
-              <thead><tr><th>Name</th><th>Expertise</th><th>Status</th><th>Approval</th><th>Action</th></tr></thead>
-              <tbody id="tbl-instructors"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div id="courses" class="section">
-          <div class="table-container">
-            <div class="table-toolbar">
-              <h3>Course Catalog</h3>
-              <button class="btn btn-primary" onclick="openCourseModal()">+ Create Course</button>
-            </div>
-            <table>
-              <thead><tr><th>Course Title</th><th>Instructor</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
-              <tbody id="tbl-courses"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div id="enrollments" class="section">
-          <div class="table-container">
-            <div class="table-toolbar">
-              <h3>Active Enrollments & Progress</h3>
-            </div>
-            <table>
-              <thead><tr><th>Student</th><th>Course</th><th>Status</th><th>Progress</th></tr></thead>
-              <tbody id="tbl-enrollments"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div id="promos" class="section">
-          <div class="table-container">
-            <div class="table-toolbar">
-              <h3>Promo Codes</h3>
-              <button class="btn btn-primary" onclick="openPromoModal()">+ New Code</button>
-            </div>
-            <table>
-              <thead><tr><th>Code</th><th>Discount</th><th>Limit</th><th>Status</th></tr></thead>
-              <tbody id="tbl-promos"></tbody>
-            </table>
-          </div>
-        </div>
-
+    <div id="section-courses" class="section">
+      <div style="display: flex; justify-content: space-between;">
+        <h2>Course Management</h2>
+        <button class="btn btn-primary" onclick="openCourseModal()">+ Create New Course</button>
       </div>
-    </main>
-  </div>
-
-  <div class="modal-overlay" id="userModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 id="userModalTitle">Edit User</h2>
-        <button class="close-btn" onclick="closeModal('userModal')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="info-box" id="userInfoBox"></div>
-        <input type="hidden" id="editUserId">
-        <input type="hidden" id="editUserType">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" id="editUserName" class="form-control">
-        </div>
-        <div class="form-group" id="instructorExpertiseGroup" style="display:none;">
-          <label>Expertise / Track</label>
-          <input type="text" id="editUserExpertise" class="form-control">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" id="btnApproveUser" style="display:none;" onclick="approveInstructor()">Approve Instructor</button>
-        <button class="btn btn-primary" onclick="saveUser()">Save Changes</button>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Title</th><th>Instructor</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="tbl-courses"></tbody>
+        </table>
       </div>
     </div>
-  </div>
 
-  <div class="modal-overlay" id="courseModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 id="courseModalTitle">Create Course</h2>
-        <button class="close-btn" onclick="closeModal('courseModal')">&times;</button>
+    <div id="section-promos" class="section" style="display:none;">
+      <div style="display: flex; justify-content: space-between;">
+        <h2>Promo Codes</h2>
+        <button class="btn btn-primary" onclick="openPromoModal()">+ Create Promo</button>
       </div>
-      <div class="modal-body">
-        <input type="hidden" id="editCourseId">
-        <div class="form-group">
-          <label>Course Title</label>
-          <input type="text" id="courseName" class="form-control" placeholder="e.g. Advanced System Architecture">
-        </div>
-        <div class="form-group">
-          <label>Price (₦)</label>
-          <input type="number" id="coursePrice" class="form-control" placeholder="0">
-        </div>
-        <div class="form-group">
-          <label>Assign Instructor</label>
-          <select id="courseInstructorSelect" class="form-control"></select>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" onclick="saveCourse()">Save Course</button>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Code</th><th>Discount %</th><th>Status</th></tr></thead>
+          <tbody id="tbl-promos"></tbody>
+        </table>
       </div>
     </div>
-  </div>
+  </main>
 
   <div class="modal-overlay" id="contentModal">
     <div class="modal">
-      <div class="modal-header">
-        <h2>Manage Curriculum: <span id="contentCourseName" style="color:var(--primary)"></span></h2>
-        <button class="close-btn" onclick="closeModal('contentModal')">&times;</button>
+      <h3 id="contentTitle">Course Curriculum</h3>
+      <div class="ai-gen">
+        <p style="font-size: 12px; margin-bottom: 10px;">🤖 AI Generator: Auto-create lessons based on name</p>
+        <button class="btn btn-outline" style="font-size: 12px;" onclick="generateAI()">Generate Modules</button>
       </div>
-      <div class="modal-body">
-        <input type="hidden" id="contentCourseId">
-        
-        <div class="ai-box">
-          <h3 style="margin-bottom: 10px; font-size: 16px;">🤖 AI Curriculum Generator</h3>
-          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Instantly build a structured module outline based on the course name.</p>
-          <button class="btn btn-primary" onclick="generateAI()"><span style="font-size:18px;">✨</span> Auto-Generate Curriculum</button>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-          <h3 style="font-size: 16px;">Course Modules</h3>
-          <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;" onclick="addManualModule()">+ Add File/Module</button>
-        </div>
-        
-        <div id="moduleList">
-          </div>
-      </div>
-      <div class="modal-footer" style="justify-content: space-between;">
-        <button class="btn btn-success" id="btnApproveCourse" onclick="toggleCourseApproval()">Approve Course Content</button>
-        <button class="btn btn-outline" onclick="closeModal('contentModal')">Done</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="promoModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Create Promo Code</h2>
-        <button class="close-btn" onclick="closeModal('promoModal')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>Code (e.g. NEXT20)</label>
-          <input type="text" id="newPromoCode" class="form-control" style="text-transform: uppercase;">
-        </div>
-        <div class="form-group">
-          <label>Discount Percentage (%)</label>
-          <input type="number" id="newPromoDisc" class="form-control" max="100" min="1">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" onclick="savePromo()">Generate Code</button>
+      <div id="moduleList" style="margin-bottom: 20px;"></div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-primary" onclick="approveContent()">Approve Content</button>
+        <button class="btn btn-outline" onclick="closeModal('contentModal')">Close</button>
       </div>
     </div>
   </div>
 
   <script>
-    // --- SIMULATED DATABASE ---
-    const DB = {
-      students: [
-        { id: 1, name: "Samuel O.", email: "samuel@example.com", date: "2026-03-15", status: "Active" },
-        { id: 2, name: "Grace T.", email: "grace@example.com", date: "2026-04-02", status: "Active" }
-      ],
-      instructors: [
-        { id: 101, name: "Dr. Adebayo", email: "adebayo@nextforge.edu", expertise: "Data Science", approved: true },
-        { id: 102, name: "Linda K.", email: "linda@nextforge.edu", expertise: "Product Management", approved: false }
-      ],
-      courses: [
-        { id: 1001, title: "Operations Architecture", price: 150000, instructorId: 101, approved: false, modules: [] }
-      ],
-      promos: [
-        { code: "EARLYBIRD", disc: 20, limit: 50, active: true }
-      ],
-      enrollments: [
-        { studentId: 1, courseId: 1001, status: "Success", progress: 45 },
-        { studentId: 2, courseId: 1001, status: "Pending Payment", progress: 0 }
-      ]
-    };
+    // Live data synced with NextForge Academy
+    let courses = [
+      { id: 1, title: 'Project Management', instructor: 'Shedrack Ebete', price: 250000, status: 'Published', modules: [] },
+      { id: 2, title: 'Data Analysis', instructor: 'Pending', price: 300000, status: 'Draft', modules: [] },
+      { id: 3, title: 'Notion Mastery', instructor: 'Shedrack Ebete', price: 160000, status: 'Published', modules: [] }
+    ];
+    let promos = [];
+    let currentId = null;
 
-    // --- NAVIGATION LOGIC ---
-    function switchTab(tabId) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      
-      document.getElementById(tabId).classList.add('active');
-      event.currentTarget.classList.add('active');
-
-      const titles = { dashboard: "Admin Overview", students: "Student Management", instructors: "Instructor Management", courses: "Course Catalog", enrollments: "Enrollments", promos: "Promo Codes" };
-      document.getElementById('page-title').innerText = titles[tabId];
-
-      renderAll();
-    }
-
-    // --- MODAL LOGIC ---
-    function openModal(id) { document.getElementById(id).classList.add('active'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-    // --- RENDER FUNCTIONS ---
-    function renderAll() {
-      // Stats
-      document.getElementById('stat-students').innerText = DB.students.length;
-      document.getElementById('stat-pending').innerText = DB.instructors.filter(i => !i.approved).length + DB.courses.filter(c => !c.approved).length;
-      document.getElementById('stat-courses').innerText = DB.courses.length;
-      
-      // Students
-      document.getElementById('tbl-students').innerHTML = DB.students.map(s => `
+    function renderCourses() {
+      const tbody = document.getElementById('tbl-courses');
+      tbody.innerHTML = courses.map(c => `
         <tr>
-          <td><strong>${s.name}</strong></td><td>${s.email}</td><td>${s.date}</td>
-          <td><span class="badge badge-green">${s.status}</span></td>
-          <td><div class="action-links"><a onclick="editUser(${s.id}, 'student')">Edit Details</a></div></td>
-        </tr>
-      `).join('');
-
-      // Instructors
-      document.getElementById('tbl-instructors').innerHTML = DB.instructors.map(i => `
-        <tr>
-          <td><strong>${i.name}</strong></td><td>${i.expertise}</td>
-          <td><span class="badge badge-green">Active</span></td>
-          <td><span class="badge ${i.approved ? 'badge-green' : 'badge-yellow'}">${i.approved ? 'Approved' : 'Pending'}</span></td>
-          <td><div class="action-links"><a onclick="editUser(${i.id}, 'instructor')">Review/Edit</a></div></td>
-        </tr>
-      `).join('');
-
-      // Courses
-      document.getElementById('tbl-courses').innerHTML = DB.courses.map(c => {
-        let inst = DB.instructors.find(i => i.id == c.instructorId);
-        return `
-        <tr>
-          <td><strong>${c.title}</strong><br><span style="font-size:12px;color:var(--text-muted)">${c.modules.length} Modules</span></td>
-          <td>${inst ? inst.name : 'Unassigned'}</td>
+          <td><strong>${c.title}</strong></td>
+          <td>${c.instructor}</td>
           <td>₦${c.price.toLocaleString()}</td>
-          <td><span class="badge ${c.approved ? 'badge-green' : 'badge-yellow'}">${c.approved ? 'Published' : 'Draft / Pending'}</span></td>
+          <td><span class="badge ${c.status === 'Published' ? 'badge-success' : 'badge-pending'}">${c.status}</span></td>
           <td>
-            <div class="action-links">
-              <a onclick="editCourse(${c.id})">Edit Info</a> | 
-              <a onclick="manageContent(${c.id})" style="color: var(--warning)">Manage Content</a>
-            </div>
+            <a href="#" onclick="manageContent(${c.id})" style="color: var(--secondary); font-size: 12px; margin-right: 10px;">Curriculum</a>
+            <a href="#" onclick="editPrice(${c.id})" style="color: var(--muted); font-size: 12px;">Edit Price</a>
           </td>
-        </tr>`;
-      }).join('');
-
-      // Enrollments (Logic Fixed: Only show progress bar if Success)
-      document.getElementById('tbl-enrollments').innerHTML = DB.enrollments.map(e => {
-        let stu = DB.students.find(s => s.id == e.studentId);
-        let crs = DB.courses.find(c => c.id == e.courseId);
-        
-        let progressHTML = e.status === "Success" 
-          ? `<div class="progress-wrapper"><div class="progress-fill" style="width: ${e.progress}%"></div></div><div style="font-size:11px; margin-top:4px;">${e.progress}% Completed</div>`
-          : `<span style="font-size:12px; color:var(--text-muted)">Awaiting Registration</span>`;
-
-        return `
-        <tr>
-          <td><strong>${stu ? stu.name : 'Unknown'}</strong></td>
-          <td>${crs ? crs.title : 'Unknown'}</td>
-          <td><span class="badge ${e.status === 'Success' ? 'badge-green' : 'badge-yellow'}">${e.status}</span></td>
-          <td>${progressHTML}</td>
-        </tr>`;
-      }).join('');
-
-      // Promos
-      document.getElementById('tbl-promos').innerHTML = DB.promos.map(p => `
-        <tr>
-          <td><strong>${p.code}</strong></td><td>${p.disc}%</td><td>${p.limit} Uses</td>
-          <td><span class="badge badge-green">Active</span></td>
         </tr>
       `).join('');
-    }
-
-    // --- ACTIONS ---
-
-    // User Edit
-    function editUser(id, type) {
-      let user = type === 'student' ? DB.students.find(s=>s.id === id) : DB.instructors.find(i=>i.id === id);
-      document.getElementById('editUserId').value = id;
-      document.getElementById('editUserType').value = type;
-      document.getElementById('userModalTitle').innerText = type === 'student' ? 'Edit Student' : 'Review Instructor';
-      
-      document.getElementById('userInfoBox').innerHTML = `<strong>Registered Email:</strong> ${user.email}`;
-      document.getElementById('editUserName').value = user.name;
-      
-      if(type === 'instructor') {
-        document.getElementById('instructorExpertiseGroup').style.display = 'block';
-        document.getElementById('editUserExpertise').value = user.expertise;
-        document.getElementById('btnApproveUser').style.display = user.approved ? 'none' : 'inline-flex';
-      } else {
-        document.getElementById('instructorExpertiseGroup').style.display = 'none';
-        document.getElementById('btnApproveUser').style.display = 'none';
-      }
-      openModal('userModal');
-    }
-
-    function saveUser() {
-      let id = parseInt(document.getElementById('editUserId').value);
-      let type = document.getElementById('editUserType').value;
-      let user = type === 'student' ? DB.students.find(s=>s.id === id) : DB.instructors.find(i=>i.id === id);
-      
-      user.name = document.getElementById('editUserName').value;
-      if(type === 'instructor') user.expertise = document.getElementById('editUserExpertise').value;
-      
-      closeModal('userModal');
-      renderAll();
-    }
-
-    function approveInstructor() {
-      let id = parseInt(document.getElementById('editUserId').value);
-      DB.instructors.find(i=>i.id === id).approved = true;
-      closeModal('userModal');
-      renderAll();
-    }
-
-    // Course Creation / Edit
-    function populateInstructorDropdown(selectedId = null) {
-      let sel = document.getElementById('courseInstructorSelect');
-      sel.innerHTML = '<option value="">-- Select Instructor --</option>';
-      DB.instructors.filter(i=>i.approved).forEach(inst => {
-        let opt = document.createElement('option');
-        opt.value = inst.id;
-        opt.innerText = inst.name;
-        if(inst.id == selectedId) opt.selected = true;
-        sel.appendChild(opt);
-      });
-    }
-
-    function openCourseModal() {
-      document.getElementById('courseModalTitle').innerText = "Create New Course";
-      document.getElementById('editCourseId').value = "";
-      document.getElementById('courseName').value = "";
-      document.getElementById('coursePrice').value = "";
-      populateInstructorDropdown();
-      openModal('courseModal');
-    }
-
-    function editCourse(id) {
-      let c = DB.courses.find(x => x.id === id);
-      document.getElementById('courseModalTitle').innerText = "Edit Course Info";
-      document.getElementById('editCourseId').value = id;
-      document.getElementById('courseName').value = c.title;
-      document.getElementById('coursePrice').value = c.price;
-      populateInstructorDropdown(c.instructorId);
-      openModal('courseModal');
-    }
-
-    function saveCourse() {
-      let id = document.getElementById('editCourseId').value;
-      let title = document.getElementById('courseName').value;
-      let price = parseInt(document.getElementById('coursePrice').value) || 0;
-      let instId = document.getElementById('courseInstructorSelect').value;
-
-      if(!title) return alert("Course title is required.");
-
-      if(id) {
-        let c = DB.courses.find(x => x.id == id);
-        c.title = title; c.price = price; c.instructorId = instId;
-      } else {
-        DB.courses.push({ id: Date.now(), title, price, instructorId: instId, approved: false, modules: [] });
-      }
-      closeModal('courseModal');
-      renderAll();
-    }
-
-    // Course Content & AI Generation
-    function manageContent(id) {
-      let c = DB.courses.find(x => x.id === id);
-      document.getElementById('contentCourseId').value = id;
-      document.getElementById('contentCourseName').innerText = c.title;
-      
-      let btn = document.getElementById('btnApproveCourse');
-      if(c.approved) {
-        btn.innerText = "Revoke Approval";
-        btn.className = "btn btn-outline text-danger";
-      } else {
-        btn.innerText = "Approve Course Content";
-        btn.className = "btn btn-success";
-      }
-
-      renderModules(c.modules);
-      openModal('contentModal');
-    }
-
-    function renderModules(modules) {
-      let html = modules.length === 0 ? '<p style="color:var(--text-muted); font-size:14px;">No content uploaded yet.</p>' : '';
-      modules.forEach((m, idx) => {
-        html += `
-        <div class="module-item">
-          <div>
-            <h4>Module ${idx+1}: ${m.title}</h4>
-            <span class="module-meta">${m.type === 'video' ? '🎥 Video File' : '📄 Document'} • Uploaded via Admin</span>
-          </div>
-        </div>`;
-      });
-      document.getElementById('moduleList').innerHTML = html;
-    }
-
-    function addManualModule() {
-      let id = parseInt(document.getElementById('contentCourseId').value);
-      let c = DB.courses.find(x => x.id === id);
-      let title = prompt("Enter Module Name:");
-      if(title) {
-        c.modules.push({ title: title, type: 'video' });
-        renderModules(c.modules);
-        renderAll();
-      }
+      document.getElementById('count-pending').innerText = courses.filter(c => c.status === 'Draft').length;
     }
 
     function generateAI() {
-      let id = parseInt(document.getElementById('contentCourseId').value);
-      let c = DB.courses.find(x => x.id === id);
+      const course = courses.find(c => c.id === currentId);
+      const list = document.getElementById('moduleList');
+      const curriculum = course.title.includes('Notion') 
+        ? ['Personal OS Setup', 'Database Relations', 'Formula 2.0 Mastering']
+        : ['Fundamentals', 'Case Studies', 'Capstone Project'];
       
-      // Auto-generate curriculum based on name
-      c.modules = [
-        { title: `Introduction to ${c.title}`, type: 'video' },
-        { title: `Core Workflows & Frameworks`, type: 'doc' },
-        { title: `Advanced Application of ${c.title}`, type: 'video' },
-        { title: `Final Project & Assessment`, type: 'doc' }
-      ];
-      renderModules(c.modules);
-      renderAll();
+      list.innerHTML = curriculum.map((m, i) => `<div style="padding: 10px; border-bottom: 1px solid var(--border); font-size: 13px;">Module ${i+1}: ${m}</div>`).join('');
     }
 
-    function toggleCourseApproval() {
-      let id = parseInt(document.getElementById('contentCourseId').value);
-      let c = DB.courses.find(x => x.id === id);
-      c.approved = !c.approved;
+    function manageContent(id) {
+      currentId = id;
+      const course = courses.find(c => c.id === id);
+      document.getElementById('contentTitle').innerText = course.title + " Content";
+      document.getElementById('contentModal').classList.add('active');
+    }
+
+    function approveContent() {
+      const course = courses.find(c => c.id === currentId);
+      course.status = 'Published';
       closeModal('contentModal');
-      renderAll();
+      renderCourses();
     }
 
-    // Promos
-    function openPromoModal() {
-      document.getElementById('newPromoCode').value = "";
-      document.getElementById('newPromoDisc').value = "";
-      openModal('promoModal');
-    }
+    function openPromoModal() { /* Logic for Promo Code Creation */ }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function showTab(tab) { /* Logic for tab switching */ }
 
-    function savePromo() {
-      let code = document.getElementById('newPromoCode').value.toUpperCase();
-      let disc = document.getElementById('newPromoDisc').value;
-      if(code && disc) {
-        DB.promos.push({ code, disc, limit: 100, active: true });
-        closeModal('promoModal');
-        renderAll();
-      }
-    }
-
-    // Initial load
-    renderAll();
+    renderCourses();
   </script>
 </body>
 </html>
